@@ -1,4 +1,4 @@
-# SOEN-363-Project
+# COMP-345-Assignment
 
 <p align="center">
   <a href="https://github.com/CSG48-TZ/comp-345-a1">
