@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/CSG48-TZ/comp-345-a1">
-  <img src="./C++Logo.png" height="128">
+  <img src="./C++logo.png" height="128">
     <h1 align="center">COMP 345: Assignment</h1>
   </a>
 </p>
