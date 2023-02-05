@@ -19,6 +19,7 @@
 # Project Information
 
 [**Assignment Part 1**](./Assets/a1.pdf)
+<br>
 [**Assignment Part 1 Grading Scheme**](./Assets/a1gs.pdf)
 
 ## Team Members 
