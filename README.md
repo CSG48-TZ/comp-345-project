@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/CSG48-TZ/comp-345-a1">
-  <img src="./C++logo.png" height="128">
+  <img src="./Assets/C++logo.png" height="128">
     <h1 align="center">COMP 345: Assignment</h1>
   </a>
 </p>
@@ -18,8 +18,8 @@
 
 # Project Information
 
-[**Assignment Part 1**](./a1.pdf)
-[**Assignment Part 1 Grading Scheme**](./a1gs.pdf)
+[**Assignment Part 1**](./Assets/a1.pdf)
+[**Assignment Part 1 Grading Scheme**](./Assets/a1gs.pdf)
 
 ## Team Members 
 
