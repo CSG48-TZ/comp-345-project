@@ -28,11 +28,14 @@
 <table>
   <tr>
     <td align="center"><a href="https://github.com/CSG48-TZ"><img src="https://avatars.githubusercontent.com/u/82446800?v=4" width="100px;" alt=""/><br /><sub><b> Tongwei Zhang</b></sub></a></td>
-        <td align="center"><a href="https://github.com/"><img src="https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392?k=6&m=1223671392&s=612x612&w=0&h=NGxdexflb9EyQchqjQP0m6wYucJBYLfu46KCLNMHZYM=" width="100px;" alt=""/><br /><sub><b>Salman Hussain Ali</b></sub></a></td> 
+    <td align="center"><a href="https://github.com/DaxInvader"><img src="https://avatars.githubusercontent.com/u/24554538?v=4" width="100px;" alt=""/><br /><sub><b>Dario Cimmino</b></sub></a></td>
   </tr>
   <tr>
-   <td align="center"><a href="https://github.com/DaxInvader"><img src="https://avatars.githubusercontent.com/u/24554538?v=4" width="100px;" alt=""/><br /><sub><b>Dario Cimmino</b></sub></a></td>
-<td align="center"><a href="https://github.com/"><img src="https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392?k=6&m=1223671392&s=612x612&w=0&h=NGxdexflb9EyQchqjQP0m6wYucJBYLfu46KCLNMHZYM=" width="100px;" alt=""/><br /><sub><b>Placeholder</b></sub></a></td> 
+    <td align="center"><a href="https://github.com/"><img src="https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392?k=6&m=1223671392&s=612x612&w=0&h=NGxdexflb9EyQchqjQP0m6wYucJBYLfu46KCLNMHZYM=" width="100px;" alt=""/><br /><sub><b>Salman Hussain Ali</b></sub></a></td> 
+    <td align="center"><a href="https://github.com/"><img src="https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392?k=6&m=1223671392&s=612x612&w=0&h=NGxdexflb9EyQchqjQP0m6wYucJBYLfu46KCLNMHZYM=" width="100px;" alt=""/><br /><sub><b>Jeremy Vo Buu</b></sub></a></td> 
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/"><img src="https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1223671392?k=6&m=1223671392&s=612x612&w=0&h=NGxdexflb9EyQchqjQP0m6wYucJBYLfu46KCLNMHZYM=" width="100px;" alt=""/><br /><sub><b>Wanjun Gong</b></sub></a></td> 
   </tr>
 </table>
 </div>
