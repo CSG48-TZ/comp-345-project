@@ -2,39 +2,85 @@
 //
 
 #include <iostream>
-#include "OrdersList.h"
+#include "Orders.h"
 
 int main()
 {
-    OrdersList ol(1);
+	OrdersList ol(1);
 
-    list<Orders> testOrders;
+	list<Orders> testOrders;
 
-    int N = 21;
-    int N1 = 6;
-    int test = (rand() % N1);
+	int N = 21;
+	int N1 = 7;
+	int test = (rand() % N1);
 
-    for (int i = 0; i < 10; i++) {
-        Orders add = Orders((rand() % 5), (rand() % N1), 1, rand() % N, rand() % N, rand() % N);
-        testOrders.push_front(add);
-    }
+	srand(time(0));
 
-    list<Orders>::iterator it;
+	//CREATION OF RANDOM ORDERS FOR PLAYER 1
+	for (int i = 0; i < 10; i++) {
+		Orders add = Orders((rand() % 5), (rand() % N1), 1, rand() % N, rand() % N, rand() % N, i);
+		testOrders.push_front(add);
+	}
 
-    for (it = testOrders.begin(); it != testOrders.end(); it++) {
-        ol.add(*it);
-    }
-    
-   cout << "Current number of order in list: " << ol.getCurrentNumberOfOrders();
-   cout << "\n\nCurrent orders are: \n";
+	list<Orders>::iterator it;
 
-   list<Orders> currentList;
-    
-   currentList = ol.getCurrentOrdersList();
+	//ADDING ORDERS TO PLAYER 1 LIST OF ORDER.
+	for (it = testOrders.begin(); it != testOrders.end(); it++) {
+		ol.add(*it);
+	}
 
-   for (it = currentList.begin(); it != currentList.end(); it++) {
-       Orders current = *it;
-       cout << current.toString();
-   }
+	//SHOWING CURRENT ORDERS ON SCREEN
+	cout << "Current number of order in list: " << ol.getCurrentNumberOfOrders();
+	cout << "\n\nCurrent orders are: \n";
+
+	list<Orders> currentList;
+
+	currentList = ol.getCurrentOrdersList();
+
+	for (it = currentList.begin(); it != currentList.end(); it++) {
+		Orders current = *it;
+		cout << current.toString();
+	}
+
+	//CHOOSING A RANDOM ORDER MOVE
+	int index = rand() % ol.getCurrentNumberOfOrders() - 1;
+	int toIndex = rand() % ol.getCurrentNumberOfOrders() - 1;
+
+	cout << "\nMoving order at index: " << index << " to index: " << toIndex << "...";
+
+	//SHOWCASING THE MOVE() FUNCTION
+	ol.move(index, toIndex);
+
+	//SHOWING UPDATED DATA
+	cout << "\n\nUpdated Current orders are: \n";
+
+
+	currentList = ol.getCurrentOrdersList();
+
+	for (it = currentList.begin(); it != currentList.end(); it++) {
+		Orders current = *it;
+		cout << current.toString();
+	}
+
+	//CHOOSING A RANDOM ORDER TO REMOVE MOVE
+	index = rand() % ol.getCurrentNumberOfOrders() - 1;
+
+	cout << "\nRemoving order at index: " << index << "...";
+
+
+	ol.remove(index);
+
+	//SHOWING UPDATED DATA
+	cout << "\n\nUpdated Current orders are: \n";
+
+
+	currentList = ol.getCurrentOrdersList();
+
+	for (it = currentList.begin(); it != currentList.end(); it++) {
+		Orders current = *it;
+		cout << current.toString();
+	}
+
+
 }
 
