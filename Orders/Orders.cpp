@@ -1,4 +1,5 @@
 #include "Orders.h"
+#include <iostream>
 
 /*
 * Constructor
@@ -10,6 +11,13 @@ Orders::Orders() {
 	this->targetLocation = 0;
 	this->fromLocation = 0;
 	this->orderNumber = 0;
+}
+
+/*
+* Deconstructor
+*/
+Orders::~Orders() {
+
 }
 
 /*
@@ -75,6 +83,28 @@ bool Orders::execute() {
 	return false;
 }
 
+/*
+* Stream Insertion operator
+*/
+ostream& operator << (ostream& out, const Orders &o)
+{
+	out << "\nOrder ID: " << o.orderNumber;
+	out << " - Player " << o.from;
+	out << " issued the order: \"" << o.currentOrder;
+	out << "\" to target Player: \"" << o.target;
+	out << "\" from: \"" << o.fromLocation;
+	out << "\" to \"" << o.targetLocation << "\".\n";
+	return out;
+}
+
+/*
+* Stream Input Operator TODO
+*/
+istream& operator >> (istream& in, Orders& o)
+{
+	return in;
+}
+
 
 /*
 * toString() Implementation.
@@ -98,6 +128,19 @@ string Orders::toString(void) {
 	return returnString;
 }
 
+/*
+* Assignment Operator
+*/
+void Orders::operator = (const Orders& o) {
+	this->target = o.target;
+	this->from = o.from;
+	this->armyCount = o.armyCount;
+	this->targetLocation = o.targetLocation;
+	this->fromLocation = o.fromLocation;
+	this->orderNumber = o.orderNumber;
+	this->currentOrder = o.currentOrder;
+}
+
 /****************ORDERS LIST CLASS****************/
 
 /*
@@ -113,6 +156,13 @@ OrdersList::OrdersList(int player) {
 	hasOrdersInList = false;
 	lastOrderModifiedIndex = 0;
 	orderNumber = 0;
+}
+
+/*
+* Deconstructor
+*/
+OrdersList::~OrdersList() {
+
 }
 
 /*
@@ -247,6 +297,19 @@ list<Orders> OrdersList::getCurrentOrdersList()
 	return ordersList;
 }
 
+/*
+* Assignment Operator
+*/
+void OrdersList::operator = (const OrdersList& o) {
+	this->ordersList = o.ordersList;
+	this->player = o.player;
+	currentNumberOfOrders = o.currentNumberOfOrders;
+	hasOrdersInList = o.hasOrdersInList;
+	lastOrderModifiedIndex = o.lastOrderModifiedIndex;
+	orderNumber = o.orderNumber;
+}
+
+
 /****************DEPLOY ORDER LIST CLASS****************/
 
 /*
@@ -264,6 +327,13 @@ Deploy::Deploy(int target, int from, int armyCount, int targetLocation, int from
 }
 
 /*
+* Deconstructor
+*/
+Deploy::~Deploy() {
+
+}
+
+/*
 * Validates the order, returns true or false
 */
 bool Deploy::validate() {
@@ -274,6 +344,9 @@ bool Deploy::validate() {
 * Executes the Order returns true is successful
 */
 bool Deploy::execute() {
+	if (validate()) {
+		return true;
+	}
 	return false;
 }
 
@@ -303,6 +376,13 @@ Advance::Advance(int target, int from, int armyCount, int targetLocation, int fr
 }
 
 /*
+* Deconstructor
+*/
+Advance::~Advance() {
+
+}
+
+/*
 * Validates the order, returns true or false
 */
 bool Advance::validate() {
@@ -313,6 +393,9 @@ bool Advance::validate() {
 * Executes the Order returns true is successful
 */
 bool Advance::execute() {
+	if (validate()) {
+		return true;
+	}
 	return false;
 }
 
@@ -341,6 +424,13 @@ Bomb::Bomb(int target, int from, int armyCount, int targetLocation, int fromLoca
 }
 
 /*
+* Deconstructor
+*/
+Bomb::~Bomb() {
+
+}
+
+/*
 * Validates the order, returns true or false
 */
 bool Bomb::validate() {
@@ -351,6 +441,9 @@ bool Bomb::validate() {
 * Executes the Order returns true is successful
 */
 bool Bomb::execute() {
+	if (validate()) {
+		return true;
+	}
 	return false;
 }
 
@@ -379,6 +472,13 @@ Blockade::Blockade(int target, int from, int armyCount, int targetLocation, int 
 }
 
 /*
+* Deconstructor
+*/
+Blockade::~Blockade() {
+
+}
+
+/*
 * Validates the order, returns true or false
 */
 bool Blockade::validate() {
@@ -389,6 +489,9 @@ bool Blockade::validate() {
 * Executes the Order returns true is successful
 */
 bool Blockade::execute() {
+	if (validate()) {
+		return true;
+	}
 	return false;
 }
 
@@ -418,6 +521,13 @@ Airlift::Airlift(int target, int from, int armyCount, int targetLocation, int fr
 }
 
 /*
+* Deconstructor
+*/
+Airlift::~Airlift() {
+
+}
+
+/*
 * Validates the order, returns true or false
 */
 bool Airlift::validate() {
@@ -428,6 +538,9 @@ bool Airlift::validate() {
 * Executes the Order returns true is successful
 */
 bool Airlift::execute() {
+	if (validate()) {
+		return true;
+	}
 	return false;
 }
 
@@ -456,6 +569,13 @@ Negociate::Negociate(int target, int from, int armyCount, int targetLocation, in
 }
 
 /*
+* Deconstructor
+*/
+Negociate::~Negociate() {
+
+}
+
+/*
 * Validates the Negociate order, returns true or false
 */
 bool Negociate::validate() {
@@ -466,6 +586,9 @@ bool Negociate::validate() {
 * Executes the Order returns true is successful
 */
 bool Negociate::execute() {
+	if (validate()) {
+		return true;
+	}
 	return false;
 }
 

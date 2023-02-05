@@ -17,10 +17,7 @@ int main()
 	srand(time(0));
 
 	//CREATION OF RANDOM ORDERS FOR PLAYER 1
-	for (int i = 0; i < 10; i++) {
-		Orders add = Orders((rand() % 5), (rand() % N1), 1, rand() % N, rand() % N, rand() % N, i);
-		testOrders.push_front(add);
-	}
+
 
 	list<Orders>::iterator it;
 
