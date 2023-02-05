@@ -20,7 +20,7 @@ public:
 	string toString(void);
 	bool validate();
 	bool execute();
-	void operator = (const Orders& D);
+	void operator = (const Orders& o);
 	friend ostream& operator << (ostream& out, const Orders& o);
 	friend istream& operator >> (istream& in, Orders& o);
 
@@ -74,6 +74,7 @@ public:
 };
 
 class Advance : public Orders {
+public:
 	Advance(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	~Advance();
 	bool validate(void);
@@ -82,6 +83,7 @@ class Advance : public Orders {
 };
 
 class Bomb : public Orders {
+public:
 	Bomb(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	~Bomb();
 	bool validate(void);
@@ -90,6 +92,7 @@ class Bomb : public Orders {
 };
 
 class Blockade : public Orders {
+public:
 	Blockade(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	~Blockade();
 	bool validate(void);
@@ -98,6 +101,7 @@ class Blockade : public Orders {
 };
 
 class Airlift : public Orders {
+public:
 	Airlift(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	~Airlift();
 	bool validate(void);
@@ -106,6 +110,7 @@ class Airlift : public Orders {
 };
 
 class Negociate : public Orders {
+public:
 	Negociate(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	~Negociate();
 	bool validate(void);
