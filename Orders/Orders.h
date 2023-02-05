@@ -9,6 +9,7 @@ class Orders
 
 public:
 	Orders(int type, int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
+	Orders();
 	string getCurrentOrder(void);
 	int getOrderTargetPlayer(void);
 	int getOrderArmyCount(void);
@@ -19,8 +20,7 @@ public:
 	int getOrderNumber(void);
 	string toString(void);
 
-private:
-	string orderType[6] = { "Deploy", "Advance", "Bomb", "Blockade", "Airlift", "Negotiate"};
+protected:
 	string currentOrder;
 	int target;
 	int from;
@@ -56,6 +56,36 @@ private:
 	list<Orders> ordersList;
 	int orderNumber = 0;
 
-
 };
 
+class Deploy : public Orders {
+public:
+	Deploy(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
+	bool validate(void);
+	bool execute();
+};
+
+class Advance : public Orders {
+	bool validate(void);
+	bool execute();
+};
+
+class Bomb : public Orders {
+	bool validate(void);
+	bool execute();
+};
+
+class Blockade : public Orders {
+	bool validate(void);
+	bool execute();
+};
+
+class Airlift : public Orders {
+	bool validate(void);
+	bool execute();
+};
+
+class Negociate : public Orders {
+	bool validate(void);
+	bool execute();
+};
