@@ -18,18 +18,25 @@ class GameEngine{
             END
         };
 
-        // Constructor
+        // default constructor
         GameEngine();
+        // copy constructor
+        GameEngine(const GameEngine& engine);
+        // assignment operator
+        GameEngine& operator=(const GameEngine& engine);
+        // stream insertion operator
+        friend std::ostream& operator<<(std::ostream& out, const GameEngine& GameEngine);
+        // Destructor
         ~GameEngine();
 
         // To process the command entered in the program console
         bool processCommand(std::string& command);
 
         // Accessors for private variables
-        std::string getCurrentState();
+        std::string getCurrentState() const;
         void setCurrentState(State newState);
 
     private:
         // A private attribute to track current state
-        State currentState;
+        State* currentState;
 };
