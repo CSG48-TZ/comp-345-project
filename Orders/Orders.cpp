@@ -1,14 +1,5 @@
 #include "Orders.h"
 
-Orders::Orders(int type, int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
-	this->target = target;
-	this->from = from;
-	this->armyCount = armyCount;
-	this->targetLocation = targetLocation;
-	this->fromLocation = fromLocation;
-	this->orderNumber = orderNumber;
-}
-
 Orders::Orders() {
 	this->target = 0;
 	this->from = 0;
@@ -169,5 +160,90 @@ bool Deploy::validate() {
 }
 
 bool Deploy::execute() {
+	return false;
+}
+
+Advance::Advance(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+	this->target = target;
+	this->from = from;
+	this->armyCount = armyCount;
+	this->targetLocation = targetLocation;
+	this->fromLocation = fromLocation;
+	this->orderNumber = orderNumber;
+}
+
+bool Advance::validate() {
+	return false;
+}
+
+bool Advance::execute() {
+	return false;
+}
+
+Bomb::Bomb(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+	this->target = target;
+	this->from = from;
+	this->armyCount = armyCount;
+	this->targetLocation = targetLocation;
+	this->fromLocation = fromLocation;
+	this->orderNumber = orderNumber;
+}
+
+bool Bomb::validate() {
+	return false;
+}
+
+bool Bomb::execute() {
+	return false;
+}
+
+Blockade::Blockade(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+	this->target = target;
+	this->from = from;
+	this->armyCount = armyCount;
+	this->targetLocation = targetLocation;
+	this->fromLocation = fromLocation;
+	this->orderNumber = orderNumber;
+}
+
+bool Blockade::validate() {
+	return false;
+}
+
+bool Blockade::execute() {
+	return false;
+}
+
+Airlift::Airlift(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+	this->target = target;
+	this->from = from;
+	this->armyCount = armyCount;
+	this->targetLocation = targetLocation;
+	this->fromLocation = fromLocation;
+	this->orderNumber = orderNumber;
+}
+
+bool Airlift::validate() {
+	return false;
+}
+
+bool Airlift::execute() {
+	return false;
+}
+
+Negociate::Negociate(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+	this->target = target;
+	this->from = from;
+	this->armyCount = armyCount;
+	this->targetLocation = targetLocation;
+	this->fromLocation = fromLocation;
+	this->orderNumber = orderNumber;
+}
+
+bool Negociate::validate() {
+	return false;
+}
+
+bool Negociate::execute() {
 	return false;
 }

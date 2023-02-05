@@ -8,13 +8,11 @@ class Orders
 {
 
 public:
-	Orders(int type, int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	Orders();
 	string getCurrentOrder(void);
 	int getOrderTargetPlayer(void);
 	int getOrderArmyCount(void);
 	int getOrderIssuer(void);
-	void changeOrder(int newOrder);
 	int getTargetLocation(void);
 	int getIssuerLocation(void);
 	int getOrderNumber(void);
@@ -66,26 +64,31 @@ public:
 };
 
 class Advance : public Orders {
+	Advance(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	bool validate(void);
 	bool execute();
 };
 
 class Bomb : public Orders {
+	Bomb(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	bool validate(void);
 	bool execute();
 };
 
 class Blockade : public Orders {
+	Blockade(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	bool validate(void);
 	bool execute();
 };
 
 class Airlift : public Orders {
+	Airlift(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	bool validate(void);
 	bool execute();
 };
 
 class Negociate : public Orders {
+	Negociate(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
 	bool validate(void);
 	bool execute();
 };
