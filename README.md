@@ -18,7 +18,8 @@
 
 # Project Information
 
-[**Assignment Part 1**](./assignment1.COMP345.pdf)
+[**Assignment Part 1**](./a1.pdf)
+[**Assignment Part 1 Grading Scheme**](./a1gs.pdf)
 
 ## Team Members 
 
