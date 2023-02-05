@@ -7,16 +7,19 @@ Orders::Orders(int type, int target, int from, int armyCount, int targetLocation
 	this->targetLocation = targetLocation;
 	this->fromLocation = fromLocation;
 	this->orderNumber = orderNumber;
+}
 
-	currentOrder = orderType[type];
+Orders::Orders() {
+	this->target = 0;
+	this->from = 0;
+	this->armyCount = 0;
+	this->targetLocation = 0;
+	this->fromLocation = 0;
+	this->orderNumber = 0;
 }
 
 string Orders::getCurrentOrder(void) {
 	return currentOrder;
-}
-
-void Orders::changeOrder(int newOrder) {
-	currentOrder = orderType[newOrder];
 }
 
 int Orders::getOrderTargetPlayer(void) {
@@ -149,5 +152,22 @@ list<Orders> OrdersList::getCurrentOrdersList()
 }
 
 bool OrdersList::execute(int index) {
+	return false;
+}
+
+Deploy::Deploy(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+	this->target = target;
+	this->from = from;
+	this->armyCount = armyCount;
+	this->targetLocation = targetLocation;
+	this->fromLocation = fromLocation;
+	this->orderNumber = orderNumber;
+}
+
+bool Deploy::validate() {
+	return false;
+}
+
+bool Deploy::execute() {
 	return false;
 }
