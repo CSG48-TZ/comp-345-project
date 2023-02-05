@@ -11,8 +11,28 @@ void GameEngine::setCurrentState(GameEngine::State newState) {
     currentState = newState;
 }
 
-GameEngine::State GameEngine::getCurrentState() {
-    return currentState;
+std::string GameEngine::getCurrentState() {
+    switch (currentState) {
+        case START:
+            return "Start";
+        case MAP_LOADED:
+            return "Map Loaded";
+        case MAP_VALIDATED:
+            return "Map Validated";
+        case PLAYERS_ADDED:
+            return "Players Added";
+        case ASSIGN_REINFORCEMENT:
+            return "Assign Reinforcement";
+        case ISSUE_ORDERS:
+            return "Issue Orders";
+        case EXECUTE_ORDERS:
+            return "Execute orders";
+        case WIN:
+            return "Win";
+        case END:
+            return "End";
+    }
+    return "Invalid State";
 }
 
 // Implementation of command processing step
@@ -35,7 +55,7 @@ bool GameEngine::processCommand(std::string& command) {
             return false;
         }
     } else if (command == "addplayer") {
-        if (currentState == State::MAP_LOADED || currentState == State::PLAYERS_ADDED) {
+        if (currentState == State::MAP_VALIDATED || currentState == State::PLAYERS_ADDED) {
             currentState = State::PLAYERS_ADDED;
             return true;
         } else {
@@ -48,7 +68,7 @@ bool GameEngine::processCommand(std::string& command) {
         } else {
             return false;
         }
-    } else if (command == "issueorders") {
+    } else if (command == "issueorder") {
         if (currentState == State::ASSIGN_REINFORCEMENT || currentState == State::ISSUE_ORDERS) {
             currentState = State::ISSUE_ORDERS;
             return true;

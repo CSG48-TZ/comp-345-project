@@ -7,15 +7,15 @@ class GameEngine{
     public:
         // Define a enum data member to present the all the states of the game engine
         enum State { 
-            START = 0, 
-            MAP_LOADED = 1, 
-            MAP_VALIDATED = 2, 
-            PLAYERS_ADDED = 3,
-            ASSIGN_REINFORCEMENT = 4,
-            ISSUE_ORDERS = 5,
-            EXECUTE_ORDERS = 6,
-            WIN = 7,
-            END = 8
+            START, 
+            MAP_LOADED, 
+            MAP_VALIDATED, 
+            PLAYERS_ADDED,
+            ASSIGN_REINFORCEMENT,
+            ISSUE_ORDERS,
+            EXECUTE_ORDERS,
+            WIN,
+            END
         };
 
         // Constructor
@@ -26,7 +26,7 @@ class GameEngine{
         bool processCommand(std::string& command);
 
         // Accessors for private variables
-        State getCurrentState();
+        std::string getCurrentState();
         void setCurrentState(State newState);
 
     private:
