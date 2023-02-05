@@ -2,11 +2,11 @@
 
 using namespace std;
 
-class Order
+class Orders
 {
 
 public:
-	Order(int type, int target, int from, int armyCount, int targetLocation, int fromLocation);
+	Orders(int type, int target, int from, int armyCount, int targetLocation, int fromLocation);
 	string getCurrentOrder(void);
 	int getOrderTargetPlayer(void);
 	int getOrderArmyCount(void);

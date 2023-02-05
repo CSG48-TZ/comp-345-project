@@ -2,23 +2,23 @@
 #include <string>
 #include <iterator>
 #include <list>
-#include "Order.h"
+#include "Orders.h"
 
 using namespace std;
 class OrdersList
 {
 public:
 
-	void add(Order order);
+	void add(Orders order);
 	void move(int index, int toIndex);
-	void remove(int index, Order order);
+	void remove(int index, Orders order);
 	bool validate();
 	bool execute(int index);
 	int getCurrentNumberOfOrders();
 	int getLastOrderModified();
-	Order getLastOrder();
-	Order getNextOrder();
-	list<Order> getCurrentOrdersList();
+	Orders getLastOrder();
+	Orders getNextOrder();
+	list<Orders> getCurrentOrdersList();
 	OrdersList(int playerNumber);
 
 private:
@@ -28,7 +28,7 @@ private:
 	const int orderLimit = 99;
 	int lastOrderModifiedIndex;
 	bool hasOrdersInList;
-	list<Order> ordersList;
+	list<Orders> ordersList;
 	
 	
 };

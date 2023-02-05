@@ -1,6 +1,6 @@
-#include "Order.h"
+#include "Orders.h"
 
-Order::Order(int type, int target, int from, int armyCount, int targetLocation, int fromLocation) {
+Orders::Orders(int type, int target, int from, int armyCount, int targetLocation, int fromLocation) {
 	this->target = target;
 	this->from = from;
 	this->armyCount = armyCount;
@@ -10,34 +10,34 @@ Order::Order(int type, int target, int from, int armyCount, int targetLocation, 
 	currentOrder = orderType[type];
 }
 
-string Order::getCurrentOrder(void) {
+string Orders::getCurrentOrder(void) {
 	return currentOrder;
 }
 
-void Order::changeOrder(int newOrder) {
+void Orders::changeOrder(int newOrder) {
 	currentOrder = orderType[newOrder];
 }
 
-int Order::getOrderTargetPlayer(void) {
+int Orders::getOrderTargetPlayer(void) {
 	return target;
 }
-int Order::getOrderArmyCount(void) {
+int Orders::getOrderArmyCount(void) {
 	return armyCount;
 }
-int Order::getOrderIssuer(void) {
+int Orders::getOrderIssuer(void) {
 	return from;
 }
 
-int Order::getTargetLocation() {
+int Orders::getTargetLocation() {
 	return targetLocation;
 }
 
-int Order::getIssuerLocation() {
+int Orders::getIssuerLocation() {
 	return fromLocation;
 }
 
 
-string Order::toString(void) {
+string Orders::toString(void) {
 	string returnString;
 	returnString.append("\nPlayer ");
 	returnString.append(to_string(from));

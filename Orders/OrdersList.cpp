@@ -5,7 +5,7 @@ OrdersList::OrdersList(int player) {
 	this->player = player;
 }
 
-void OrdersList::add(Order order) {
+void OrdersList::add(Orders order) {
 	ordersList.push_front(order);
 	//Update lastOrderModifiedIndex
 	lastOrderModifiedIndex = ordersList.size() - 1;
@@ -13,13 +13,13 @@ void OrdersList::add(Order order) {
 
 void OrdersList::move(int index, int toIndex) {
 	//Creates Iterator
-	list<Order>::iterator it;
+	list<Orders>::iterator it;
 	//Starts at the beginning of the list.
 	it = ordersList.begin();
 	//Advances to the desired Index
 	advance(it, index);
 	//Copy the Order.
-	Order orderToMove = *it;
+	Orders orderToMove = *it;
 	//Erase the Order.
 	ordersList.erase(it);
 
@@ -34,15 +34,15 @@ void OrdersList::move(int index, int toIndex) {
 	lastOrderModifiedIndex = toIndex;
 }
 
-void OrdersList::remove(int index, Order order) {
+void OrdersList::remove(int index, Orders order) {
 	//Creates Iterator
-	list<Order>::iterator it;
+	list<Orders>::iterator it;
 	//Starts at the beginning of the list.
 	it = ordersList.begin();
 	//Advances to the desired Index
 	advance(it, index);
 	//Check if the order is correct
-	Order orderToRemove = *it;
+	Orders orderToRemove = *it;
 	if (order.getCurrentOrder() == orderToRemove.getCurrentOrder()) {
 		//Erase the Order.
 		ordersList.erase(it);
@@ -68,17 +68,17 @@ int OrdersList::getLastOrderModified()
 	return lastOrderModifiedIndex;
 }
 
-Order OrdersList::getLastOrder()
+Orders OrdersList::getLastOrder()
 {
 	return ordersList.back();
 }
 
-Order OrdersList::getNextOrder()
+Orders OrdersList::getNextOrder()
 {
 	return ordersList.front();
 }
 
-list<Order> OrdersList::getCurrentOrdersList()
+list<Orders> OrdersList::getCurrentOrdersList()
 {
 	return ordersList;
 }
