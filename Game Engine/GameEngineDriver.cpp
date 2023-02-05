@@ -12,10 +12,11 @@ int main() {
         // Ask for input command
         cout << "\nPlease Enter command or input 'E' to exit the game: ";
         cin >> command;
-
+        // Manually exist
         if (command == "E") {
             break;
         }
+        // Check if the command is valid and display correct messages
         if (!game->processCommand(command)) {
             cout << "Error Message: Invalid command. Please try again or input 'E' to exit the game." << endl;
         } else{
