@@ -1,10 +1,12 @@
 #include "GameEngine.h"
 
+// Implementation of Constructors
 GameEngine::GameEngine()
     : currentState(State::START){}
 
 GameEngine::~GameEngine(){}
 
+// Implementation of Accessors
 void GameEngine::setCurrentState(GameEngine::State newState) {
     currentState = newState;
 }
@@ -13,6 +15,10 @@ GameEngine::State GameEngine::getCurrentState() {
     return currentState;
 }
 
+// Implementation of command processing step
+// Make the transition based on the input command
+// If the command is a valid command, return true
+// If the command is invalid, or at least can not be used in the current state, return false
 bool GameEngine::processCommand(std::string& command) {
     if (command == "loadmap") {
         if (currentState == State::START || currentState == State::MAP_LOADED) {

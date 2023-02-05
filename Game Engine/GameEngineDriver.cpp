@@ -3,11 +3,12 @@
 #include <string>
 using namespace std;
 
-int main()
-{
+int main() {
+    cout << "***********Game Start***********" << endl;
     GameEngine game;
     string command;
     while (true) {
+        // Ask for input command
         cout << "Please Enter command: ";
         cin >> command;
         if (!game.processCommand(command)) {
@@ -16,7 +17,6 @@ int main()
         } else{
             cout << "Valid Command! Current State is " << game.getCurrentState() <<endl;
             if (game.getCurrentState() == GameEngine::State::END){
-                cout << "Game Over! Thank you!" << endl;
                 break;
             } else if (game.getCurrentState() == GameEngine::State::WIN) {
                 cout << "Game Win! Please choose the next step by typing \"play\" or \"end\"..." << endl;
@@ -25,5 +25,6 @@ int main()
         }
 
     }
+    cout << "***********Game Over! Thank you!***********" << endl;
     return 0;
 }
