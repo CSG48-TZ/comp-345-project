@@ -36,17 +36,76 @@ Map::Map(vector <vector<Territory *>> *continents, vector<Territory *> territori
 void Map::addTerritory(Territory *territory) {
     this->territories.push_back(territory); // Adds the territory to territory list
 
-    int numContinent = territory->continent - 1;    // Have to decrease value of continent because it starts at 1
-                                                    // in text file
+    int numContinent = territory->continent;
 
     this->continents.at(numContinent).push_back(territory); // Adds the territory to the continents list
 }
 
 bool Map::validate() {
-    // 1) 3) Create a hashmap and do a DFS on the graph. When visiting a territory, add its name to the hashmap
-    // and mark it as visited. If name is already in the hashmap,(name exists twice) so return false. When DFS is done, iterate over all
-    // the territories in the vector and check if each one has been visited. While iterating, if a territory has been
-    // visited, mark it as unvisited(in case validate is called again).
-    // 2) BFS on random territory in continent and mark the territories from the same continent as visited. While doing
-    // the BFS add a static variable counter and when the counter is the same as size of the continent, return true
+    unordered_map<string,int> duplicates ; // Maps the territory name to its continent value
+
+    bool dfs = DFS(this->territories.at(0), map);
+
+    if(dfs == false){
+        return false;
+    }
+
+    for(int index = 0; index < territories.size(); i ++){
+        Territory * temp = territories.at(index);
+        if(temp->visited == false){
+            cout<< "Territory: " << temp << " is not connected to the rest of the map" << endl;
+            return false;
+        } else {
+            temp->visited = false; // Resets visited to false for continentDFS
+        }
+    }
+
+    for(int index = 0; index < continents.size(); index ++){
+        int territoriesFound = continentDFS(continents.at(index).at(0));
+
+        if(territoriesFound != continents.at(index).size()){
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Goes through the map and marks the territories iterated through as visited and checks if two territories
+// have the same name
+bool Map::DFS(Territory * territory, unordered_map<string, int> * duplicate){
+    territory->visited = true;
+
+    if( duplicate.find(territory->name) == duplicate->end()){
+        duplicate[territory->name] = territory->continent; // Not found so insert it into the map
+    }
+    else{
+        cout << "Territory: " << territory->name << " has a duplicate" << endl;
+        return false; // Already found while doing DFS
+    }
+
+
+    for(int i = 0; i < territory->edges.size(); i ++){
+        Territory * next = territory->edges.at(i);
+        if(next->visited == false){
+            return DFS(next);
+        }
+    }
+
+    return true;
+}
+
+// Returns number of territories found within a continent
+int Map::continentDFS(Territory * territory){
+    territory->visited = true;
+    int continentNum = territory->continent;
+
+    for(int i = 0; i < territory->edges.size(); i ++){
+        Territory * next = territory->edges.at(i);
+        if( next->continent == continentNum  && next->visited == false){
+            return 1+ continentDFS(next);
+        }
+    }
+
+    return 1;
 }

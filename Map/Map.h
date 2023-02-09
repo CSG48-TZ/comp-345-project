@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include <list>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -13,16 +13,17 @@ using namespace std;
 class Territory{// TODO- Add a copy constructor, assignment operator, and stream insertion operator
 public:
     string name;
+    int id;
     int continent;
     Player * owner;
 
-    bool visited;
+    bool visited; // Created for validate()
 
     int numArmies;
 
     vector<Territory *> edges;
 
-    Territory(string name, int continent, int number1, int number2);
+    Territory(int id, string name, int continent, int number1, int number2);
 
     void changeOwner(Player * newOwner);
 
@@ -46,9 +47,14 @@ public:
                                             // territories belonging to that continent
 
     vector<Territory *> territories; // Cumulative list of all the territories
+
     void addTerritory(Territory * territory);
 
     Map(vector<vector<Territory *>> * continents, vector<Territory *> territories);
+
+    bool DFS(Territory * territory, unordered_map<string, int> * duplicate);
+
+    int continentDFS(Territory * territory);
 };
 
 class Maploader{// TODO- Add a copy constructor, assignment operator, and stream insertion operator
