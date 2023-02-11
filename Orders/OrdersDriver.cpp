@@ -8,45 +8,45 @@ int main()
 {
 	OrdersList ol(1);
 
-	list<Orders> testOrders;
+	list<Orders*> testOrders;
 
-	int N = 21; 
+	int N = 21;
 	int N1 = 6;
 	int test = 0;
 
 	srand(time(0));
-	Orders o;
+	Orders* o;
 
 	//CREATION OF RANDOM ORDERS FOR PLAYER 1
 	for (int i = 0; i < 10; i++) {
 		test = (rand() % N1);
 		switch (test) {
 		case 0:
-			o = Deploy(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Deploy(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
 			break;
 		case 1:
-			o = Advance(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Advance(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
 			break;
 		case 2:
-			o = Bomb(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Bomb(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
 			break;
 		case 3:
-			o = Blockade(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Blockade(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
 			break;
 		case 4:
-			o = Airlift(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Airlift(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
 			break;
 		case 5:
-			o = Negociate(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Negociate(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
 			break;
 		default:
-			o = Deploy(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Deploy(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
 		}
 
 		testOrders.push_front(o);
 	}
 
-	list<Orders>::iterator it;
+	list<Orders*>::iterator it;
 
 	//ADDING ORDERS TO PLAYER 1 LIST OF ORDER.
 	for (it = testOrders.begin(); it != testOrders.end(); it++) {
@@ -57,13 +57,13 @@ int main()
 	cout << "Current number of order in list: " << ol.getCurrentNumberOfOrders();
 	cout << "\n\nCurrent orders are: \n";
 
-	list<Orders> currentList;
+	list<Orders*> currentList;
 
 	currentList = ol.getCurrentOrdersList();
 
 	for (it = currentList.begin(); it != currentList.end(); it++) {
-		Orders current = *it;
-		cout << current.toString();
+		Orders* current = *it;
+		cout << *current << "\n";
 	}
 
 	//PAUSE
@@ -90,8 +90,8 @@ int main()
 	currentList = ol.getCurrentOrdersList();
 
 	for (it = currentList.begin(); it != currentList.end(); it++) {
-		Orders current = *it;
-		cout << current.toString();
+		Orders* current = *it;
+		cout << *current << "\n";
 	}
 
 	//PAUSE
@@ -116,8 +116,8 @@ int main()
 	currentList = ol.getCurrentOrdersList();
 
 	for (it = currentList.begin(); it != currentList.end(); it++) {
-		Orders current = *it;
-		cout << current.toString();
+		Orders* current = *it;
+		cout << *current << "\n";
 	}
 
 	//PAUSE
@@ -133,24 +133,24 @@ int main()
 	cin.get();
 
 	for (it = currentList.begin(); it != currentList.end(); it++) {
-		Orders current = *it;
-		if (!current.validate()) {
-			cout << "Order " << current.getOrderNumber() << " is invalid!\n";
+		Orders* current = *it;
+		if (!current->validate()) {
+			cout << "\nOrder " << current->getOrderNumber() << " is invalid!\n\n";
 		}
 	}
 
 	//EXECUTING ALL ORDERS IN ORDER
 
-	cout << "\n\nTrying to execute current orders... **ALL WILL FAIL SINCE ORDERS ARE INVALID BY DEFAULT** \n";
+	cout << "\nTrying to execute current orders... **ALL WILL FAIL SINCE ORDERS ARE INVALID BY DEFAULT** \n\n";
 
 	//PAUSE
 	cout << "\nPress any key to continue..";
 	cin.get();
 
 	for (it = currentList.begin(); it != currentList.end(); it++) {
-		Orders current = *it;
-		if (!current.execute()) {
-			cout << "Order " << current.getOrderNumber() << " could not be executed because it is invalid!\n";
+		Orders* current = *it;
+		if (!current->execute()) {
+			cout << "\nOrder " << current->getOrderNumber() << " could not be executed because it is invalid!\n\n";
 		}
 	}
 
