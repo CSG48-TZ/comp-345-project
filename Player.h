@@ -23,6 +23,7 @@ public:
     Player(string pName, vector<Territory *> territories, Hand * hand, OrdersList * orderList);
     Player(const Player &player);
     ~Player();   // deconstruct
+    Player& operator=(const Player &player);
 
     void setName(string name);
     string getName();
@@ -31,7 +32,9 @@ public:
     OrdersList *getOrderList();
 
     vector<Territory *> toDefend();
+    void printDefendList(vector<Territory *> defendList);
     vector<Territory *> toAttack();
+    void printAttackList(vector<Territory *> attackList);
     void issueOrder();
 };
 
