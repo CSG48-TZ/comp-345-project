@@ -44,10 +44,14 @@ Player& Player::operator=(const Player& player){
 
 // stream insertion operator
 ostream &operator <<(std::ostream &strm, const Player &player){
-    cout << "Player name = " << player.getName() << endl;
-    cout << "\tTerritories = " << player.getTerritory();
-    cout << "\tCards in hand = " << player.getHand();
-    cout << "\tOrder list = " << player.getOrderList();
+    cout << "Player name = " << player.pName << endl;
+    cout << "\tTerritories = ";
+    for (int i = 0; i < player.territories.size(); ++i) {
+        cout << player.territories[i] << ", ";
+    }
+    cout << endl;
+    cout << "\tCards in hand = " << player.hand;
+    cout << "\tOrder list = " << player.orderList;
     return cout;
 }
 
