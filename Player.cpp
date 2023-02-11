@@ -76,14 +76,25 @@ OrdersList* Player::getOrderList(){
 
 // return a list of territories that are to be defended
 vector<Territory *> Player::toDefend(){
+    int random1 = rand()% 5;  // # of territories to attack[0~4]
+    int random2 = rand()% (territories.size());  // which territories to attack[0~4]
     vector<Territory *> defendList;
     // return an arbitrary list
+    for (int i = 0; i < random1; ++i) {
+        defendList.push_back(territories.at(random2));
+    }
+    return defendList;
 }
 
 // return a list of territories that are to be attacked
 vector<Territory *> Player::toAttack(){
+    int random1 = rand()% 5;  // # of territories to attack[0~4]
+    int random2 = rand()% (territories.size());  // which territories to attack[0~4]
     vector<Territory *> attackList;
-    // return an arbitrary list
+    for (int i = 0; i < random1; ++i) {
+        attackList.push_back(territories.at(random2));
+    }
+    return attackList;
 }
 
 //  creates an order object and adds it to the list of orders.
