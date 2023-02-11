@@ -20,7 +20,7 @@ int main() {
         if (!game->processCommand(command)) {
             cout << "Error Message: Invalid command. Please try again or input 'E' to exit the game." << endl;
         } else{
-            cout << "Valid Command! Current State is " << game->getCurrentState() << endl;
+            cout << "Valid Command! " << *game << endl;
             if (game->getCurrentState() == "End") {
                 break;
             } else if (game->getCurrentState() == "Win") {
