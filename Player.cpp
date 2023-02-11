@@ -90,6 +90,14 @@ vector<Territory *> Player::toDefend(){
     return defendList;
 }
 
+// print defend list
+void Player::printDefendList(vector<Territory *> defendList){
+    for (int i = 0; i < defendList.size(); i++) {
+        cout << "Defend list = " << defendList.at(i) << ", " ;
+    }
+    cout << endl;
+}
+
 // return a list of territories that are to be attacked
 vector<Territory *> Player::toAttack(){
     int random1 = rand()% 5;  // # of territories to attack[0~4]
@@ -99,6 +107,14 @@ vector<Territory *> Player::toAttack(){
         attackList.push_back(territories.at(random2));
     }
     return attackList;
+}
+
+// print attack list
+void Player::printAttackList(vector<Territory *> attackList){
+    for (int i = 0; i < attackList.size(); i++) {
+        cout << "Attack list = " << attackList.at(i) << ", " ;
+    }
+    cout << endl;
 }
 
 //  creates an order object and adds it to the list of orders.
