@@ -30,7 +30,7 @@
   <tr>
     <td align="center"><a href="https://github.com/CSG48-TZ"><img src="https://avatars.githubusercontent.com/u/82446800?v=4" width="100px;" alt=""/><br /><sub><b> Tongwei Zhang</b></sub></a></td>
     <td align="center"><a href="https://github.com/DaxInvader"><img src="https://avatars.githubusercontent.com/u/24554538?v=4" width="100px;" alt=""/><br /><sub><b>Dario Cimmino</b></sub></a></td>
-    <td align="center"><a href="https://github.com/https://github.com/junkokie"><img src="https://avatars.githubusercontent.com/u/76203567?v=4" width="100px;" alt=""/><br /><sub><b>Wanjun Gong</b></sub></a></td>
+    <td align="center"><a href="https://github.com/junkokie"><img src="https://avatars.githubusercontent.com/u/76203567?v=4" width="100px;" alt=""/><br /><sub><b>Wanjun Gong</b></sub></a></td>
     <td align="center"><a href="https://github.com/therealsal"><img src="https://avatars.githubusercontent.com/u/75696327?v=4" width="100px;" alt=""/><br /><sub><b>Salman Hussain Ali</b></sub></a></td> 
     <td align="center"><a href="https://github.com/jvobuu"><img src="https://avatars.githubusercontent.com/u/61026480?v=4" width="100px;" alt=""/><br /><sub><b>Jeremy Vo Buu</b></sub></a></td> 
   </tr>
