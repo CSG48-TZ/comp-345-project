@@ -51,10 +51,12 @@ public:
     void addTerritory(Territory * territory);
     Map(vector<vector<Territory *>>& continents, vector<Territory *>& territories);
     Map(const Map& map);
-    bool DFS(Territory * territory, unordered_map<string, int>& duplicate);
-    int continentDFS(Territory * territory);
     ~Map();
     Map operator=(const Map& map);
+
+private:
+    bool DFS(Territory * territory, unordered_map<string, int>& duplicate);
+    int continentDFS(Territory * territory);
 };
 
 class Maploader{
