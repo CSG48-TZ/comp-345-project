@@ -34,13 +34,16 @@ public:
     ~Territory();
     Territory operator=(const Territory& territory);
     Territory(const Territory& territory);
+    void setDuplicate();
+    bool isDuplicate();
 
 private:
     int number1;
     int number2;
+    bool duplicate;
 };
 
-class Map{ // TODO- Add a copy constructor, assignment operator, and stream insertion operator
+class Map{
 public:
     vector<vector<Territory *>> continents; // Continents are by index. Each index of the vector contains a vector of
                                             // territories belonging to that continent
@@ -51,16 +54,18 @@ public:
     void addTerritory(Territory * territory);
     Map(vector<vector<Territory *>>& continents, vector<Territory *>& territories);
     Map(const Map& map);
-    bool DFS(Territory * territory, unordered_map<string, int>& duplicate);
-    int continentDFS(Territory * territory);
     ~Map();
     Map operator=(const Map& map);
+
+private:
+    void DFS(Territory * territory, unordered_map<string, int>& duplicate);
+    int continentDFS(Territory * territory);
 };
 
 class Maploader{
 public:
     Maploader(string filename);
-    Map & load();
+    Map load();
     ~Maploader();
     void operator=(const Maploader& maploader);
     Maploader(const Maploader& maploader);

@@ -48,9 +48,19 @@ void Territory::addEdge(Territory *adjacent) {
     this->edges.push_back(adjacent);
 }
 
+// Accessor method for duplicate attribute
+bool Territory::isDuplicate() {
+    return this->duplicate;
+}
+
 // Destructor for territory object
 Territory::~Territory(){
     edges.clear();
+}
+
+// Mutator for duplicate attribute
+void Territory::setDuplicate() {
+    this->duplicate = true;
 }
 
 // Stream insertion operator for Territory
@@ -111,16 +121,15 @@ void Map::addTerritory(Territory *territory) {
 bool Map::validate() {
     unordered_map<string,int> duplicates ; // Maps the territory name to its continent value
 
-    bool dfs = DFS(this->territories.at(0), duplicates);
-
-    if(!dfs){
-        return false;
-    }
+    DFS(this->territories.at(0), duplicates);
 
     for(int index = 0; index < territories.size(); index ++){
         Territory * temp = territories.at(index);
-        if(!temp->visited){
-            cerr<< "Territory: " << temp << " is not connected to the rest of the map" << endl;
+        if(temp->isDuplicate()){
+            cerr<< "Territory: " << temp->name << " is in more than one continent" << endl;
+            return false;
+        } else if(!temp->visited){
+            cerr<< "Territory: " << temp->name << " is not connected to the rest of the map" << endl;
             return false;
         } else {
             temp->visited = false; // Resets visited to false for continentDFS
@@ -131,6 +140,10 @@ bool Map::validate() {
         int territoriesFound = continentDFS(continents.at(index).at(0));
 
         if(territoriesFound != continents.at(index).size()){
+            cout << "Index: " << index << endl;
+            cout << "Num territories found: " << territoriesFound << endl;
+            cout << "Num supposed to be: " << continents.at(index).size() << endl;
+            cerr << "Territory numbers do not match with continent size" << endl;
             return false;
         }
     }
@@ -140,7 +153,8 @@ bool Map::validate() {
 
 // Goes through the map and marks the territories iterated through as visited and checks if two territories
 // have the same name
-bool Map::DFS(Territory * territory, unordered_map<string, int> &duplicate){
+void Map::DFS(Territory * territory, unordered_map<string, int> &duplicate){
+    cout << "Visiting: " << territory->name << endl;
     territory->visited = true;
 
     if( duplicate.find(territory->name) == duplicate.end()){
@@ -148,18 +162,17 @@ bool Map::DFS(Territory * territory, unordered_map<string, int> &duplicate){
     }
     else{
         cerr << "Territory: " << territory->name << " has a duplicate" << endl;
-        return false; // Already found while doing DFS
+        territory->setDuplicate();
     }
-
 
     for(int i = 0; i < territory->edges.size(); i ++){
         Territory * next = territory->edges.at(i);
         if(!next->visited){
-            return DFS(next, duplicate);
+            DFS(next, duplicate);
         }
     }
 
-    return true;
+    return ;
 }
 
 // Returns number of territories found within a continent
@@ -167,14 +180,15 @@ int Map::continentDFS(Territory * territory){
     territory->visited = true;
     int continentNum = territory->continent;
 
+    int num = 1;
     for(int i = 0; i < territory->edges.size(); i ++){
         Territory * next = territory->edges.at(i);
         if( next->continent == continentNum  && !next->visited){
-            return 1+ continentDFS(next);
+            num += continentDFS(next);
         }
     }
 
-    return 1;
+    return num;
 }
 
 // Destructor for Map object
@@ -235,9 +249,13 @@ Maploader::Maploader(const Maploader &maploader) {
 }
 
 // Loads the map and returns a reference to a Map object
-Map& Maploader::load() {
+Map Maploader::load() {
 
     ifstream infile(filename);
+
+    if(infile.fail()){
+        cout << "File not found" << endl;
+    }
 
     vector<Territory *> territoriesVector;
     vector<vector<Territory*>> continentsVector;
@@ -247,6 +265,7 @@ Map& Maploader::load() {
     bool territories = false;
     bool edges = false;
 
+
     while(getline(infile, line)){
         if(line == ""){
             continue;
@@ -254,10 +273,13 @@ Map& Maploader::load() {
 
         if(line == "[continents]"){
             continents = true;
+            continue;
         }else if(line == "[countries]"){
             territories = true;
+            continue;
         }else if(line == "[borders]"){
             edges = true;
+            continue;
         }
 
         stringstream s(line);
@@ -285,8 +307,8 @@ Map& Maploader::load() {
             int num2;
 
             s >> id >> name >> continent >> num1 >> num2;
-
             id --;
+
             continent --;
 
             Territory * territory = new Territory(id, name, continent, num1, num2);
@@ -303,7 +325,9 @@ Map& Maploader::load() {
 
     cout << "Loaded map" << endl;
 
-    Map map = {continentsVector, territoriesVector};
+    Map map(continentsVector, territoriesVector);
+
+    infile.close();
 
     return map;
 }
