@@ -1,4 +1,5 @@
 #pragma once
+#include "../Orders/Orders.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -21,7 +22,7 @@ public:
         // stream insertion operator
         friend std::ostream& operator<<(std::ostream& out, const Card& card);
         Card(int);
-        void play(Hand*,int,Deck*);
+        void play(Hand*, int, Deck*, OrdersList*);
         int getType();
         void setType(int);
 };

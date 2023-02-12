@@ -8,11 +8,12 @@
 #include <vector>
 #include "../Map/Map.h"
 #include "../Orders/Orders.h"
+#include "../Cards/Cards.h"
 
 using namespace std;
 
 class Territory;
-class Hand{};
+class Hand;
 
 class Player {
 public:

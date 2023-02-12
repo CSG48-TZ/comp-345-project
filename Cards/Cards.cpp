@@ -58,8 +58,30 @@ void Card::setType(int newType){
 }
 
 // plays a card from hand which removes it and returns it to the deck
-void Card::play(Hand* hand, int cardNum, Deck* deck) {		
-	//createOrder(cardNum);
+void Card::play(Hand* hand, int cardNum, Deck* deck, OrdersList* orderList) {		
+	// TODO: Create an order and add it to an order list
+    Orders* order;
+    if (this->cardType == 0){
+        order = new Airlift(0,0,0,0,0,0);
+        orderList->add(order);
+    }
+    if (this->cardType == 1){
+        order = new Blockade(0,0,0,0,0,0);
+        orderList->add(order);
+    }
+    if (this->cardType == 2){
+        order = new Bomb(0,0,0,0,0,0);
+        orderList->add(order);
+    }
+    if (this->cardType == 3){
+        order = new Negociate(0,0,0,0,0,0);
+        orderList->add(order);
+    }
+    if (this->cardType == 4){
+        order = new Deploy(0,0,0,0,0,0);
+        orderList->add(order);
+    }
+    order = NULL;
     hand->removeCard(cardNum);	
 	deck->returnCard(this);
 }
