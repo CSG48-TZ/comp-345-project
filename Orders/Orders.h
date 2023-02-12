@@ -45,6 +45,8 @@ public:
 	bool execute();
 	int getCurrentNumberOfOrders();
 	int getLastOrderModified();
+	int getPlayerID();
+	OrdersList* copy(OrdersList* ordersList);
 	Orders* getLastOrder();
 	Orders* getNextOrder();
 	list<Orders*> getCurrentOrdersList();
@@ -55,7 +57,6 @@ public:
 protected:
 
 	int player;
-	int currentNumberOfOrders;
 	const int orderLimit = 99;
 	int lastOrderModifiedIndex;
 	bool hasOrdersInList;

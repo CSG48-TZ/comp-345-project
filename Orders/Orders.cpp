@@ -161,7 +161,6 @@ void Orders::operator = (const Orders& o) {
 */
 OrdersList::OrdersList(int player) {
 	this->player = player;
-	currentNumberOfOrders = 0;
 	hasOrdersInList = false;
 	lastOrderModifiedIndex = 0;
 	orderNumber = 0;
@@ -173,6 +172,28 @@ OrdersList::OrdersList(int player) {
 OrdersList::~OrdersList() {
 	ordersList.clear();
 }
+
+/*
+* Copy function (REQUIREMENT).
+*/
+OrdersList* OrdersList::copy(OrdersList* orderList) {
+	OrdersList* copy = new OrdersList(orderList->getPlayerID());
+	
+	copy->lastOrderModifiedIndex = orderList->getLastOrderModified();
+	copy->ordersList = orderList->getCurrentOrdersList();
+	copy->hasOrdersInList = orderList->hasOrdersInList;
+	copy->orderNumber = orderList->orderNumber;
+
+	return copy;
+}
+
+/*
+* Returns the Player ID this list is attributed to
+*/
+int OrdersList::getPlayerID() {
+	return player;
+}
+
 
 /*
 * Adds an Order to the list.
@@ -316,7 +337,6 @@ list<Orders*> OrdersList::getCurrentOrdersList()
 void OrdersList::operator = (const OrdersList& o) {
 	this->ordersList = o.ordersList;
 	this->player = o.player;
-	currentNumberOfOrders = o.currentNumberOfOrders;
 	hasOrdersInList = o.hasOrdersInList;
 	lastOrderModifiedIndex = o.lastOrderModifiedIndex;
 	orderNumber = o.orderNumber;
