@@ -6,6 +6,7 @@
 #include <vector>
 #include <unordered_map>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -26,7 +27,6 @@ public:
     void addEdge(Territory * adjacent);
     void addArmies(int num);
     ~Territory();
-    ostream& operator<<(ostream& out, const Territory& territory);
     Territory operator=(const Territory& territory);
     Territory(const Territory& territory);
 
@@ -47,23 +47,22 @@ public:
 
     bool validate();
     void addTerritory(Territory * territory);
-    Map(vector<vector<Territory *>> * continents, vector<Territory *> territories);
+    Map(vector<vector<Territory *>>& continents, vector<Territory *>& territories);
     Map(const Map& map);
-    bool DFS(Territory * territory, unordered_map<string, int> * duplicate);
+    bool DFS(Territory * territory, unordered_map<string, int>& duplicate);
     int continentDFS(Territory * territory);
     ~Map();
-    ostream& operator<<(ostream& out, const Map& map);
     Map operator=(const Map& map);
 };
 
 class Maploader{
 public:
     Maploader(string filename);
-    Map * load();
+    Map & load();
     ~Maploader();
-    ostream& operator<<(ostream& out, const Maploader& maploader);
     Maploader operator=(const Maploader& maploader);
     Maploader(const Maploader& maploader);
+    string getFileName();
 
 private:
     string filename;

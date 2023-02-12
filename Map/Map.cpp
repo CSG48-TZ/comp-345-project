@@ -7,7 +7,8 @@
 // Territory class implementation
 
 // Constructor with parameters
-Territory::Territory(string name, int continent, int number1, int number2) {
+Territory::Territory(int id, string name, int continent, int number1, int number2) {
+    this->id = id;
     this->name = name;
     this->continent = continent;
     this->number1 = number1;
@@ -29,7 +30,7 @@ Territory::Territory(const Territory& territory) {
     for(int i = 0; i < edges.size(); i ++){
         adjacent.push_back(edges.at(i));
     }
-    this.edges = adjacent; // TODO - check if valid
+    this->edges = adjacent;
 }
 
 // Change owner of territory
@@ -49,25 +50,7 @@ void Territory::addEdge(Territory *adjacent) {
 
 // Destructor for territory object
 void Territory::~Territory(){
-    delete name;
-    delete visited;
-    delete continent;
-    delete numArmies;
-    delete owner; // Not sure if this is right
-    delete number1;
-    delete number2;
-    delete id;
-    delete edges;
-
-    name = NULL;
-    visited = NULL;
-    continent = NULL;
-    numArmies = NULL;
-    owner = NULL; // Not sure this is right
-    number1 = NULL;
-    number2 = NULL;
-    id = NULL;
-    edges = NULL;
+    edges.clear();
 }
 
 // Stream insertion operator for Territory
@@ -102,7 +85,7 @@ Territory Territory::operator=(const Territory& territory){
 }
 
 // Map class implementation
-Map::Map(vector <vector<Territory *>> *continents, vector<Territory *> territories) {
+Map::Map(vector <vector<Territory *>>& continents, vector<Territory *>& territories) {
     this->continents = continents;
     this->territories = territories;
 }
@@ -110,7 +93,7 @@ Map::Map(vector <vector<Territory *>> *continents, vector<Territory *> territori
 // Copy constructor for Map class
 Map::Map(const Map& map){
     for(int i = 0; i < territories.size(); i ++){
-        Territory * territory = new Territory(territories.at(i));
+        Territory * territory = new Territory(*territories.at(i));
         territories.push_back(territory);
         continents.at(territory->continent).push_back(territory);
     }
@@ -128,13 +111,13 @@ void Map::addTerritory(Territory *territory) {
 bool Map::validate() {
     unordered_map<string,int> duplicates ; // Maps the territory name to its continent value
 
-    bool dfs = DFS(this->territories.at(0), map);
+    bool dfs = DFS(this->territories.at(0), duplicates);
 
     if(!dfs){
         return false;
     }
 
-    for(int index = 0; index < territories.size(); i ++){
+    for(int index = 0; index < territories.size(); index ++){
         Territory * temp = territories.at(index);
         if(!temp->visited){
             cerr<< "Territory: " << temp << " is not connected to the rest of the map" << endl;
@@ -157,10 +140,10 @@ bool Map::validate() {
 
 // Goes through the map and marks the territories iterated through as visited and checks if two territories
 // have the same name
-bool Map::DFS(Territory * territory, unordered_map<string, int> * duplicate){
+bool Map::DFS(Territory * territory, unordered_map<string, int> &duplicate){
     territory->visited = true;
 
-    if( duplicate.find(territory->name) == duplicate->end()){
+    if( duplicate.find(territory->name) == duplicate.end()){
         duplicate[territory->name] = territory->continent; // Not found so insert it into the map
     }
     else{
@@ -196,11 +179,8 @@ int Map::continentDFS(Territory * territory){
 
 // Destructor for Map object
 Map::~Map() {
-    delete continents;
-    delete territories;
-
-    continents = NULL;
-    territories = NULL;
+    continents.clear();
+    territories.clear();
 }
 
 // Stream insertion operator for Map object
@@ -220,23 +200,26 @@ Map Map::operator=(const Map& map){
     return *this;
 }
 
+//
 // Maploader implementation
+//
 
 // Constructor for Maploader object
 Maploader::Maploader(string filename) {
     this->filename = filename;
 }
 
+string Maploader::getFileName() {
+    return filename;
+}
+
 // Destructor for maploader
 Maploader::~Maploader() {
-    delete filename;
-
-    filename = NULL;
 }
 
 // Stream insertion operator for Maploader object
 ostream& operator<<(ostream& out, Maploader& maploader){
-    out<< "Maploader filename: " << maploader.filename << endl;
+    out<< "Maploader filename: " << maploader.getFileName() << endl;
 
     return out;
 }
@@ -320,7 +303,7 @@ Map& Maploader::load() {
 
     cout << "Loaded map" << endl;
 
-    Map * map = new Map(continentsVector, territoriesVector);
+    Map map = {continentsVector, territoriesVector};
 
     return map;
 }
