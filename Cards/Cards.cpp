@@ -1,4 +1,5 @@
 #include "Cards.h"
+#include "../Orders/Orders.h"
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -11,17 +12,33 @@ const string cardTypes[6] = {"Airlift", "Blockade", "Bomb", "Diplomacy", "Reinfo
 
 // Default constructor
 Card::Card(){
-    cardType= NULL;
+    this->cardType = NULL;
 }
 
-// Copy constructor
-Card::Card(int type){
-    cardType = type;
+// copy constructor
+Card::Card(const Card& card) {
+    this->cardType = card.cardType;
+}
+
+// assignment operator
+Card& Card::operator=(const Card& card) {
+    this->cardType = card.cardType;
+    return *this;
+}
+
+// stream insertion operator
+ostream& operator<<(ostream& out, const Card& card) {
+    out << "Card Type is " << card.cardType << endl;
+    return out;
 }
 
 // Destructor
 Card::~Card() {
-    
+    cardType = NULL;
+}
+
+Card::Card(int type){
+    cardType = type;
 }
 
 // returns an int responding to the card type
@@ -42,7 +59,8 @@ void Card::setType(int newType){
 
 // plays a card from hand which removes it and returns it to the deck
 void Card::play(Hand* hand, int cardNum, Deck* deck) {		
-	hand->removeCard(cardNum);	
+	//createOrder(cardNum);
+    hand->removeCard(cardNum);	
 	deck->returnCard(this);
 }
 
@@ -54,6 +72,41 @@ Hand::Hand(){
         cardHand[i] = NULL;
     }
     cardAmount = 0;
+}
+
+// copy constructor
+Hand::Hand(const Hand& hand) {
+    for (int i =0; i < 7; i++){
+        this->cardHand[i] = hand.cardHand[i];
+    }
+}
+
+// assignment operator
+Hand& Hand::operator=(const Hand& hand) {
+    for (int i =0; i < 7; i++){
+        this->cardHand[i] = hand.cardHand[i];
+    }
+    return *this;
+}
+
+// stream insertion operator
+ostream& operator<<(ostream& out, const Hand& hand) {
+    out << "Card 1 in hand is " << hand.cardHand[0] << endl;
+    out << "Card 2 in hand is " << hand.cardHand[1] << endl;
+    out << "Card 3 in hand is " << hand.cardHand[2] << endl;
+    out << "Card 4 in hand is " << hand.cardHand[3] << endl;
+    out << "Card 5 in hand is " << hand.cardHand[4] << endl;
+    out << "Card 6 in hand is " << hand.cardHand[5] << endl;
+    out << "Card 7 in hand is " << hand.cardHand[6] << endl;
+    return out;
+}
+
+// Destructor
+Hand::~Hand() {
+    for (int i =0; i < 7; i++){
+        delete cardHand[i];
+        cardHand[i] = NULL;
+    }
 }
 
 // delete hand
@@ -102,7 +155,7 @@ void Hand::showHand(){
 
 // Deck definitions
 
-// Create the deck (deck contains 10 fo each card totalling to 50)
+// Default constructor (deck contains 10 fo each card totalling to 50)
 Deck::Deck() {
     for (int i = 0; i < 10; i++){
         cardDeck[i] = new Card(0);
@@ -121,6 +174,35 @@ Deck::Deck() {
     }
     // 49 because index starts at 0
     deckAmount = 50;
+}
+
+// copy constructor
+Deck::Deck(const Deck& deck) {
+    for (int i = 0; i < 50; i++){
+        this->cardDeck[i] = deck.cardDeck[i];
+    }
+}
+
+// assignment operator
+Deck& Deck::operator=(const Deck& deck) {
+    for (int i = 0; i < 50; i++){
+        this->cardDeck[i] = deck.cardDeck[i];
+    }
+    return *this;
+}
+
+// stream insertion operator
+ostream& operator<<(ostream& out, const Deck& deck) {
+    out << "Deck amount is " << deck.deckAmount << endl;
+    return out;
+}
+
+// Destructor
+Deck::~Deck() {
+    for (int i = 0; i < 49; i++){
+        delete cardDeck[i];
+        cardDeck[i] = NULL;
+    }
 }
 
 // Deletes the whole deck
