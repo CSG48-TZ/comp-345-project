@@ -1,10 +1,17 @@
-// Orders.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+/* ==========================================
+; Title:  OrdersDriver.cpp
+; Author: Dario Cimmino
+; Student ID: 40068769
+; Date:   12 FEB 2023
+; Description: This is a simple Driver to showcase different methods of the Orders, Orders subclasses and OrdersList as described in
+; Programming assignment.
+; ==========================================
+*/
 
 #include <iostream>
 #include "Orders.h"
 
-int main()
+int main_order()
 {
 	OrdersList ol(1);
 
@@ -14,7 +21,7 @@ int main()
 	int N1 = 6;
 	int test = 0;
 
-	srand(time(0));
+	srand((int)time(0));
 	Orders* o;
 
 	//CREATION OF RANDOM ORDERS FOR PLAYER 1
@@ -154,5 +161,6 @@ int main()
 		}
 	}
 
+	return 0;
 }
 

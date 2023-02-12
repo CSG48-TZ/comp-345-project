@@ -1,3 +1,12 @@
+/* ==========================================
+; Title:  Orders.cpp
+; Author: Dario Cimmino
+; Student ID: 40068769
+; Date:   12 FEB 2023
+; Description: Orders Class used by the Player class that contains the OrdersList class and all the different types of Orders subclasses. This is the orders management part of the game.
+; ==========================================
+*/
+
 #include "Orders.h"
 #include <iostream>
 
@@ -171,7 +180,7 @@ OrdersList::~OrdersList() {
 void OrdersList::add(Orders* order) {
 	ordersList.push_front(order);
 	//Update lastOrderModifiedIndex
-	lastOrderModifiedIndex = ordersList.size() - 1;
+	lastOrderModifiedIndex = (int)ordersList.size() - 1;
 }
 
 /*
@@ -262,7 +271,7 @@ bool OrdersList::execute()
 */
 int OrdersList::getCurrentNumberOfOrders()
 {
-	return ordersList.size();
+	return (int)ordersList.size();
 }
 
 /*
