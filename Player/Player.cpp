@@ -1,5 +1,5 @@
+#pragma once
 #include "Player.h"
-
 #include <algorithm>
 #include <cctype>
 
@@ -13,10 +13,10 @@ Player::Player(){
 }
 
 // parametrized constructor
-Player::Player(string pName, int id, vector<Territory *> territories, Hand * hand){
+Player::Player(string pName, int id){
     this->pName = pName;
-    this->territories = territories;
-    this->hand = hand;
+    this->territories = vector<Territory*>();
+    this->hand = new Hand();
     this->playerID = id;
     this->orderList = new OrdersList(id);
 }
@@ -91,14 +91,32 @@ OrdersList* Player::getOrderList(){
     return orderList;
 }
 
+//Adds a Territory to the list of owned Territory
+void Player::addOwnedTerritory(Territory* t) {
+    territories.push_back(t);
+}
+
+// print Owned list
+void Player::printOwnedTerritoryList() {
+    for (int i = 0; i < territories.size(); i++) {
+        cout << territories.at(i)->name << "\n";
+    }
+}
+
 // return a list of territories that are to be defended
 vector<Territory *> Player::toDefend(){
-    int random1 = rand()% 5;  // # of territories to defend[0~4]
-    int random2 = rand()% (territories.size());  // which territories to defend[0~4]
     vector<Territory *> defendList;
-    // return an arbitrary list
-    for (int i = 0; i < random1; ++i) {
-        defendList.push_back(territories.at(random2));
+    vector<int> random;
+    for (int i = 0; i < 10; i++) {
+        random.push_back(i);
+    }
+
+    std::random_shuffle(random.begin(), random.end());
+
+    for (int i = 0; i < 5; i++) {
+
+        defendList.push_back(territories.at(random.at(i)));
+
     }
     return defendList;
 }
@@ -106,18 +124,20 @@ vector<Territory *> Player::toDefend(){
 // print defend list
 void Player::printDefendList(vector<Territory *> defendList){
     for (int i = 0; i < defendList.size(); i++) {
-        cout << "Defend list = " << defendList.at(i) << ", " ;
+        cout << "Defend list = " << defendList.at(i)->name << "\n" ;
     }
     cout << endl;
 }
 
 // return a list of territories that are to be attacked
 vector<Territory *> Player::toAttack(){
-    int random1 = rand() % 4 + 1;  // # of territories to attack[1~4]
-    int random2 = rand() % (territories.size() + 1);  // which territories to attack[1~4]
+    string name;
     vector<Territory *> attackList;
-    for (int i = 0; i < random1; ++i) {
-        attackList.push_back(territories.at(random2));
+    for (int i = 10; i < 16; i++) {
+
+        name = "Territory " + to_string(i);
+        attackList.push_back(new Territory(i, name, rand() % 5 + 1, rand() % 120, rand() % 120));
+
     }
     return attackList;
 }
@@ -125,9 +145,8 @@ vector<Territory *> Player::toAttack(){
 // print attack list
 void Player::printAttackList(vector<Territory *> attackList){
     for (int i = 0; i < attackList.size(); i++) {
-        cout << "Attack list = " << attackList.at(i) << ", " ;
+        cout << "Attack list = " << attackList.at(i)->name << "\n";
     }
-    cout << endl;
 }
 
 //  creates an order object and adds it to the list of orders.

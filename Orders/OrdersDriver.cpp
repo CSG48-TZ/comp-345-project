@@ -7,11 +7,11 @@
 ; Programming assignment.
 ; ==========================================
 */
-
+#pragma once
 #include <iostream>
 #include "Orders.h"
 
-int main()
+int main_()
 {
 	OrdersList ol(1);
 
