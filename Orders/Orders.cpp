@@ -1,3 +1,12 @@
+/* ==========================================
+; Title:  Orders.cpp
+; Author: Dario Cimmino
+; Student ID: 40068769
+; Date:   12 FEB 2023
+; Description: Orders Class used by the Player class that contains the OrdersList class and all the different types of Orders subclasses. This is the orders management part of the game.
+; ==========================================
+*/
+
 #include "Orders.h"
 #include <iostream>
 
@@ -152,7 +161,6 @@ void Orders::operator = (const Orders& o) {
 */
 OrdersList::OrdersList(int player) {
 	this->player = player;
-	currentNumberOfOrders = 0;
 	hasOrdersInList = false;
 	lastOrderModifiedIndex = 0;
 	orderNumber = 0;
@@ -166,12 +174,35 @@ OrdersList::~OrdersList() {
 }
 
 /*
+* Copy function (REQUIREMENT).
+*/
+OrdersList* OrdersList::copy(OrdersList* orderList) {
+	OrdersList* copy = new OrdersList(orderList->getPlayerID());
+	
+	copy->lastOrderModifiedIndex = orderList->getLastOrderModified();
+	copy->ordersList = orderList->getCurrentOrdersList();
+	copy->hasOrdersInList = orderList->hasOrdersInList;
+	copy->orderNumber = orderList->orderNumber;
+
+	return copy;
+}
+
+/*
+* Returns the Player ID this list is attributed to
+*/
+int OrdersList::getPlayerID() {
+	return player;
+}
+
+
+/*
 * Adds an Order to the list.
 */
 void OrdersList::add(Orders* order) {
-	ordersList.push_front(order);
+	ordersList.push_back(order);
 	//Update lastOrderModifiedIndex
-	lastOrderModifiedIndex = ordersList.size() - 1;
+	lastOrderModifiedIndex = (int)ordersList.size() - 1;
+	hasOrdersInList = true;
 }
 
 /*
@@ -221,6 +252,9 @@ void OrdersList::remove(int index) {
 	//Update lastOrderModifiedIndex
 	lastOrderModifiedIndex = index;
 
+	if ((int)ordersList.size() == 0) {
+		hasOrdersInList = false;
+	}
 }
 
 /*
@@ -262,7 +296,7 @@ bool OrdersList::execute()
 */
 int OrdersList::getCurrentNumberOfOrders()
 {
-	return ordersList.size();
+	return (int)ordersList.size();
 }
 
 /*
@@ -303,7 +337,6 @@ list<Orders*> OrdersList::getCurrentOrdersList()
 void OrdersList::operator = (const OrdersList& o) {
 	this->ordersList = o.ordersList;
 	this->player = o.player;
-	currentNumberOfOrders = o.currentNumberOfOrders;
 	hasOrdersInList = o.hasOrdersInList;
 	lastOrderModifiedIndex = o.lastOrderModifiedIndex;
 	orderNumber = o.orderNumber;
