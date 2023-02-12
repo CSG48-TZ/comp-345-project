@@ -6,6 +6,7 @@
 
 // Territory class implementation
 
+// Constructor with parameters
 Territory::Territory(string name, int continent, int number1, int number2) {
     this->name = name;
     this->continent = continent;
@@ -14,6 +15,7 @@ Territory::Territory(string name, int continent, int number1, int number2) {
     this->numArmies = 0;
 }
 
+// Copy constructor for Territory class
 Territory::Territory(const Territory& territory) {
     this->name = territory.name;
     this->visited = territory.visited;
@@ -30,18 +32,22 @@ Territory::Territory(const Territory& territory) {
     this.edges = adjacent; // TODO - check if valid
 }
 
+// Change owner of territory
 void Territory::changeOwner(int *newOwner) {
     this->owner = newOwner;
 }
 
+// Add number of armies in territory
 void Territory::addArmies(int number) {
     this->numArmies = this->numArmies + number;
 }
 
+// Adds pointer to Territory object to edge list
 void Territory::addEdge(Territory *adjacent) {
     this->edges.push_back(adjacent);
 }
 
+// Destructor for territory object
 void Territory::~Territory(){
     delete name;
     delete visited;
@@ -64,6 +70,7 @@ void Territory::~Territory(){
     edges = NULL;
 }
 
+// Stream insertion operator for Territory
 ostream& operator<<(ostream& out, Territory& territory){
     out << "Territory name: " << territory.name << endl;
     out << "Continent number: " << territory.continent << endl;
@@ -79,6 +86,7 @@ ostream& operator<<(ostream& out, Territory& territory){
     return out;
 }
 
+// Assignment operator for Territory
 Territory Territory::operator=(const Territory& territory){
     this->name = territory.name;
     this->owner = territory.owner;
@@ -99,6 +107,7 @@ Map::Map(vector <vector<Territory *>> *continents, vector<Territory *> territori
     this->territories = territories;
 }
 
+// Copy constructor for Map class
 Map::Map(const Map& map){
     for(int i = 0; i < territories.size(); i ++){
         Territory * territory = new Territory(territories.at(i));
@@ -107,6 +116,7 @@ Map::Map(const Map& map){
     }
 }
 
+// Adds a territory to the map
 void Map::addTerritory(Territory *territory) {
     this->territories.push_back(territory); // Adds the territory to territory list
 
@@ -184,6 +194,7 @@ int Map::continentDFS(Territory * territory){
     return 1;
 }
 
+// Destructor for Map object
 Map::~Map() {
     delete continents;
     delete territories;
@@ -192,6 +203,7 @@ Map::~Map() {
     territories = NULL;
 }
 
+// Stream insertion operator for Map object
 ostream& operator<<(ostream& out, Map& map){
     out<< "All territories: " << endl;
     for(int i = 0; i < map.territories.size(); i ++){
@@ -200,38 +212,46 @@ ostream& operator<<(ostream& out, Map& map){
     return out;
 }
 
+// Assignment operator for Map object
 Map Map::operator=(const Map& map){
     this->territories = map.territories;
     this->continents = map.continents;
 
     return *this;
 }
+
 // Maploader implementation
 
+// Constructor for Maploader object
 Maploader::Maploader(string filename) {
     this->filename = filename;
 }
 
+// Destructor for maploader
 Maploader::~Maploader() {
     delete filename;
 
     filename = NULL;
 }
 
+// Stream insertion operator for Maploader object
 ostream& operator<<(ostream& out, Maploader& maploader){
     out<< "Maploader filename: " << maploader.filename << endl;
 
     return out;
 }
 
+// Assignment operator for Maploader object
 Maploader Maploader::operator=(const Maploader& maploader){
     this->filename = maploader.filename;
 }
 
+// Copy constructor for Maploader object
 Maploader::Maploader(const Maploader &maploader) {
     this->filename = maploader.filename;
 }
 
+// Loads the map and returns a reference to a Map object
 Map& Maploader::load() {
 
     ifstream infile(filename);

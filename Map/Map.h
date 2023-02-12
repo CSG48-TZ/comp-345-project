@@ -58,17 +58,14 @@ public:
 
 class Maploader{
 public:
-    string filename;
     Maploader(string filename);
-
     Map * load();
-
     ~Maploader();
-
     ostream& operator<<(ostream& out, const Maploader& maploader);
-
     Maploader operator=(const Maploader& maploader);
-
     Maploader(const Maploader& maploader);
+
+private:
+    string filename;
 };
 #endif //COMP345_MAP_H
