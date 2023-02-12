@@ -25,7 +25,7 @@ Territory::Territory(const Territory& territory) {
     this->number2 = territory.number2;
     this->continent = territory.continent;
     this->id = territory.id;
-    this->playerID = territory.playerID;
+    this->owner = territory.owner;
     vector<Territory *> adjacent;
     for(int i = 0; i < edges.size(); i ++){
         adjacent.push_back(edges.at(i));
@@ -34,8 +34,8 @@ Territory::Territory(const Territory& territory) {
 }
 
 // Change owner of territory
-void Territory::changeOwner(int playerID) {
-    this->playerID = playerID;
+void Territory::changeOwner(Player* newOwner) {
+    this->owner = newOwner;
 }
 
 // Add number of armies in territory
@@ -58,7 +58,7 @@ ostream& operator<<(ostream& out, Territory& territory){
     out << "Territory name: " << territory.name << endl;
     out << "Continent number: " << territory.continent << endl;
     out << "Number of armies in territory: " << territory.numArmies << endl;
-    out << "Owner: " << territory.playerID << endl; // TODO - add player name "owner.name"
+    out << "Owner: " << territory.owner << endl; // TODO - add player name "owner.name"
     out << "Number 1: " << territory.continent << endl;
     out << "Number 2: " << territory.name << endl;
     out << "Territories connected to: " << endl;
@@ -72,7 +72,7 @@ ostream& operator<<(ostream& out, Territory& territory){
 // Assignment operator for Territory
 Territory Territory::operator=(const Territory& territory){
     this->name = territory.name;
-    this->playerID = territory.playerID;
+    this->owner = territory.owner;
     this->numArmies = territory.numArmies;
     this->continent = territory.continent;
     this->id = territory.id;

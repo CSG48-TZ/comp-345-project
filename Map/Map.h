@@ -22,14 +22,13 @@ public:
     string name;
     int id;
     int continent;
-    int playerID;
     Player* owner;
     bool visited; // Created for validate()
     int numArmies;
     vector<Territory *> edges;
 
     Territory(int id, string name, int continent, int number1, int number2);
-    void changeOwner(int newPLayerID);
+    void changeOwner(Player* newOwner);
     void addEdge(Territory * adjacent);
     void addArmies(int num);
     ~Territory();
