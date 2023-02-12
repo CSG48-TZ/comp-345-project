@@ -1,6 +1,12 @@
+
+#pragma once
+#ifndef COMP345_ORDERS_H
+#define COMP345_ORDERS_H
+
 #include <string>
 #include <iterator>
 #include <list>
+
 
 using namespace std;
 
@@ -45,6 +51,8 @@ public:
 	bool execute();
 	int getCurrentNumberOfOrders();
 	int getLastOrderModified();
+	int getPlayerID();
+	OrdersList* copy(OrdersList* ordersList);
 	Orders* getLastOrder();
 	Orders* getNextOrder();
 	list<Orders*> getCurrentOrdersList();
@@ -55,7 +63,6 @@ public:
 protected:
 
 	int player;
-	int currentNumberOfOrders;
 	const int orderLimit = 99;
 	int lastOrderModifiedIndex;
 	bool hasOrdersInList;
@@ -117,3 +124,5 @@ public:
 	bool execute() override;
 	Negociate copy(Negociate order);
 };
+
+#endif
