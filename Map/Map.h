@@ -56,7 +56,7 @@ public:
     Map operator=(const Map& map);
 };
 
-class Maploader{// TODO- Add a copy constructor, assignment operator, and stream insertion operator
+class Maploader{
 public:
     string filename;
     Maploader(string filename);

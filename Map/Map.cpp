@@ -14,7 +14,7 @@ Territory::Territory(string name, int continent, int number1, int number2) {
     this->numArmies = 0;
 }
 
-Territory::Territory(const Territory &territory) {
+Territory::Territory(const Territory& territory) {
     this->name = territory.name;
     this->visited = territory.visited;
     this->numArmies = territory.numArmies;
@@ -23,7 +23,11 @@ Territory::Territory(const Territory &territory) {
     this->continent = territory.continent;
     this->id = territory.id;
     this->owner = territory.owner;
-    this.edges;// TODO
+    vector<Territory *> adjacent;
+    for(int i = 0; i < edges.size(); i ++){
+        adjacent.push_back(edges.at(i));
+    }
+    this.edges = adjacent; // TODO - check if valid
 }
 
 void Territory::changeOwner(int *newOwner) {
@@ -95,8 +99,12 @@ Map::Map(vector <vector<Territory *>> *continents, vector<Territory *> territori
     this->territories = territories;
 }
 
-Map::Map(const Map& map){ // TODO
-
+Map::Map(const Map& map){
+    for(int i = 0; i < territories.size(); i ++){
+        Territory * territory = new Territory(territories.at(i));
+        territories.push_back(territory);
+        continents.at(territory->continent).push_back(territory);
+    }
 }
 
 void Map::addTerritory(Territory *territory) {
@@ -224,9 +232,9 @@ Maploader::Maploader(const Maploader &maploader) {
     this->filename = maploader.filename;
 }
 
-Map *Maploader::load() {
+Map& Maploader::load() {
 
-    ifstream infile("europe.txt");
+    ifstream infile(filename);
 
     vector<Territory *> territoriesVector;
     vector<vector<Territory*>> continentsVector;
@@ -235,8 +243,6 @@ Map *Maploader::load() {
     bool continents = false;
     bool territories = false;
     bool edges = false;
-
-    int numContinents = 0;
 
     while(getline(infile, line)){
         if(line == ""){
@@ -286,7 +292,7 @@ Map *Maploader::load() {
 
             territoriesVector.push_back(territory);
             continentsVector.at(continent).push_back(territory);
-        } else if( continents){
+        } else if(continents){
             vector<Territory *> countries;
             continentsVector.push_back(countries);
         }
