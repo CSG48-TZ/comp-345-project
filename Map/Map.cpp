@@ -34,7 +34,7 @@ Territory::Territory(const Territory& territory) {
 }
 
 // Change owner of territory
-void Territory::changeOwner(int *newOwner) {
+void Territory::changeOwner(Player* newOwner) {
     this->owner = newOwner;
 }
 
@@ -49,7 +49,7 @@ void Territory::addEdge(Territory *adjacent) {
 }
 
 // Destructor for territory object
-void Territory::~Territory(){
+Territory::~Territory(){
     edges.clear();
 }
 
@@ -225,7 +225,7 @@ ostream& operator<<(ostream& out, Maploader& maploader){
 }
 
 // Assignment operator for Maploader object
-Maploader Maploader::operator=(const Maploader& maploader){
+void Maploader::operator=(const Maploader& maploader){
     this->filename = maploader.filename;
 }
 

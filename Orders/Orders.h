@@ -1,6 +1,12 @@
+
+#pragma once
+#ifndef COMP345_ORDERS_H
+#define COMP345_ORDERS_H
+
 #include <string>
 #include <iterator>
 #include <list>
+
 
 using namespace std;
 
@@ -118,3 +124,5 @@ public:
 	bool execute() override;
 	Negociate copy(Negociate order);
 };
+
+#endif
