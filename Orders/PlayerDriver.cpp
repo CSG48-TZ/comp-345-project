@@ -1,6 +1,6 @@
 #include "Player.h"
 
-int main(){
+int main_(){
 
     // create territories that a player owns (randomly)
     vector<Territory *> terre1;
@@ -10,12 +10,12 @@ int main(){
     Player* p1 = new Player("Dax", 1, terre1, new Hand());
 
     // territories to be attacked by player 1
-    vector<Territory *> attack = p1->toAttack();
-    p1->printAttackList(attack);
+    //vector<Territory *> attack = p1->toAttack();
+    //p1->printAttackList(attack);
 
     // territories to be defended by player 1
-    vector<Territory *> defend = p1->toDefend();
-    p1->printDefendList(defend);
+    //vector<Territory *> defend = p1->toDefend();
+    //p1->printDefendList(defend);
 
     string orderType = "";
     int random;
@@ -49,5 +49,22 @@ int main(){
         }
     }
     
+    OrdersList* p1Orders = p1->getOrderList();
+    list<Orders*>::iterator it;
+    list<Orders*> currentList;
+
+    currentList = p1Orders->getCurrentOrdersList();
+
+    //SHOWING CURRENT ORDERS ON SCREEN
+    cout << "Current number of order in list: " << p1Orders->getCurrentNumberOfOrders();
+    cout << "\n\nCurrent orders are: \n";
+
+
+
+    for (it = currentList.begin(); it != currentList.end(); it++) {
+        Orders* current = *it;
+        cout << *current << "\n";
+    }
+
     return 0;
 }

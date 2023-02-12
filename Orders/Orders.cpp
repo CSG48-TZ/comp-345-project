@@ -178,9 +178,10 @@ OrdersList::~OrdersList() {
 * Adds an Order to the list.
 */
 void OrdersList::add(Orders* order) {
-	ordersList.push_front(order);
+	ordersList.push_back(order);
 	//Update lastOrderModifiedIndex
 	lastOrderModifiedIndex = (int)ordersList.size() - 1;
+	hasOrdersInList = true;
 }
 
 /*
@@ -230,6 +231,9 @@ void OrdersList::remove(int index) {
 	//Update lastOrderModifiedIndex
 	lastOrderModifiedIndex = index;
 
+	if ((int)ordersList.size() == 0) {
+		hasOrdersInList = false;
+	}
 }
 
 /*

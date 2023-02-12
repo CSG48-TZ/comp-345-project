@@ -11,7 +11,7 @@
 #include <iostream>
 #include "Orders.h"
 
-int main_order()
+int main()
 {
 	OrdersList ol(1);
 
@@ -50,7 +50,7 @@ int main_order()
 			o = new Deploy(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
 		}
 
-		testOrders.push_front(o);
+		testOrders.push_back(o);
 	}
 
 	list<Orders*>::iterator it;
@@ -81,7 +81,7 @@ int main_order()
 	int index = rand() % ol.getCurrentNumberOfOrders();
 	int toIndex = rand() % ol.getCurrentNumberOfOrders();
 
-	cout << "\nMoving order at index: " << index << " to index: " << toIndex << "...";
+	cout << "\nMoving order from index: " << index << " to index: " << toIndex << "...";
 
 	//PAUSE
 	cout << "\nPress any key to continue..";
