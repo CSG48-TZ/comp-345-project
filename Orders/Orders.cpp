@@ -88,12 +88,12 @@ bool Orders::execute() {
 */
 ostream& operator << (ostream& out, const Orders &o)
 {
-	out << "\nOrder ID: " << o.orderNumber;
+	out << "Order ID: " << o.orderNumber;
 	out << " - Player " << o.from;
 	out << " issued the order: \"" << o.currentOrder;
 	out << "\" to target Player: \"" << o.target;
 	out << "\" from: \"" << o.fromLocation;
-	out << "\" to \"" << o.targetLocation << "\".\n";
+	out << "\" to \"" << o.targetLocation << "\".";
 	return out;
 }
 
@@ -111,7 +111,7 @@ istream& operator >> (istream& in, Orders& o)
 */
 string Orders::toString(void) {
 	string returnString;
-	returnString.append("\nOrder#: ");
+	returnString.append("Order#: ");
 	returnString.append(to_string(orderNumber));
 	returnString.append(" - Player ");
 	returnString.append(to_string(from));
@@ -123,7 +123,7 @@ string Orders::toString(void) {
 	returnString.append(to_string(getIssuerLocation()));
 	returnString.append("\" to \"");
 	returnString.append(to_string(getTargetLocation()));
-	returnString.append("\".\n");
+	returnString.append("\".");
 
 	return returnString;
 }
@@ -162,13 +162,13 @@ OrdersList::OrdersList(int player) {
 * Deconstructor
 */
 OrdersList::~OrdersList() {
-
+	ordersList.clear();
 }
 
 /*
 * Adds an Order to the list.
 */
-void OrdersList::add(Orders order) {
+void OrdersList::add(Orders* order) {
 	ordersList.push_front(order);
 	//Update lastOrderModifiedIndex
 	lastOrderModifiedIndex = ordersList.size() - 1;
@@ -182,13 +182,13 @@ void OrdersList::add(Orders order) {
 */
 void OrdersList::move(int index, int toIndex) {
 	//Creates Iterator
-	list<Orders>::iterator it;
+	list<Orders*>::iterator it;
 	//Starts at the beginning of the list.
 	it = ordersList.begin();
 	//Advances to the desired Index
 	advance(it, index);
 	//Copy the Order.
-	Orders orderToMove = *it;
+	Orders* orderToMove = *it;
 	//Erase the Order.
 	ordersList.erase(it);
 
@@ -208,13 +208,13 @@ void OrdersList::move(int index, int toIndex) {
 */
 void OrdersList::remove(int index) {
 	//Creates Iterator
-	list<Orders>::iterator it;
+	list<Orders*>::iterator it;
 	//Starts at the beginning of the list.
 	it = ordersList.begin();
 	//Advances to the desired Index
 	advance(it, index);
 	//Check if the order is correct
-	Orders orderToRemove = *it;
+	Orders* orderToRemove = *it;
 
 	//Erase the Order.
 	ordersList.erase(it);
@@ -228,11 +228,11 @@ void OrdersList::remove(int index) {
 */
 bool OrdersList::validate()
 {
-	list<Orders>::iterator it;
+	list<Orders*>::iterator it;
 
 	for (it = ordersList.begin(); it != ordersList.end(); it++) {
-		Orders current = *it;
-		if (!current.validate()) {
+		Orders* current = *it;
+		if (!current->validate()) {
 			return false;
 		}
 	}
@@ -245,11 +245,11 @@ bool OrdersList::validate()
 */
 bool OrdersList::execute()
 {
-	list<Orders>::iterator it;
+	list<Orders*>::iterator it;
 
 	for (it = ordersList.begin(); it != ordersList.end(); it++) {
-		Orders current = *it;
-		if (!current.execute()) {
+		Orders* current = *it;
+		if (!current->execute()) {
 			return false;
 		}
 	}
@@ -276,7 +276,7 @@ int OrdersList::getLastOrderModified()
 /*
 * Gets the last Order in the list.
 */
-Orders OrdersList::getLastOrder()
+Orders* OrdersList::getLastOrder()
 {
 	return ordersList.back();
 }
@@ -284,7 +284,7 @@ Orders OrdersList::getLastOrder()
 /*
 * Gets the first Order in the list.
 */
-Orders OrdersList::getNextOrder()
+Orders* OrdersList::getNextOrder()
 {
 	return ordersList.front();
 }
@@ -292,7 +292,7 @@ Orders OrdersList::getNextOrder()
 /*
 * Returns the list.
 */
-list<Orders> OrdersList::getCurrentOrdersList()
+list<Orders*> OrdersList::getCurrentOrdersList()
 {
 	return ordersList;
 }
@@ -337,6 +337,7 @@ Deploy::~Deploy() {
 * Validates the order, returns true or false
 */
 bool Deploy::validate() {
+	cout << "Validating Deploy order: \"" << this->toString();
 	return false;
 }
 
@@ -386,6 +387,7 @@ Advance::~Advance() {
 * Validates the order, returns true or false
 */
 bool Advance::validate() {
+	cout << "Validating Advance order: \"" << this->toString();
 	return false;
 }
 
@@ -434,6 +436,7 @@ Bomb::~Bomb() {
 * Validates the order, returns true or false
 */
 bool Bomb::validate() {
+	cout << "Validating Bomb order: \"" << this->toString();
 	return false;
 }
 
@@ -482,6 +485,7 @@ Blockade::~Blockade() {
 * Validates the order, returns true or false
 */
 bool Blockade::validate() {
+	cout << "Validating Blockade order: \"" << this->toString();
 	return false;
 }
 
@@ -531,6 +535,7 @@ Airlift::~Airlift() {
 * Validates the order, returns true or false
 */
 bool Airlift::validate() {
+	cout << "Validating Airlift order: \"" << this->toString();
 	return false;
 }
 
@@ -579,6 +584,7 @@ Negociate::~Negociate() {
 * Validates the Negociate order, returns true or false
 */
 bool Negociate::validate() {
+	cout << "Validating Negociate order: \"" << this->toString();
 	return false;
 }
 
