@@ -14,17 +14,13 @@ int main(){
 
     // create territories that a player owns (randomly)
     vector<Territory *> terre1;
-
     string name;
-   
     for (int i = 0; i < 10; i++) {
-        
         name = "Territory " + to_string(i);
         terre1.push_back(new Territory(i, name, rand() % 5 + 1, rand() % 120, rand() % 120));
-
     }
 
-    // create players
+    // create player
     Player* p1 = new Player("Dax", 1);
 
     //adds territories to the player
@@ -37,7 +33,6 @@ int main(){
   
     //display current owned territories
     cout << "Current Owned Territories: " << endl;
-
     p1->printOwnedTerritoryList();
 
     //PAUSE
@@ -48,7 +43,6 @@ int main(){
     vector<Territory *> attack = p1->toAttack();
     p1->printAttackList(attack);
 
-
     //PAUSE
     cout << "\nPress any key to continue..";
     cin.get();
@@ -56,7 +50,6 @@ int main(){
     // territories to be defended by player 1
     vector<Territory *> defend = p1->toDefend();
     p1->printDefendList(defend);
-
 
     //PAUSE
     cout << "\nPress any key to continue..";
@@ -66,7 +59,6 @@ int main(){
     string orderType = "";
     int random;
     srand((int)time(0));
-
     // issue order for player 1
     for (int i = 0; i < 10; i++) {
         random = rand() % 6;
@@ -94,23 +86,24 @@ int main(){
             break;
         }
     }
-    
+
     OrdersList* p1Orders = p1->getOrderList();
     list<Orders*>::iterator it2;
     list<Orders*> currentList;
-
     currentList = p1Orders->getCurrentOrdersList();
 
     //SHOWING CURRENT ORDERS ON SCREEN
     cout << "Current number of order in list: " << p1Orders->getCurrentNumberOfOrders();
     cout << "\n\nCurrent orders are: \n";
 
-
-
     for (it2 = currentList.begin(); it2 != currentList.end(); it2++) {
         Orders* current = *it2;
         cout << *current << "\n";
     }
+
+    //SHOW CURRENT HAND
+    cout << "\nCurrent cards in hand are: " << "\n";
+    p1->printCurrentHand();
 
     return 0;
 }

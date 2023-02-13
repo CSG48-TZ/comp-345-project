@@ -179,3 +179,12 @@ void Player::issueOrder(string type, int target, int from, int armyCount, int ta
     cout << "Order has been added to the list" << endl;
 }
 
+//Helper funtion for the driver to show current hand.
+void Player::printCurrentHand() {
+    for(int i = 0; i < 7; i++) {
+        hand->addCard(new Card(rand() % 5));
+    }
+
+    hand->showHand();
+
+}

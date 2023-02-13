@@ -12,8 +12,9 @@
 
 using namespace std;
 
-class Territory;
+
 class Hand;
+class Territory;
 
 class Player {
 public:
@@ -43,6 +44,7 @@ public:
     void printAttackList(vector<Territory *> attackList);
     void printOwnedTerritoryList();
     void issueOrder(string type, int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
+    void printCurrentHand();
 };
 
 #endif //COMP345_PLAYER_H
