@@ -8,8 +8,10 @@ Player::Player(){
     this->pName = "default";
     this->territories = vector<Territory *>();
     this->hand = new Hand();
-    this->playerID = 0;
+    this->playerID = numPlayers;
+    numPlayers ++;
     this->orderList = new OrdersList(this->playerID);
+    this->reinforcementPool = 0;
 }
 
 // parametrized constructor
@@ -19,6 +21,7 @@ Player::Player(string pName, int id){
     this->hand = new Hand();
     this->playerID = id;
     this->orderList = new OrdersList(id);
+    this->reinforcementPool = 0;
 }
 
 // copy constructor
@@ -27,6 +30,8 @@ Player::Player(const Player &player){
     territories = player.territories;
     hand = player.hand;
     orderList = player.orderList;
+    reinforcementPool = player.reinforcementPool;
+    playerID = player.playerID;
 }
 
 // destructor
@@ -187,4 +192,9 @@ void Player::printCurrentHand() {
 
     hand->showHand();
 
+}
+
+// Adds specified number to the player's reinforcement pool
+void Player::addArmies(int num) {
+    this->reinforcementPool += num;
 }

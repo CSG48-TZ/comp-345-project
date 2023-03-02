@@ -23,6 +23,7 @@ public:
     Hand* hand;
     OrdersList* orderList;
     int playerID;
+    int reinforcementPool;
 
     Player(); // default constructor
     Player(string pName, int id);
@@ -37,6 +38,7 @@ public:
     void addOwnedTerritory(Territory* t);
     Hand *getHand();
     OrdersList *getOrderList();
+    void addArmies(int num);
 
     vector<Territory *> toDefend();
     void printDefendList(vector<Territory *> defendList);
@@ -45,6 +47,9 @@ public:
     void printOwnedTerritoryList();
     void issueOrder(string type, int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
     void printCurrentHand();
+
+private:
+    static int numPlayers;
 };
 
 #endif //COMP345_PLAYER_H
