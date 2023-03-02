@@ -255,6 +255,7 @@ Map Maploader::load() {
 
     if(infile.fail()){
         cout << "File not found" << endl;
+        exit(404);
     }
 
     vector<Territory *> territoriesVector;
