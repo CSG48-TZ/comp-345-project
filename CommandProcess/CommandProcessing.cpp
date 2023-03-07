@@ -42,7 +42,7 @@ void CommandProcessor::saveCommand(const string& input, const string& effect = "
 	Command* newCommand = new Command(input, effect);
 	this->commands.push_back(newCommand);
 }
-string CommandProcessor::readCommand() const {
+string& CommandProcessor::readCommand() const {
 	string command;
 	// cout << "\nPlease Enter a command: ";
 	getline(cin, command);
@@ -69,14 +69,18 @@ string& CommandProcessor::valCommand(const string& command, const string& curren
 	else if (command == "addplayer" && (currentState == "mapvalidated" || currentState == "playersadded ")) {
 		nextState = "playersadded";
 	}
+	else if (command == "") {
+		cout << "Empty Command" << endl;
+		nextState = currentState;
+	}
 
 	return nextState;
 }
 string& CommandProcessor::validate(Command* const command, const string& currentState) {
 	string commandName = command->getCommandName();
 	istringstream iss(commandName);
-	std::vector<std::string> result;
-	std::string word;
+	vector<string> result;
+	string word;
 	while (getline(iss, word, ' ')) {
 		result.push_back(word);
 	}
@@ -112,12 +116,14 @@ FileLineReader::~FileLineReader() {
 }
 string& FileLineReader::readLineFromFile() {
 	string command = "";
-	if (myfile.eof()) {
-		cout << "All commands have been read. No new command can be read." << endl;
-		myfile.close();
-	}
-	else {
-		getline(myfile, command, '\n');
+	if (this->myfile.is_open()) {
+		if (myfile.eof()) {
+			cout << "All commands have been read. No new command can be read." << endl;
+			myfile.close();
+		}
+		else {
+			getline(myfile, command, '\n');
+		}
 	}
 	return command;
 }
@@ -131,6 +137,11 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(string& fileName) {
 	this->flr = new FileLineReader(fileName);
 }
 
-FileCommandProcessorAdapter::FileCommandProcessorAdapter() {
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProcessorAdapter& other) {
+	this->flr = other.flr;
+}
 
+string& FileCommandProcessorAdapter::readCommand() const {
+	string command = this->flr->readLineFromFile();
+	return command;
 }
