@@ -2,16 +2,16 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <filesystem>
+#include <cstdlib>
 using namespace std;
 
 /*
 	Following is implementation of Command class
 */
 Command::Command() : commandName("Empty Command"), commandEffect("No Command") {}
-Command::Command(const std::string& name) : commandName(name), commandEffect("") {}
-Command::Command(const string& name, const std::string& effect) : commandName(name), commandEffect(effect) {}
-Command::Command(const Command& anotherCommand) : commandName(anotherCommand.getCommandName()), commandEffect(anotherCommand.getCommandEffect()) {}
+Command::Command(string name) : commandName(name), commandEffect("") {}
+Command::Command(string name, string effect) : commandName(name), commandEffect(effect) {}
+Command::Command(Command& anotherCommand) : commandName(anotherCommand.getCommandName()), commandEffect(anotherCommand.getCommandEffect()) {}
 Command& Command::operator=(Command& other) {
 	this->commandName = other.getCommandName();
 	this->commandEffect = other.getCommandEffect();
@@ -19,7 +19,7 @@ Command& Command::operator=(Command& other) {
 }
 
 ostream& operator<<(ostream& out, Command& command) {
-	out <<command.getCommandName() << ", " << command.getCommandEffect() << endl;
+	out <<"Command: " << command.getCommandName() << "; \nCommand Effect: " << command.getCommandEffect() << endl;
 	return out;
 }
 
@@ -33,27 +33,38 @@ Command::~Command() {
 	Following is implementation of CommandProcessor class
 */
 CommandProcessor::~CommandProcessor() {
-	for (Command* command : this->commands) {
-		delete command;
-		command = NULL;
+	for (int i = 0; i < this->commands.size(); i++) {
+		delete commands[i];
+		commands[i] = NULL;
 	}
+	this->commands.clear();
 }
-void CommandProcessor::saveCommand(const string& input, const string& effect = "Null") {
+void CommandProcessor::saveCommand(string input, string effect) {
 	Command* newCommand = new Command(input, effect);
 	this->commands.push_back(newCommand);
 }
-string& CommandProcessor::readCommand() const {
+string CommandProcessor::readCommand() const {
 	string command;
-	// cout << "\nPlease Enter a command: ";
 	getline(cin, command);
+	if (command == "E") {
+		cout << "Terminated" << endl;
+		exit(0);
+	}
 	return command;
 }
 Command* CommandProcessor::getCommand() {
+	cout << "In getCommand" << endl;
 	string command = this->readCommand();
-	this->saveCommand(command);
-	return this->commands.back();
+	if (command == "") {
+		return NULL;
+	}else{
+		this->saveCommand(command);
+		return this->commands.back();
+		cout << "Line 63" << endl;
+	}
+	
 }
-string& CommandProcessor::valCommand(const string& command, const string& currentState) const {
+string CommandProcessor::valCommand(string command, string currentState) const {
 	string nextState = "";
 	if (command == "validatemap" && currentState == "maploaded") {
 		nextState = "mapvalidated";
@@ -69,14 +80,10 @@ string& CommandProcessor::valCommand(const string& command, const string& curren
 	else if (command == "addplayer" && (currentState == "mapvalidated" || currentState == "playersadded ")) {
 		nextState = "playersadded";
 	}
-	else if (command == "") {
-		cout << "Empty Command" << endl;
-		nextState = currentState;
-	}
 
 	return nextState;
 }
-string& CommandProcessor::validate(Command* const command, const string& currentState) {
+string CommandProcessor::validate(Command* command, string currentState) {
 	string commandName = command->getCommandName();
 	istringstream iss(commandName);
 	vector<string> result;
@@ -88,43 +95,57 @@ string& CommandProcessor::validate(Command* const command, const string& current
 	if (nextState == "") {
 		command->saveEffect("Error Message: Invalid command. ");
 	}
+	else {
+		string effect = "The state of Game Engine change from " + currentState + " to " + nextState;
+		command->saveEffect(effect);
+	}
 	return nextState;
 }
 
 
-FileLineReader::FileLineReader() : fileName("default.txt"), myfile(fileName){
-	while (!myfile.good()) {
-		cout << fileName << " does not exist. Please input another file name:" << endl;
-		cin >> fileName;
-		myfile.open(fileName);
-	}
+FileLineReader::FileLineReader() : fileName("default.txt"), currentCommandIndex(0) { 
+	this->readCommands(this->fileName); 
+	cout << "COMMANDS LOADED" << endl;
 }
-FileLineReader::FileLineReader(string& fileName) {
-	this->fileName = fileName;
-	myfile.open(this->getFileName());
-	while (!myfile.good()) {
-		cout << fileName << " does not exist. Please input another file name:" << endl;
-		cin >> fileName;
-		myfile.open(fileName);
-	}
+FileLineReader::FileLineReader(string fileName) : fileName(fileName), currentCommandIndex(0) { 
+	this->readCommands(this->fileName); 
+	cout << "COMMANDS LOADED" << endl;
 }
 FileLineReader::~FileLineReader() {
 	this->fileName = "";
-	if (this->myfile.is_open()) {
-		this->myfile.close();
-	}
+	this->commandsBuffer.clear();
+	this->currentCommandIndex = 0;
 }
-string& FileLineReader::readLineFromFile() {
-	string command = "";
-	if (this->myfile.is_open()) {
-		if (myfile.eof()) {
-			cout << "All commands have been read. No new command can be read." << endl;
-			myfile.close();
-		}
-		else {
-			getline(myfile, command, '\n');
-		}
+
+void FileLineReader::readCommands(string fileName) {
+	ifstream myfile;
+	
+	myfile.open(fileName);
+
+	if (myfile.fail()) {
+		cout << "File not found" << endl;
+		exit(0);
 	}
+
+	while (!myfile.eof()) {
+		string command;
+		getline(myfile, command, '\n');
+		this->commandsBuffer.push_back(command);
+		cout << "COMMAND " << command << " READED" << endl;
+	}
+	myfile.close();
+}
+
+string FileLineReader::readLineFromFile() {
+	if (this->currentCommandIndex >= this->commandsBuffer.size()) {
+		return ""; // Return empty string if all commands have been read
+	}
+	
+	string command = this->commandsBuffer[this->currentCommandIndex];
+
+	cout << "current command index" << currentCommandIndex << "; current command " << command << endl;
+
+	this->currentCommandIndex++;
 	return command;
 }
 
@@ -133,7 +154,7 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter() : CommandProcessor(){
 	this->flr = new FileLineReader();
 }
 
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(string& fileName) {
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(string fileName) {
 	this->flr = new FileLineReader(fileName);
 }
 
@@ -141,7 +162,15 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(const FileCommandProces
 	this->flr = other.flr;
 }
 
-string& FileCommandProcessorAdapter::readCommand() const {
+FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
+	delete flr;
+	flr = NULL;
+}
+
+string FileCommandProcessorAdapter::readCommand() const {
+	cout << "In readCommand" << endl;
 	string command = this->flr->readLineFromFile();
+	cout << "LINE 172" << endl;
 	return command;
 }
+

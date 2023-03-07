@@ -11,9 +11,10 @@ private:
 
 public:
     Command();
-    Command(const string& name);
-    Command(const string& name, const string& effect);
-    Command(const Command& anotherCommand);
+    Command(string name);
+    Command(string name, string effect);
+    Command(Command& anotherCommand);
+    ~Command();
     Command& operator=(Command& other);
     friend ostream& operator<<(ostream& out, Command& const command);
 
@@ -26,32 +27,36 @@ public:
 class CommandProcessor {
 private:
     vector<Command*> commands;
-    void saveCommand(const string& input, const string& effect="Null");
-    string& readCommand() const;
-    string& valCommand(const string& command, const string& currentState) const;
+    void saveCommand(string input, string effect="Null");
+    string readCommand() const;
+    string valCommand(string command, string currentState) const;
 public:
     ~CommandProcessor();
-    string& validate(Command* const command, const string& currentState);
+    string validate(Command* command, string currentState);
     Command* getCommand();
 };
 
 class FileLineReader {
 private:
     string fileName;
-    ifstream myfile;
+    vector<string> commandsBuffer;
+    int currentCommandIndex;
 public:
     FileLineReader();
-    FileLineReader(string& fileName);
-    string& readLineFromFile();
+    FileLineReader(string fileName);
+    ~FileLineReader();
+    void readCommands(string fileName);
+    string readLineFromFile();
     string getFileName() const { return fileName; }
 };
 
 class FileCommandProcessorAdapter : public CommandProcessor {
 private:
     FileLineReader* flr;
-    string& readCommand() const;
+    string readCommand() const;
 public:
     FileCommandProcessorAdapter();
-    FileCommandProcessorAdapter(std::string& fileName);
+    FileCommandProcessorAdapter(string fileName);
     FileCommandProcessorAdapter(const FileCommandProcessorAdapter& other);
+    ~FileCommandProcessorAdapter();
 };
