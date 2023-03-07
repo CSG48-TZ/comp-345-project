@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include <iostream>
+#include <string>
 using namespace std;
 
 // Implementation of Constructors
@@ -31,30 +32,56 @@ GameEngine::~GameEngine() {
 }
 
 // Implementation of Accessors
-void GameEngine::setCurrentState(GameEngine::State newState) {
-    *currentState = newState;
+void GameEngine::setCurrentState(string& state) {
+    if (state == "start") {
+        *currentState = State::START;
+    }
+    else if (state == "maploaded") {
+        *currentState = State::MAP_LOADED;
+    }
+    else if (state == "mapvalidated") {
+        *currentState = State::MAP_VALIDATED;
+    }
+    else if (state == "playersadded") {
+        *currentState = State::PLAYERS_ADDED;
+    }
+    else if (state == "assignreinforcement") {
+        *currentState = State::ASSIGN_REINFORCEMENT;
+    }
+    else if (state == "issueorders") {
+        *currentState = State::ISSUE_ORDERS;
+    }
+    else if (state == "executeorders") {
+        *currentState = State::EXECUTE_ORDERS;
+    }
+    else if (state == "win") {
+        *currentState = State::WIN;
+    }
+    else if (state == "exit program") {
+        *currentState = State::END;
+    }
 }
 
 std::string GameEngine::getCurrentState() const {
     switch (*currentState) {
         case START:
-            return "Start";
+            return "start";
         case MAP_LOADED:
-            return "Map Loaded";
+            return "maploaded";
         case MAP_VALIDATED:
-            return "Map Validated";
+            return "mapvalidated";
         case PLAYERS_ADDED:
-            return "Players Added";
+            return "playersadded";
         case ASSIGN_REINFORCEMENT:
-            return "Assign Reinforcement";
+            return "assignreinforcement";
         case ISSUE_ORDERS:
-            return "Issue Orders";
+            return "issueorders";
         case EXECUTE_ORDERS:
-            return "Execute orders";
+            return "executeorders";
         case WIN:
-            return "Win";
+            return "win";
         case END:
-            return "End";
+            return "exit program";
     }
     return "Invalid State";
 }

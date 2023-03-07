@@ -34,7 +34,7 @@ class GameEngine{
 
         // Accessors for private variables
         std::string getCurrentState() const;
-        void setCurrentState(State newState);
+        void setCurrentState(std::string& state);
 
     private:
         // A private attribute to track current state
