@@ -28,10 +28,10 @@ class CommandProcessor {
 private:
     vector<Command*> commands;
     void saveCommand(string input, string effect="Null");
-    string readCommand() const;
+    virtual string readCommand() const;
     string valCommand(string command, string currentState) const;
 public:
-    ~CommandProcessor();
+    virtual ~CommandProcessor();
     string validate(Command* command, string currentState);
     Command* getCommand();
 };

@@ -53,14 +53,12 @@ string CommandProcessor::readCommand() const {
 	return command;
 }
 Command* CommandProcessor::getCommand() {
-	cout << "In getCommand" << endl;
 	string command = this->readCommand();
 	if (command == "") {
 		return NULL;
 	}else{
 		this->saveCommand(command);
 		return this->commands.back();
-		cout << "Line 63" << endl;
 	}
 	
 }
@@ -105,11 +103,9 @@ string CommandProcessor::validate(Command* command, string currentState) {
 
 FileLineReader::FileLineReader() : fileName("default.txt"), currentCommandIndex(0) { 
 	this->readCommands(this->fileName); 
-	cout << "COMMANDS LOADED" << endl;
 }
 FileLineReader::FileLineReader(string fileName) : fileName(fileName), currentCommandIndex(0) { 
 	this->readCommands(this->fileName); 
-	cout << "COMMANDS LOADED" << endl;
 }
 FileLineReader::~FileLineReader() {
 	this->fileName = "";
@@ -131,7 +127,6 @@ void FileLineReader::readCommands(string fileName) {
 		string command;
 		getline(myfile, command, '\n');
 		this->commandsBuffer.push_back(command);
-		cout << "COMMAND " << command << " READED" << endl;
 	}
 	myfile.close();
 }
@@ -168,9 +163,7 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
 }
 
 string FileCommandProcessorAdapter::readCommand() const {
-	cout << "In readCommand" << endl;
 	string command = this->flr->readLineFromFile();
-	cout << "LINE 172" << endl;
 	return command;
 }
 
