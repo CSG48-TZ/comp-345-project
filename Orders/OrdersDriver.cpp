@@ -11,7 +11,7 @@
 #include <iostream>
 #include "Orders.h"
 
-int main_()
+int main()
 {
 	OrdersList ol(1);
 
@@ -21,6 +21,22 @@ int main_()
 	int N1 = 6;
 	int test = 0;
 
+	Player* p = new Player("Dax", 1);
+	Player* t = new Player("Enemy", 2);
+	Player* r = new Player("random", 3);
+
+	Maploader maploader = { "C:\\Dev\\test.txt" };
+
+	Map map = maploader.load();
+
+	Territory* terr = map.territories.at(14);
+	Territory* terr2 = map.territories.at(8);
+	Territory* terr3 = map.territories.at(23);
+
+	t->addOwnedTerritory(terr);
+	p->addOwnedTerritory(terr2);
+	r->addOwnedTerritory(terr3);
+
 	srand((int)time(0));
 	Orders* o;
 
@@ -29,25 +45,25 @@ int main_()
 		test = (rand() % N1);
 		switch (test) {
 		case 0:
-			o = new Deploy(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Deploy(t, p, rand() % 100, terr, terr2, i);
 			break;
 		case 1:
-			o = new Advance(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Advance(t, p, rand() % 100, terr, terr2, i);
 			break;
 		case 2:
-			o = new Bomb(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Bomb(t, p, rand() % 100, terr, terr2, i);
 			break;
 		case 3:
-			o = new Blockade(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Blockade(t, p, rand() % 100, terr, terr2, i);
 			break;
 		case 4:
-			o = new Airlift(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Airlift(t, p, rand() % 100, terr, terr2, i);
 			break;
 		case 5:
-			o = new Negociate(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Negociate(t, p, rand() % 100, terr, terr2, i);
 			break;
 		default:
-			o = new Deploy(rand() % N, 1, rand() % 100, rand() % 121, rand() % 121, i);
+			o = new Deploy(t, p, rand() % 100, terr, terr2, i);
 		}
 
 		testOrders.push_back(o);
@@ -67,9 +83,10 @@ int main_()
 	list<Orders*> currentList;
 
 	currentList = ol.getCurrentOrdersList();
+	Orders* current;
 
 	for (it = currentList.begin(); it != currentList.end(); it++) {
-		Orders* current = *it;
+		current = *it;
 		cout << *current << "\n";
 	}
 
@@ -77,6 +94,7 @@ int main_()
 	cout << "\nPress any key to continue..";
 	cin.get();
 
+	/* PART 1 CODE 
 	//CHOOSING A RANDOM ORDER MOVE
 	int index = rand() % ol.getCurrentNumberOfOrders();
 	int toIndex = rand() % ol.getCurrentNumberOfOrders();
@@ -97,7 +115,7 @@ int main_()
 	currentList = ol.getCurrentOrdersList();
 
 	for (it = currentList.begin(); it != currentList.end(); it++) {
-		Orders* current = *it;
+		current = *it;
 		cout << *current << "\n";
 	}
 
@@ -123,13 +141,14 @@ int main_()
 	currentList = ol.getCurrentOrdersList();
 
 	for (it = currentList.begin(); it != currentList.end(); it++) {
-		Orders* current = *it;
+		current = *it;
 		cout << *current << "\n";
 	}
 
 	//PAUSE
 	cout << "\nPress any key to continue..";
 	cin.get();
+	*/
 
 	//VALIDATING ALL ORDERS IN ORDER
 
@@ -140,9 +159,10 @@ int main_()
 	cin.get();
 
 	for (it = currentList.begin(); it != currentList.end(); it++) {
-		Orders* current = *it;
-		if (!current->validate()) {
-			cout << "\nOrder " << current->getOrderNumber() << " is invalid!\n\n";
+		current = *it;
+		cout << "\n";
+		if (current->validate()) {
+			cout << "\nOrder " << current->getOrderNumber() << " is valid!\n\n";
 		}
 	}
 
@@ -160,6 +180,9 @@ int main_()
 			cout << "\nOrder " << current->getOrderNumber() << " could not be executed because it is invalid!\n\n";
 		}
 	}
+
+
+	delete p, t, r, terr, terr2;
 
 	return 0;
 }

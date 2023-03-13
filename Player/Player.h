@@ -15,6 +15,7 @@ using namespace std;
 
 class Hand;
 class Territory;
+class OrdersList;
 
 class Player {
 public:
@@ -23,6 +24,7 @@ public:
     Hand* hand;
     OrdersList* orderList;
     int playerID;
+    bool conqueredTerritoryThisTurn;
 
     Player(); // default constructor
     Player(string pName, int id);
@@ -38,12 +40,13 @@ public:
     Hand *getHand();
     OrdersList *getOrderList();
 
+    void setConqueredFlag(bool value);
     vector<Territory *> toDefend();
     void printDefendList(vector<Territory *> defendList);
     vector<Territory *> toAttack();
     void printAttackList(vector<Territory *> attackList);
     void printOwnedTerritoryList();
-    void issueOrder(string type, int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
+    void issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber);
     void printCurrentHand();
 };
 

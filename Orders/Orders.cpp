@@ -14,8 +14,8 @@
 * Constructor
 */
 Orders::Orders() {
-	this->target = 0;
-	this->from = 0;
+	this->target;
+	this->player;
 	this->armyCount = 0;
 	this->targetLocation = 0;
 	this->fromLocation = 0;
@@ -39,7 +39,7 @@ string Orders::getCurrentOrder(void) {
 /*
 * Gets the current player ID the order is targeted to.
 */
-int Orders::getOrderTargetPlayer(void) {
+Player* Orders::getOrderTargetPlayer(void) {
 	return target;
 }
 
@@ -53,8 +53,8 @@ int Orders::getOrderArmyCount(void) {
 /*
 * Gets the current player ID the order is assigned to.
 */
-int Orders::getOrderIssuer(void) {
-	return from;
+Player* Orders::getOrderIssuer(void) {
+	return player;
 }
 
 /*
@@ -67,14 +67,14 @@ int Orders::getOrderNumber() {
 /*
 * Gets the target the location ID
 */
-int Orders::getTargetLocation() {
+Territory* Orders::getTargetLocation() {
 	return targetLocation;
 }
 
 /*
 * Gets the location ID the order is coming from
 */
-int Orders::getIssuerLocation() {
+Territory* Orders::getIssuerLocation() {
 	return fromLocation;
 }
 
@@ -98,11 +98,11 @@ bool Orders::execute() {
 ostream& operator << (ostream& out, const Orders &o)
 {
 	out << "Order ID: " << o.orderNumber;
-	out << " - Player " << o.from;
+	out << " - Player " << o.player->pName;
 	out << " issued the order: \"" << o.currentOrder;
-	out << "\" to target Player: \"" << o.target;
-	out << "\" from: \"" << o.fromLocation;
-	out << "\" to \"" << o.targetLocation << "\".";
+	out << "\" to target Player: \"" << o.target->pName;
+	out << "\" from: \"" << o.fromLocation->name;
+	out << "\" to \"" << o.targetLocation->name << "\".";
 	return out;
 }
 
@@ -123,15 +123,15 @@ string Orders::toString(void) {
 	returnString.append("Order#: ");
 	returnString.append(to_string(orderNumber));
 	returnString.append(" - Player ");
-	returnString.append(to_string(from));
+	returnString.append(player->pName);
 	returnString.append(" issued the order: \"");
 	returnString.append(currentOrder);
 	returnString.append("\" to target Player: \"");
-	returnString.append(to_string(target));
+	returnString.append(target->pName);
 	returnString.append("\" from: \"");
-	returnString.append(to_string(getIssuerLocation()));
+	returnString.append(getIssuerLocation()->name);
 	returnString.append("\" to \"");
-	returnString.append(to_string(getTargetLocation()));
+	returnString.append(getTargetLocation()->name);
 	returnString.append("\".");
 
 	return returnString;
@@ -142,7 +142,7 @@ string Orders::toString(void) {
 */
 void Orders::operator = (const Orders& o) {
 	this->target = o.target;
-	this->from = o.from;
+	this->player = o.player;
 	this->armyCount = o.armyCount;
 	this->targetLocation = o.targetLocation;
 	this->fromLocation = o.fromLocation;
@@ -348,9 +348,9 @@ void OrdersList::operator = (const OrdersList& o) {
 /*
 * Constructor
 */
-Deploy::Deploy(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+Deploy::Deploy(Player* target, Player* player, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber) {
 	this->target = target;
-	this->from = from;
+	this->player = player;
 	this->armyCount = armyCount;
 	this->targetLocation = targetLocation;
 	this->fromLocation = fromLocation;
@@ -389,7 +389,7 @@ bool Deploy::execute() {
 * Copy function (REQUIREMENT). 
 */
 Deploy Deploy::copy(Deploy order) {
-	Deploy copy = Deploy(this->target, this->from, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
+	Deploy copy = Deploy(this->target, this->player, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
 	return copy;
 }
 
@@ -398,9 +398,9 @@ Deploy Deploy::copy(Deploy order) {
 /*
 * Constructor
 */
-Advance::Advance(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+Advance::Advance(Player* target, Player* player, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber) {
 	this->target = target;
-	this->from = from;
+	this->player = player;
 	this->armyCount = armyCount;
 	this->targetLocation = targetLocation;
 	this->fromLocation = fromLocation;
@@ -421,14 +421,81 @@ Advance::~Advance() {
 */
 bool Advance::validate() {
 	cout << "Validating Advance order: \"" << this->toString();
-	return false;
+	bool flag = true;
+		
+	if (fromLocation->owner != player) {
+		flag = false;
+		return flag;
+	}
+	
+	vector<Territory*> currentedges;
+
+	currentedges = fromLocation->edges;
+
+	bool found = false;
+	for (auto i : currentedges) {
+		if (i == targetLocation) {
+			found = true;
+			break;
+		}
+	}
+
+	if (!found) {
+		flag = false;
+		return flag;
+	}
+
+
+	return flag;
 }
 
 /*
 * Executes the Order returns true is successful
 */
 bool Advance::execute() {
+
+	int probabilityAttackers = 60;
+	int probabilityDefenders = 70;
+	bool prob;
+	int attackingKillsCounter = 0;
+	int defendingKillsCounter = 0;
+	srand(time(NULL));
+
 	if (validate()) {
+		//if the target location is owned by the player:
+		if (targetLocation->owner == player) {
+			fromLocation->addArmies(-armyCount);
+			targetLocation->addArmies(armyCount);
+		}
+		else {
+			//attacking probabilities
+			for (int i = 0; i < armyCount; i++) {
+				prob = (rand() % 100) < probabilityAttackers;
+				if (prob) {
+					attackingKillsCounter++;
+				}
+			}
+			//Defending probabilities
+			for (int i = 0; i < targetLocation->numArmies; i++) {
+				prob = (rand() % 100) < probabilityDefenders;
+				if (prob) {
+					defendingKillsCounter++;
+				}
+			}
+
+			//Check for capture
+			if (targetLocation->numArmies <= defendingKillsCounter) {
+				player->addOwnedTerritory(targetLocation);
+				targetLocation->numArmies = (fromLocation->numArmies) - attackingKillsCounter;
+				fromLocation->numArmies = 0;
+				player->setConqueredFlag(true); //this is to set a success flag so that the player recieves a card at the end of the turn. (only once for at leat one successful conquer)
+			}
+			else {
+				//capture failed.
+				fromLocation->addArmies(-attackingKillsCounter);
+				targetLocation->addArmies(-defendingKillsCounter);
+			}
+		}
 		return true;
 	}
 	return false;
@@ -438,7 +505,7 @@ bool Advance::execute() {
 * Copy function (REQUIREMENT).
 */
 Advance Advance::copy(Advance order) {
-	Advance copy = Advance(this->target, this->from, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
+	Advance copy = Advance(this->target, this->player, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
 	return copy;
 }
 
@@ -447,9 +514,9 @@ Advance Advance::copy(Advance order) {
 /*
 * Constructor
 */
-Bomb::Bomb(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+Bomb::Bomb(Player* target, Player* player, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber) {
 	this->target = target;
-	this->from = from;
+	this->player = player;
 	this->armyCount = armyCount;
 	this->targetLocation = targetLocation;
 	this->fromLocation = fromLocation;
@@ -487,7 +554,7 @@ bool Bomb::execute() {
 * Copy function (REQUIREMENT).
 */
 Bomb Bomb::copy(Bomb order) {
-	Bomb copy = Bomb(this->target, this->from, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
+	Bomb copy = Bomb(this->target, this->player, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
 	return copy;
 }
 
@@ -496,9 +563,9 @@ Bomb Bomb::copy(Bomb order) {
 /*
 * Constructor
 */
-Blockade::Blockade(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+Blockade::Blockade(Player* target, Player* player, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber) {
 	this->target = target;
-	this->from = from;
+	this->player = player;
 	this->armyCount = armyCount;
 	this->targetLocation = targetLocation;
 	this->fromLocation = fromLocation;
@@ -536,7 +603,7 @@ bool Blockade::execute() {
 * Copy function (REQUIREMENT).
 */
 Blockade Blockade::copy(Blockade order) {
-	Blockade copy = Blockade(this->target, this->from, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
+	Blockade copy = Blockade(this->target, this->player, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
 	return copy;
 }
 
@@ -545,9 +612,9 @@ Blockade Blockade::copy(Blockade order) {
 /*
 * Constructor
 */
-Airlift::Airlift(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+Airlift::Airlift(Player* target, Player* player, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber) {
 	this->target = target;
-	this->from = from;
+	this->player = player;
 	this->armyCount = armyCount;
 	this->targetLocation = targetLocation;
 	this->fromLocation = fromLocation;
@@ -586,7 +653,7 @@ bool Airlift::execute() {
 * Copy function (REQUIREMENT).
 */
 Airlift Airlift::copy(Airlift order) {
-	Airlift copy = Airlift(this->target, this->from, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
+	Airlift copy = Airlift(this->target, this->player, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
 	return copy;
 }
 
@@ -595,9 +662,9 @@ Airlift Airlift::copy(Airlift order) {
 /*
 * Constructor
 */
-Negociate::Negociate(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+Negociate::Negociate(Player* target, Player* player, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber) {
 	this->target = target;
-	this->from = from;
+	this->player = player;
 	this->armyCount = armyCount;
 	this->targetLocation = targetLocation;
 	this->fromLocation = fromLocation;
@@ -635,6 +702,6 @@ bool Negociate::execute() {
 * Copy function (REQUIREMENT).
 */
 Negociate Negociate::copy(Negociate order) {
-	Negociate copy = Negociate(this->target, this->from, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
+	Negociate copy = Negociate(this->target, this->player, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
 	return copy;
 }

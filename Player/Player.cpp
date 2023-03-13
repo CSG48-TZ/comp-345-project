@@ -93,6 +93,7 @@ OrdersList* Player::getOrderList(){
 
 //Adds a Territory to the list of owned Territory
 void Player::addOwnedTerritory(Territory* t) {
+    t->changeOwner(this);
     territories.push_back(t);
 }
 
@@ -150,29 +151,29 @@ void Player::printAttackList(vector<Territory *> attackList){
 }
 
 //  creates an order object and adds it to the list of orders.
-void Player::issueOrder(string type, int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber) {
+void Player::issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber) {
     Orders* order{};
     
     std::transform(type.begin(), type.end(), type.begin(),
         [](unsigned char c) { return std::tolower(c); });
     
     if (type == "deploy") {
-        order = new Deploy(target, from, armyCount, targetLocation, fromLocation, orderNumber);
+        order = new Deploy(this, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
     else if (type == "airlift") {
-        order = new Airlift(target, from, armyCount, targetLocation, fromLocation, orderNumber);
+        order = new Airlift(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
     else if (type == "blockade") {
-        order = new Blockade(target, from, armyCount, targetLocation, fromLocation, orderNumber);
+        order = new Blockade(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
     else if (type == "bomb") {
-        order = new Bomb(target, from, armyCount, targetLocation, fromLocation, orderNumber);
+        order = new Bomb(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
     else if (type == "advance") {
-        order = new Advance(target, from, armyCount, targetLocation, fromLocation, orderNumber);
+        order = new Advance(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
     else if (type == "negociate") {
-        order = new Negociate(target, from, armyCount, targetLocation, fromLocation, orderNumber);
+        order = new Negociate(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
 
     orderList->add(order);  // adding order to the list
@@ -187,4 +188,9 @@ void Player::printCurrentHand() {
 
     hand->showHand();
 
+}
+
+//Sets a flag if the player conquered a territory or not this turn
+void Player::setConqueredFlag(bool value) {
+    conqueredTerritoryThisTurn = value;
 }
