@@ -23,7 +23,7 @@ public:
         // stream insertion operator
         friend std::ostream& operator<<(std::ostream& out, const Card& card);
         Card(int);
-        void play(Hand*, int, Deck*, OrdersList*);
+        void play(Hand*, int, Deck*, OrdersList*, Orders*);
         int getType();
         void setType(int);
 };
