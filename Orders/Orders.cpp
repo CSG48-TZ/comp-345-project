@@ -547,6 +547,32 @@ Bomb::~Bomb() {
 */
 bool Bomb::validate() {
 	cout << "Validating Bomb order: \"" << this->toString();
+	if (targetLocation->owner == player) {
+		cout << "The target territory is owned by the same player issuing the bomb order.\"";
+		return false;
+	}
+	int count = player->getHand()->contains(2); //2 for BOMB
+	if (count == 0) {
+		cout << "The player does not have a BOMB card.\"";
+		return false;
+	}
+
+	vector<Territory*> currentedges;
+
+	currentedges = fromLocation->edges;
+
+	bool found = false;
+	for (auto i : currentedges) {
+		if (i == targetLocation) {
+			found = true;
+			break;
+		}
+	}
+
+	if (!found) {
+		cout << "The source territory doesn't have a connected edge with the target territory to BOMB.\"";
+		return false;
+	}
 	return false;
 }
 
@@ -555,6 +581,7 @@ bool Bomb::validate() {
 */
 bool Bomb::execute() {
 	if (validate()) {
+		targetLocation->addArmies(-(int)targetLocation->numArmies/2);
 		return true;
 	}
 	return false;
