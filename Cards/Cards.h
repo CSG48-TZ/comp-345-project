@@ -6,6 +6,7 @@ using namespace std;
 
 class Hand;
 class Deck;
+class OrdersList;
 
 class Card {
     int cardType;
@@ -30,6 +31,7 @@ public:
 class Hand {
     Card* cardHand[7];
     int cardAmount;
+    static const int MAX_AMOUNT_OF_CARDS = 7;
 
 public:
        // Default Constructor
@@ -45,12 +47,15 @@ public:
         void del();
         Card* getCard(int);
         bool addCard(Card*);
-        void removeCard(int);
+        void removeCardAtIndex(int);
+        void removeCardOfType(int type);
         void showHand();
+        int contains(int type);
 };
 
 class Deck {
-    Card* cardDeck[50];
+    static const int MAX_AMOUNT_IN_DECK = 50;
+    Card* cardDeck[MAX_AMOUNT_IN_DECK];
     int deckAmount;
 
 public:

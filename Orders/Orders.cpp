@@ -422,10 +422,18 @@ Advance::~Advance() {
 bool Advance::validate() {
 	cout << "Validating Advance order: \"" << this->toString();
 	bool flag = true;
-		
+	
+	//Check ownerships
 	if (fromLocation->owner != player) {
+		cout << "The player doesn't own the source territory to advance.\"";
 		flag = false;
 		return flag;
+	}
+
+	//check if the player has enough army.
+	if (fromLocation->numArmies < armyCount) {
+		cout << "The player doesn't have enough armies asked by the order in the source territory to advance.\"";
+		return false;
 	}
 	
 	vector<Territory*> currentedges;
@@ -441,6 +449,7 @@ bool Advance::validate() {
 	}
 
 	if (!found) {
+		cout << "The source territory doesn't have a connected edge with the target territory to advance.\"";
 		flag = false;
 		return flag;
 	}
@@ -637,7 +646,26 @@ Airlift::~Airlift() {
 */
 bool Airlift::validate() {
 	cout << "Validating Airlift order: \"" << this->toString();
-	return false;
+	
+	//Checks if both the source and target belong to the player.
+	if (targetLocation->owner != player && fromLocation->owner == player) {
+		return false;
+	}
+	
+	//check if the player has enough army.
+	if (fromLocation->numArmies < armyCount) {
+		cout << "The player doesn't have enough armies asked by the order in the source territory to airlift.\"";
+		return false;
+	}
+	Hand* playerHand = player->getHand();
+
+	int count = playerHand->contains(0); //0 for Airlift
+
+	if (count == 0) {
+		cout << "The player doesn't have an airlift card in hand.\"";
+		return false; //doesn't have the card type.
+	}
+	return true;
 }
 
 /*
@@ -645,6 +673,9 @@ bool Airlift::validate() {
 */
 bool Airlift::execute() {
 	if (validate()) {
+		fromLocation->addArmies(-armyCount);
+		targetLocation->addArmies(armyCount);
+		player->getHand()->removeCardOfType(0);
 		return true;
 	}
 	return false;
