@@ -486,6 +486,7 @@ bool Advance::execute() {
 			//Check for capture
 			if (targetLocation->numArmies <= defendingKillsCounter) {
 				player->addOwnedTerritory(targetLocation);
+				target->removeOwnedTerritory(targetLocation->id);
 				targetLocation->numArmies = (fromLocation->numArmies) - attackingKillsCounter;
 				fromLocation->numArmies = 0;
 				player->setConqueredFlag(true); //this is to set a success flag so that the player recieves a card at the end of the turn. (only once for at leat one successful conquer)

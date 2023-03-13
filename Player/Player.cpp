@@ -97,6 +97,15 @@ void Player::addOwnedTerritory(Territory* t) {
     territories.push_back(t);
 }
 
+//Removes a Territory from the list of owned Territory with the same territory ID
+void Player::removeOwnedTerritory(int id) {
+    for (int i = 0; i < territories.size(); i++) {
+        if (territories.at(i)->id == id) {
+            territories.erase(territories.begin() + i);
+        }
+    }
+}
+
 // print Owned list
 void Player::printOwnedTerritoryList() {
     for (int i = 0; i < territories.size(); i++) {

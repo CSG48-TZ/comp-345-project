@@ -37,6 +37,7 @@ public:
     void setPlayerID(int id);
     vector<Territory *> getTerritory();
     void addOwnedTerritory(Territory* t);
+    void removeOwnedTerritory(int id);
     Hand *getHand();
     OrdersList *getOrderList();
 
