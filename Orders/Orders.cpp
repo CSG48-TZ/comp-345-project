@@ -371,7 +371,11 @@ Deploy::~Deploy() {
 */
 bool Deploy::validate() {
 	cout << "Validating Deploy order: \"" << this->toString();
-	return false;
+	if (targetLocation->owner != player){
+		cout << "The player doesn't own the selected territory.\"";
+		return false;
+	}
+	return true;
 }
 
 /*
@@ -379,6 +383,7 @@ bool Deploy::validate() {
 */
 bool Deploy::execute() {
 	if (validate()) {
+		targetLocation->addArmies(armyCount);
 		return true;
 	}
 	return false;
