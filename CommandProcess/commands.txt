@@ -1,0 +1,6 @@
+loadmap <mapfile>
+validatemap 
+addplayer <playername>
+gamestart
+replay
+quit
