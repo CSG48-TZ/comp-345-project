@@ -61,6 +61,7 @@ public:
 class FileCommandProcessorAdapter : public CommandProcessor {
 private:
     FileLineReader* flr;
+protected:
     string readCommand() const;
 public:
     FileCommandProcessorAdapter();
