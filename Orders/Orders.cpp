@@ -667,6 +667,7 @@ bool Bomb::validate() {
 bool Bomb::execute() {
 	if (validate()) {
 		targetLocation->addArmies(-(int)targetLocation->numArmies/2);
+		player->getHand()->removeCardOfType(2);
 		return true;
 	}
 	return false;
@@ -890,6 +891,7 @@ bool Negociate::validate() {
 bool Negociate::execute() {
 	if (validate()) {
 		player->addPlayerToNegociatedList(target);
+		player->getHand()->removeCardOfType(3);
 		return true;
 	}
 	return false;

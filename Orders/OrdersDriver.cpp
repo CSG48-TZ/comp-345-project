@@ -68,11 +68,11 @@ int main()
 	cout << "Number of armies in Player 2 territory: " << targetTerr->numArmies << "\n";
 	cout << "Ownedship of Player 1 Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << playerTerr->owner->getName() << "\n";
+	cout << playerTerr->owner->getName() << " - " << playerTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 2 Territory: ";
 	SetConsoleTextAttribute(hConsole, 12);
-	cout << targetTerr->owner->getName() << "\n";
+	cout << targetTerr->owner->getName() << " - " << targetTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "*********************************************************************************\n\n";
 
@@ -119,11 +119,11 @@ int main()
 	cout << "Number of armies in Player 2 territory: " << targetTerr->numArmies << "\n";
 	cout << "Ownedship of Player 1 Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << playerTerr->owner->getName() << "\n";
+	cout << playerTerr->owner->getName() << " - " << playerTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 2 Territory: ";
 	SetConsoleTextAttribute(hConsole, 12);
-	cout << targetTerr->owner->getName() << "\n";
+	cout << targetTerr->owner->getName() << " - " << targetTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "*********************************************************************************\n\n";
 
@@ -157,11 +157,11 @@ int main()
 	cout << "Number of armies in Player 2 territory: " << targetTerr->numArmies << "\n";
 	cout << "Ownedship of Player 1 Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << playerTerr->owner->getName() << "\n";
+	cout << playerTerr->owner->getName() << " - " << playerTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 2 Territory: ";
 	SetConsoleTextAttribute(hConsole, 12);
-	cout << targetTerr->owner->getName() << "\n";
+	cout << targetTerr->owner->getName() << " - " << targetTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "*********************************************************************************\n\n";
 
@@ -185,7 +185,7 @@ int main()
 	//Here player 1 will bomb player 3 without a card.
 	cout << "\n\Bomb Order 4 will be issued with no bomb card. \nPress any key to continue..";
 	cin.get();
-	p->issueOrder("Bomb", t, 500, neutralTerr, playerTerr);
+	p->issueOrder("Bomb", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
 	SetConsoleTextAttribute(hConsole, 4);
 	p->getOrderList()->execute();
@@ -210,7 +210,7 @@ int main()
 	cout << "\n*********************************************************************************\n\n";
 
 	//Here player 1 will attack player 3 from a territory that is owned.
-	cout << "\n\Bomb Order 5 will be issued with a territory that is owned and adjacent to the target territory. \nPress any key to continue..";
+	cout << "\n\Bomb Order 6 will be issued with a territory that is owned and adjacent to the target territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Bomb", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -229,11 +229,11 @@ int main()
 	cout << "Number of armies in Player 2 territory: " << targetTerr->numArmies << "\n";
 	cout << "Ownedship of Player 1 Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << playerTerr->owner->getName() << "\n";
+	cout << playerTerr->owner->getName() << " - " << playerTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 2 Territory: ";
 	SetConsoleTextAttribute(hConsole, 12);
-	cout << targetTerr->owner->getName() << "\n";
+	cout << targetTerr->owner->getName() << " - " << targetTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "*********************************************************************************\n\n";
 
@@ -273,23 +273,23 @@ int main()
 	cout << "Number of armies in Player 1 - Second territory: " << t1->numArmies << "\n";
 	cout << "Ownedship of Player 1 Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << playerTerr->owner->getName() << "\n";
+	cout << playerTerr->owner->getName() << " - " << playerTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 2 Territory: ";
 	SetConsoleTextAttribute(hConsole, 12);
-	cout << targetTerr->owner->getName() << "\n";
+	cout << targetTerr->owner->getName() << " - " << targetTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 1 - Second Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << t1->owner->getName() << "\n";
+	cout << t1->owner->getName() << " - " << t1->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "*********************************************************************************\n\n";
 
 	//Here player 1 will airlift without a card.
 	SetConsoleTextAttribute(hConsole, 6);
-	cout << "\nAirlift Order 6 will be issued without a card. \nPress any key to continue..";
+	cout << "\nAirlift Order 7 will be issued without a card. \nPress any key to continue..";
 	cin.get();
-	p->issueOrder("Airlift", t, 0, playerTerr, playerTerr);
+	p->issueOrder("Airlift", p, 0, playerTerr, playerTerr);
 	cout << "*********************************************************************************";
 	SetConsoleTextAttribute(hConsole, 4);
 	p->getOrderList()->execute();
@@ -304,7 +304,7 @@ int main()
 
 	//Here player 1 will airlift into enemy territory.
 	SetConsoleTextAttribute(hConsole, 6);
-	cout << "\nAirlift Order 7 will be issued into enemy territory. \nPress any key to continue..";
+	cout << "\nAirlift Order 8 will be issued into enemy territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Airlift", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -316,9 +316,9 @@ int main()
 
 
 	//Here player 1 will airlift troop from 2 owned territory but with not enough armies.
-	cout << "\nAirlift Order 8 will be issued with 500 troop from t1 territory to player territory. \nPress any key to continue..";
+	cout << "\nAirlift Order 9 will be issued with 500 troop from t1 territory to player territory. \nPress any key to continue..";
 	cin.get();
-	p->issueOrder("Airlift", t, 500, playerTerr, t1);
+	p->issueOrder("Airlift", p, 500, playerTerr, t1);
 	cout << "*********************************************************************************";
 	SetConsoleTextAttribute(hConsole, 4);
 	p->getOrderList()->execute();
@@ -327,9 +327,9 @@ int main()
 	cout << "\n*********************************************************************************\n\n";
 
 	//Here player 1 will airlift troop from 2 owned territories.
-	cout << "\n\Airlift Order 9 will be issued with 250 troop from t1 territory to player territory. \nPress any key to continue..";
+	cout << "\n\Airlift Order 10 will be issued with 250 troop from t1 territory to player territory. \nPress any key to continue..";
 	cin.get();
-	p->issueOrder("Airlift", t, 250, playerTerr, t1);
+	p->issueOrder("Airlift", p, 250, playerTerr, t1);
 	cout << "*********************************************************************************";
 	SetConsoleTextAttribute(hConsole, 10);
 	p->getOrderList()->execute();
@@ -345,15 +345,15 @@ int main()
 	cout << "Number of armies in Player 1 - Second territory: " << t1->numArmies << "\n";
 	cout << "Ownedship of Player 1 Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << playerTerr->owner->getName() << "\n";
+	cout << playerTerr->owner->getName() << " - " << playerTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 2 Territory: ";
 	SetConsoleTextAttribute(hConsole, 12);
-	cout << targetTerr->owner->getName() << "\n";
+	cout << targetTerr->owner->getName() << " - " << targetTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 1 - Second Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << t1->owner->getName() << "\n";
+	cout << t1->owner->getName() << " - " << t1->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "*********************************************************************************\n\n";
 
@@ -366,7 +366,7 @@ int main()
 
 	//Deploy DEMO
 	//Here player 1 will DEPLOY troop to a enemy territory.
-	cout << "\nDeploy Order 10 will be issued with 500 troop by player 1 to player 2 territory. \nPress any key to continue..";
+	cout << "\nDeploy Order 11 will be issued with 500 troop by player 1 to player 2 territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Deploy", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -377,7 +377,7 @@ int main()
 	cout << "\n*********************************************************************************\n\n";
 
 	//Here player 1 will DEPLOY troop to a owned territory.
-	cout << "\n\Deploy Order 11 will be issued with 500 troop by player 1 to own territory. \nPress any key to continue..";
+	cout << "\n\Deploy Order 12 will be issued with 500 troop by player 1 to own territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Deploy", t, 500, playerTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -395,11 +395,11 @@ int main()
 	cout << "Number of armies in Player 1 - Second territory: " << t1->numArmies << "\n";
 	cout << "Ownedship of Player 1 Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << playerTerr->owner->getName() << "\n";
+	cout << playerTerr->owner->getName() << " - " << playerTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 1 - Second Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << t1->owner->getName() << "\n";
+	cout << t1->owner->getName() << " - " << t1->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "*********************************************************************************\n\n";
 
@@ -414,7 +414,7 @@ int main()
 	
 
 	//Here player 1 will try to blockade without a card.
-	cout << "\nBLOCKADE Order 12 will be issued without a card. \nPress any key to continue..";
+	cout << "\nBLOCKADE Order 13 will be issued without a card. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Blockade", t, 500, playerTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -430,7 +430,7 @@ int main()
 	SetConsoleTextAttribute(hConsole, 6);
 
 	//Here player 1 will try to blockade enemy territory.
-	cout << "\n\BLOCKADE Order 12 will be issued into enemy territory. \nPress any key to continue..";
+	cout << "\n\BLOCKADE Order 14 will be issued into enemy territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Blockade", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -441,7 +441,7 @@ int main()
 	cout << "\n*********************************************************************************\n\n";
 
 	//Here player 1 will blockade his own territory.
-	cout << "\n\BLOCKADE Order 12 will be issued into owned territory. \nPress any key to continue..";
+	cout << "\n\BLOCKADE Order 15 will be issued into owned territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Blockade", t, 500, playerTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -481,11 +481,11 @@ int main()
 	cout << "Number of armies in Player 2 territory: " << targetTerr->numArmies << "\n";
 	cout << "Ownedship of Player 1 Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << playerTerr->owner->getName() << "\n";
+	cout << playerTerr->owner->getName() << " - " << playerTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 2 Territory: ";
 	SetConsoleTextAttribute(hConsole, 12);
-	cout << targetTerr->owner->getName() << "\n";
+	cout << targetTerr->owner->getName() << " - " << targetTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "*********************************************************************************\n\n";
 
@@ -499,7 +499,7 @@ int main()
 	//Negociate DEMO
 	//Here player 1 will try to negociate without a card.
 	
-	cout << "\nNEGOCIATE Order 13 will be issued without a card. \nPress any key to continue..";
+	cout << "\nNEGOCIATE Order 16 will be issued without a card. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Negociate", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -516,7 +516,7 @@ int main()
 
 	//Here player 1 will try to negociate with himself.
 	SetConsoleTextAttribute(hConsole, 6);
-	cout << "\nNEGOCIATE Order 14 will be issued themselves. \nPress any key to continue..";
+	cout << "\nNEGOCIATE Order 17 will be issued themselves. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("negociate", p, 500, playerTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -528,7 +528,7 @@ int main()
 
 	//Here player 1 will negociate with player 2.
 	SetConsoleTextAttribute(hConsole, 6);
-	cout << "\nNEGOCIATE Order 15 will be issued themselves. \nPress any key to continue..";
+	cout << "\nNEGOCIATE Order 18 will be issued themselves. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("negociate", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -541,7 +541,24 @@ int main()
 
 	//Here player 1 will try to bomb player 2.
 	SetConsoleTextAttribute(hConsole, 6);
-	cout << "\nBOMB Order 16 will be issued themselves. \nPress any key to continue..";
+	cout << "\nBOMB Order 19 will be issued on an enemy target. \nPress any key to continue..";
+	cin.get();
+	p->issueOrder("bomb", t, 500, targetTerr, playerTerr);
+	cout << "*********************************************************************************";
+	SetConsoleTextAttribute(hConsole, 4);
+	p->getOrderList()->execute();
+	p->clearOrdersList();
+	SetConsoleTextAttribute(hConsole, 6);
+	cout << "\n*********************************************************************************\n\n";
+
+	SetConsoleTextAttribute(hConsole, 7);
+	cout << "\nADDED CARD \"BOMB\" TO PLAYER 1\n\n";
+	p->getHand()->addCard(new Card(2)); //2 for BOMB
+	SetConsoleTextAttribute(hConsole, 6);
+
+	//Here player 1 will try to bomb player 2. with a card this time.
+	SetConsoleTextAttribute(hConsole, 6);
+	cout << "\nBOMB Order 20 will be issued on an enemy target. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("bomb", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -559,11 +576,11 @@ int main()
 	cout << "Number of armies in Player 2 territory: " << targetTerr->numArmies << "\n";
 	cout << "Ownedship of Player 1 Territory: ";
 	SetConsoleTextAttribute(hConsole, 10);
-	cout << playerTerr->owner->getName() << "\n";
+	cout << playerTerr->owner->getName() << " - " << playerTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "Ownedship of Player 2 Territory: ";
 	SetConsoleTextAttribute(hConsole, 12);
-	cout << targetTerr->owner->getName() << "\n";
+	cout << targetTerr->owner->getName() << " - " << targetTerr->name << "\n";
 	SetConsoleTextAttribute(hConsole, 3);
 	cout << "*********************************************************************************\n\n";
 
