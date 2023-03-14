@@ -1,4 +1,6 @@
 #include "GameEngine.h"
+#include "Map.h"
+#include "Cards.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -171,4 +173,102 @@ bool GameEngine::processCommand(std::string& command) {
     } else {
         return false;
     }
+}
+
+
+// Implementation of the startup phase
+// Returns true if startup completed without any issues
+// Returns false if an error occurs
+bool GameEngine::startupPhase() {
+    // TODO - replace all cin instances with commandProcessor methods
+    // TODO - replace with a call to loadmap <filename>
+    cout << "Please enter the name of the map file you wish to use: ";
+    string line;
+    string command = "";
+
+    cin >> line ;
+
+    stringstream stream(line);
+
+    string filename;
+
+    stream >> command >> filename;
+    Maploader maploader(filename);
+
+    Map map = maploader.load();
+
+    setCurrentState(MAP_LOADED);
+
+    // TODO - replace with a call to validatemap command
+
+    if(map.validate()){
+        cout << "Map validated successfully" << endl;
+        setCurrentState(MAP_VALIDATED);
+    }else{
+        cout << "Map is not valid. Terminating program" << endl;
+        exit(0);
+    }
+
+    //
+
+    int numPlayers = 0;
+    vector<Player *> players;
+
+    while(numPlayers < 2 || command != "gamestart"){
+        if(numPlayers == 6) {
+            cout << "A maximum of 6 players are allowed in this game" << endl;
+            cout << "Starting game" << endl;
+            break;
+        } else if(numPlayers < 2){
+            cout << "At least two players are necessary to start the game, please add more players" << endl;
+            cin >> command;
+            if(command == "addplayer"){
+                numPlayers ++;
+                Player * player = new Player();
+                players.push_back(player);
+            }
+        } else if( command == "addplayer"){
+            numPlayers ++;
+            Player * player = new Player();
+            players.push_back(player);
+        }
+    }
+
+    setCurrentState(PLAYERS_ADDED);
+
+    while(command != "gamestart") {
+        cin >> command;
+    }
+
+    // TODO - allocate territories fairly to players
+
+
+    vector<Player *> orderedPlayers; // TODO - Possibly change this to a pointer to a vector of players for usage outside this method
+
+    while(players.size()!= 0){
+        int index = rand()%players.size();
+        orderedPlayers.push_back(players[index]);
+    }
+
+    cout << "Determined the order of play" << endl;
+    for(int i = 0 ; i < orderedPlayers.size(); i ++){
+        cout << i << ": " << orderedPlayers[i]->playerID << endl;
+    }
+
+    for(int i = 0; i < orderedPlayers.size(); i ++){
+        orderedPlayers[i]->addArmies(50);
+    }
+
+    cout << "Added 50 armies to each player's reinforcement pool" << endl;
+
+    Deck deck{};
+    for(int i = 0 ; i < orderedPlayers.size(); i ++){
+        deck.draw(orderedPlayers[i]->getHand());
+        deck.draw(orderedPlayers[i]->getHand());
+    }
+
+    cout << "Drew two cards from the deck for each player" << endl;
+
+    setCurrentState(ISSUE_ORDERS);
+
 }

@@ -24,9 +24,7 @@ public:
     Hand* hand;
     OrdersList* orderList;
     int playerID;
-    bool conqueredTerritoryThisTurn;
-    int orderNumber;
-    Player* negociatedPlayers[20];
+    int reinforcementPool;
 
     Player(); // default constructor
     Player(string pName, int id);
@@ -45,6 +43,7 @@ public:
     void addPlayerToNegociatedList(Player* p);
     void clearNegociatedList();
     OrdersList *getOrderList();
+    void addArmies(int num);
 
     void setConqueredFlag(bool value);
     vector<Territory *> toDefend();
@@ -54,6 +53,9 @@ public:
     void printOwnedTerritoryList();
     void issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation);
     void printCurrentHand();
+
+private:
+    static int numPlayers;
 };
 
 #endif //COMP345_PLAYER_H

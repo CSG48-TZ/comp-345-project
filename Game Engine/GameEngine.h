@@ -2,6 +2,7 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <sstream>
 
 class GameEngine{
     public:
@@ -35,6 +36,9 @@ class GameEngine{
         // Accessors for private variables
         std::string getCurrentState() const;
         void setCurrentState(std::string& state);
+
+        // Method called during startup of game
+        bool startupPhase();
 
     private:
         // A private attribute to track current state
