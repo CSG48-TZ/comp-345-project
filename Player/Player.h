@@ -25,6 +25,7 @@ public:
     OrdersList* orderList;
     int playerID;
     bool conqueredTerritoryThisTurn;
+    int orderNumber;
 
     Player(); // default constructor
     Player(string pName, int id);
@@ -38,6 +39,7 @@ public:
     vector<Territory *> getTerritory();
     void addOwnedTerritory(Territory* t);
     void removeOwnedTerritory(int id);
+    void clearOrdersList();
     Hand *getHand();
     OrdersList *getOrderList();
 
@@ -47,7 +49,7 @@ public:
     vector<Territory *> toAttack();
     void printAttackList(vector<Territory *> attackList);
     void printOwnedTerritoryList();
-    void issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber);
+    void issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation);
     void printCurrentHand();
 };
 

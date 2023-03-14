@@ -188,6 +188,14 @@ OrdersList* OrdersList::copy(OrdersList* orderList) {
 }
 
 /*
+* clears the Orders List.
+*/
+void OrdersList::clearOrdersList() {
+	ordersList.clear();
+}
+
+
+/*
 * Returns the Player ID this list is attributed to
 */
 int OrdersList::getPlayerID() {
@@ -280,15 +288,40 @@ bool OrdersList::validate()
 bool OrdersList::execute()
 {
 	list<Orders*>::iterator it;
+	bool flag = true;
+	Orders* current;
 
-	for (it = ordersList.begin(); it != ordersList.end(); it++) {
-		Orders* current = *it;
-		if (!current->execute()) {
-			return false;
+	for (auto it = ordersList.begin(); it != ordersList.end();) {
+		current = *it;
+		if (current->execute()) {
+			it = ordersList.erase(it);
+		}
+		else {
+			cout << "\nOrder number " << current->getOrderNumber() << " failed to execute.";
+			flag = false;
+			++it;
 		}
 	}
 
-	return true;
+	return flag;
+}
+
+/*
+* Removes a specific order 
+*/
+void OrdersList::removeOrder(Orders* order) {
+	//Creates Iterator
+	list<Orders*>::iterator it;
+	Orders* current;
+	for (auto it = ordersList.begin(); it != ordersList.end();) {
+		current = *it;
+		if (current == order) {
+			it = ordersList.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
 }
 
 /*
@@ -425,19 +458,19 @@ Advance::~Advance() {
 * Validates the order, returns true or false
 */
 bool Advance::validate() {
-	cout << "Validating Advance order: \"" << this->toString();
+	cout << "\nValidating Advance order: \"" << this->toString();
 	bool flag = true;
 	
 	//Check ownerships
 	if (fromLocation->owner != player) {
-		cout << "The player doesn't own the source territory to advance.\"";
+		cout << "\nFAILED: The player doesn't own the source territory to advance.\"";
 		flag = false;
 		return flag;
 	}
 
 	//check if the player has enough army.
 	if (fromLocation->numArmies < armyCount) {
-		cout << "The player doesn't have enough armies asked by the order in the source territory to advance.\"";
+		cout << "\nFAILED: The player doesn't have enough armies asked by the order in the source territory to advance.\"";
 		return false;
 	}
 	
@@ -454,12 +487,12 @@ bool Advance::validate() {
 	}
 
 	if (!found) {
-		cout << "The source territory doesn't have a connected edge with the target territory to advance.\"";
+		cout << "\nFAILED: The source territory doesn't have a connected edge with the target territory to advance.\"";
 		flag = false;
 		return flag;
 	}
 
-
+	cout << "\nVALIDATED.";
 	return flag;
 }
 
@@ -498,10 +531,10 @@ bool Advance::execute() {
 			}
 
 			//Check for capture
-			if (targetLocation->numArmies <= defendingKillsCounter) {
+			if (targetLocation->numArmies <= attackingKillsCounter) {
 				player->addOwnedTerritory(targetLocation);
 				target->removeOwnedTerritory(targetLocation->id);
-				targetLocation->numArmies = (fromLocation->numArmies) - attackingKillsCounter;
+				targetLocation->numArmies = (fromLocation->numArmies) - defendingKillsCounter;
 				fromLocation->numArmies = 0;
 				player->setConqueredFlag(true); //this is to set a success flag so that the player recieves a card at the end of the turn. (only once for at leat one successful conquer)
 			}
@@ -551,14 +584,14 @@ Bomb::~Bomb() {
 * Validates the order, returns true or false
 */
 bool Bomb::validate() {
-	cout << "Validating Bomb order: \"" << this->toString();
+	cout << "\nValidating Bomb order: \"" << this->toString();
 	if (targetLocation->owner == player) {
-		cout << "The target territory is owned by the same player issuing the bomb order.\"";
+		cout << "\nFAILED: The target territory is owned by the same player issuing the bomb order.\"";
 		return false;
 	}
 	int count = player->getHand()->contains(2); //2 for BOMB
 	if (count == 0) {
-		cout << "The player does not have a BOMB card.\"";
+		cout << "\nFAILED: The player does not have a BOMB card.\"";
 		return false;
 	}
 
@@ -575,10 +608,11 @@ bool Bomb::validate() {
 	}
 
 	if (!found) {
-		cout << "The source territory doesn't have a connected edge with the target territory to BOMB.\"";
+		cout << "\nFAILED: The source territory doesn't have a connected edge with the target territory to BOMB.\"";
 		return false;
 	}
-	return false;
+	cout << "\nVALIDATED.";
+	return true;
 }
 
 /*
@@ -627,7 +661,7 @@ Blockade::~Blockade() {
 * Validates the order, returns true or false
 */
 bool Blockade::validate() {
-	cout << "Validating Blockade order: \"" << this->toString();
+	cout << "\nValidating Blockade order: \"" << this->toString();
 	return false;
 }
 
@@ -677,7 +711,7 @@ Airlift::~Airlift() {
 * Validates the order, returns true or false
 */
 bool Airlift::validate() {
-	cout << "Validating Airlift order: \"" << this->toString();
+	cout << "\nValidating Airlift order: \"" << this->toString();
 	
 	//Checks if both the source and target belong to the player.
 	if (targetLocation->owner != player && fromLocation->owner == player) {
@@ -686,7 +720,7 @@ bool Airlift::validate() {
 	
 	//check if the player has enough army.
 	if (fromLocation->numArmies < armyCount) {
-		cout << "The player doesn't have enough armies asked by the order in the source territory to airlift.\"";
+		cout << "\nFAILED: The player doesn't have enough armies asked by the order in the source territory to airlift.\"";
 		return false;
 	}
 	Hand* playerHand = player->getHand();
@@ -694,9 +728,10 @@ bool Airlift::validate() {
 	int count = playerHand->contains(0); //0 for Airlift
 
 	if (count == 0) {
-		cout << "The player doesn't have an airlift card in hand.\"";
+		cout << "\nFAILED: The player doesn't have an airlift card in hand.\"";
 		return false; //doesn't have the card type.
 	}
+	cout << "\nVALIDATED.";
 	return true;
 }
 

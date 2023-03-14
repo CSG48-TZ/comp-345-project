@@ -13,176 +13,166 @@
 
 int main()
 {
-	OrdersList ol(1);
-
-	list<Orders*> testOrders;
-
-	int N = 21;
-	int N1 = 6;
-	int test = 0;
-
+	cout << "\nCreating setup...";
+	//Creating 3 players
 	Player* p = new Player("Dax", 1);
 	Player* t = new Player("Enemy", 2);
-	Player* r = new Player("random", 3);
+	Player* r = new Player("Neutral", 3);
 
+	//Loading the map
 	Maploader maploader = { "C:\\Dev\\test.txt" };
-
 	Map map = maploader.load();
 
-	Territory* terr = map.territories.at(14);
-	Territory* terr2 = map.territories.at(8);
-	Territory* terr3 = map.territories.at(23);
+	//Creating some territories for DEMO.
+	Territory* playerTerr = map.territories.at(14);
+	Territory* targetTerr = map.territories.at(8);
+	Territory* neutralTerr = map.territories.at(23);
 
-	t->addOwnedTerritory(terr);
-	p->addOwnedTerritory(terr2);
-	r->addOwnedTerritory(terr3);
+	Territory* t1 = map.territories.at(1);
+	Territory* t2 = map.territories.at(2);
+	Territory* t3 = map.territories.at(3);
+	Territory* t4 = map.territories.at(4);
+	Territory* t5 = map.territories.at(5);
+	Territory* t6 = map.territories.at(6);
 
-	srand((int)time(0));
-	Orders* o;
+	//Adding territories to players.
+	t->addOwnedTerritory(targetTerr);
+	p->addOwnedTerritory(playerTerr);
+	r->addOwnedTerritory(neutralTerr);
 
-	//CREATION OF RANDOM ORDERS FOR PLAYER 1
-	for (int i = 0; i < 10; i++) {
-		test = (rand() % N1);
-		switch (test) {
-		case 0:
-			o = new Deploy(t, p, rand() % 100, terr, terr2, i);
-			break;
-		case 1:
-			o = new Advance(t, p, rand() % 100, terr, terr2, i);
-			break;
-		case 2:
-			o = new Bomb(t, p, rand() % 100, terr, terr2, i);
-			break;
-		case 3:
-			o = new Blockade(t, p, rand() % 100, terr, terr2, i);
-			break;
-		case 4:
-			o = new Airlift(t, p, rand() % 100, terr, terr2, i);
-			break;
-		case 5:
-			o = new Negociate(t, p, rand() % 100, terr, terr2, i);
-			break;
-		default:
-			o = new Deploy(t, p, rand() % 100, terr, terr2, i);
-		}
+	//Adding armies to territories
+	playerTerr->addArmies(500);
+	targetTerr->addArmies(50);
+	neutralTerr->addArmies(500);
 
-		testOrders.push_back(o);
-	}
+	cout << "\n\nNumber of armies in Player 1 territory: " << playerTerr->numArmies << "\n";
+	cout << "Number of armies in Player 2 territory: " << targetTerr->numArmies << "\n";
+	cout << "Ownedship of Player 1 Territory: " << playerTerr->owner->getName() << "\n";
+	cout << "Ownedship of Player 2 Territory: " << targetTerr->owner->getName() << "\n";
 
-	list<Orders*>::iterator it;
 
-	//ADDING ORDERS TO PLAYER 1 LIST OF ORDER.
-	for (it = testOrders.begin(); it != testOrders.end(); it++) {
-		ol.add(*it);
-	}
-
-	//SHOWING CURRENT ORDERS ON SCREEN
-	cout << "Current number of order in list: " << ol.getCurrentNumberOfOrders();
-	cout << "\n\nCurrent orders are: \n";
-
-	list<Orders*> currentList;
-
-	currentList = ol.getCurrentOrdersList();
-	Orders* current;
-
-	for (it = currentList.begin(); it != currentList.end(); it++) {
-		current = *it;
-		cout << *current << "\n";
-	}
-
-	//PAUSE
-	cout << "\nPress any key to continue..";
+	//Showing off Advance Order:
+	//Here player 1 will attack player 2 from a territory isn't owned by p1.
+	cout << "\nAdvance Order 0 will be issued with a territory that is not owned by the player. Press any key to continue..";
 	cin.get();
+	p->issueOrder("Advance", t, 500, targetTerr, t1);
 
-	/* PART 1 CODE 
-	//CHOOSING A RANDOM ORDER MOVE
-	int index = rand() % ol.getCurrentNumberOfOrders();
-	int toIndex = rand() % ol.getCurrentNumberOfOrders();
-
-	cout << "\nMoving order from index: " << index << " to index: " << toIndex << "...";
-
-	//PAUSE
-	cout << "\nPress any key to continue..";
+	//Here player 1 will attack player 3 from a territory isn't adjacent.
+	cout << "\n\nAdvance Order 1 will be issued with a territory that is not adjacent to the target territory. Press any key to continue..";
 	cin.get();
-
-	//SHOWCASING THE MOVE() FUNCTION
-	ol.move(index, toIndex);
-
-	//SHOWING UPDATED DATA
-	cout << "\n\nUpdated Current orders are: \n";
-
-
-	currentList = ol.getCurrentOrdersList();
-
-	for (it = currentList.begin(); it != currentList.end(); it++) {
-		current = *it;
-		cout << *current << "\n";
-	}
-
-	//PAUSE
-	cout << "\nPress any key to continue..";
+	p->issueOrder("Advance", t, 500, neutralTerr, playerTerr);
+	
+	//Here player 1 will attack player 3 from a territory that is owned.
+	cout << "\n\nAdvance Order 2 will be issued with a territory that is owned and  adjacent to the target territory. Press any key to continue..";
 	cin.get();
+	p->issueOrder("Advance", t, 500, targetTerr, playerTerr);
+	
+	p->getOrderList()->execute();
 
-	//CHOOSING A RANDOM ORDER TO REMOVE MOVE
-	index = rand() % ol.getCurrentNumberOfOrders();
+	cout << "\n\nNumber of armies in Player 1 territory: " << playerTerr->numArmies << "\n";
+	cout << "Number of armies in Player 2 territory: " << targetTerr->numArmies << "\n";
+	cout << "Ownedship of Player 1 Territory: " << playerTerr->owner->getName() << "\n";
+	cout << "Ownedship of Player 2 Territory: " << targetTerr->owner->getName() << "\n";
 
-	cout << "\nRemoving order at index: " << index << "...";
 
-	//PAUSE
-	cout << "\nPress any key to continue..";
+	p->clearOrdersList();;
+
+	cout << "\n\nClearing orders list and resetting army values...\n\n";
+	playerTerr->numArmies = 500;
+	targetTerr->numArmies = 500;
+	neutralTerr->numArmies = 500;
+
+	//Adding territories to players.
+	t->addOwnedTerritory(targetTerr);
+	p->addOwnedTerritory(playerTerr);
+	r->addOwnedTerritory(neutralTerr);
+
+	//Showing BOMB Order:
+	//Here player 1 will bomb iots own territorty.
+	cout << "\Bomb Order 3 will be issued with a territory that owned by the same player issuing the order. Press any key to continue..";
 	cin.get();
+	p->issueOrder("Bomb", t, 0, playerTerr, playerTerr);
 
-	ol.remove(index);
-
-	//SHOWING UPDATED DATA
-	cout << "\n\nUpdated Current orders are: \n";
-
-
-	currentList = ol.getCurrentOrdersList();
-
-	for (it = currentList.begin(); it != currentList.end(); it++) {
-		current = *it;
-		cout << *current << "\n";
-	}
-
-	//PAUSE
-	cout << "\nPress any key to continue..";
+	//Here player 1 will bomb player 3 without a card.
+	cout << "\n\Bomb Order 4 will be issued with no bomb card. Press any key to continue..";
 	cin.get();
-	*/
+	p->issueOrder("Bomb", t, 500, neutralTerr, playerTerr);
 
-	//VALIDATING ALL ORDERS IN ORDER
+	p->getOrderList()->execute();
 
-	cout << "\n\nTrying to validate current orders... **ALL WILL FAIL** \n";
+	p->getHand()->addCard(new Card(2));
 
-	//PAUSE
-	cout << "\nPress any key to continue..";
+	//Here player 1 will bomb player 3 from a territory isn't adjacent.
+	cout << "\n\Bomb Order 5 will be issued with a territory that is not adjacent to the target territory. Press any key to continue..";
 	cin.get();
+	p->issueOrder("Bomb", t, 500, neutralTerr, playerTerr);
 
-	for (it = currentList.begin(); it != currentList.end(); it++) {
-		current = *it;
-		cout << "\n";
-		if (current->validate()) {
-			cout << "\nOrder " << current->getOrderNumber() << " is valid!\n\n";
-		}
-	}
-
-	//EXECUTING ALL ORDERS IN ORDER
-
-	cout << "\nTrying to execute current orders... **ALL WILL FAIL SINCE ORDERS ARE INVALID BY DEFAULT** \n\n";
-
-	//PAUSE
-	cout << "\nPress any key to continue..";
+	//Here player 1 will attack player 3 from a territory that is owned.
+	cout << "\n\Bomb Order 5 will be issued with a territory that is owned and adjacent to the target territory. Press any key to continue..";
 	cin.get();
+	p->issueOrder("Bomb", t, 500, targetTerr, playerTerr);
 
-	for (it = currentList.begin(); it != currentList.end(); it++) {
-		Orders* current = *it;
-		if (!current->execute()) {
-			cout << "\nOrder " << current->getOrderNumber() << " could not be executed because it is invalid!\n\n";
-		}
-	}
+	p->getOrderList()->execute();
 
 
-	delete p, t, r, terr, terr2;
+	cout << "\n\nNumber of armies in Player 1 territory: " << playerTerr->numArmies << "\n";
+	cout << "Number of armies in Player 2 territory: " << targetTerr->numArmies << "\n";
+	cout << "Ownedship of Player 1 Territory: " << playerTerr->owner->getName() << "\n";
+	cout << "Ownedship of Player 2 Territory: " << targetTerr->owner->getName() << "\n";
+
+	//Showing Airlift Order:
+ 	p->clearOrdersList();;
+
+	cout << "\n\nClearing orders list and resetting army values...\n\n";
+	playerTerr->numArmies = 500;
+	targetTerr->numArmies = 500;
+	neutralTerr->numArmies = 500;
+	t1->numArmies = 250;
+
+	//Adding territories to players.
+	t->addOwnedTerritory(targetTerr);
+	p->addOwnedTerritory(playerTerr);
+	p->addOwnedTerritory(t1);
+	r->addOwnedTerritory(neutralTerr);
+
+	//Here player 1 will airlift without a card.
+	cout << "\Airlift Order 6 will be issued without a card. Press any key to continue..";
+	cin.get();
+	p->issueOrder("Airlift", t, 0, playerTerr, playerTerr);
+	p->getOrderList()->execute();
+
+	p->clearOrdersList();
+	p->getHand()->addCard(new Card(0));
+
+	//Here player 1 will airlift into enemy territory.
+	cout << "\n\Airlift Order 7 will be issued into enemy territory. Press any key to continue..";
+	cin.get();
+	p->issueOrder("Airlift", t, 500, targetTerr, playerTerr);
+
+	p->getOrderList()->execute();
+
+
+	//Here player 1 will airlift troop from 2 owned territory but with not enough armies.
+	cout << "\n\Airlift Order  will be issued with 500 troop from t1 territory to player territory. Press any key to continue..";
+	cin.get();
+	p->issueOrder("Airlift", t, 500, playerTerr, t1);
+
+	p->getOrderList()->execute();
+	p->clearOrdersList();
+
+	//Here player 1 will airlift troop from 2 owned territories.
+	cout << "\n\Airlift Order  will be issued with 250 troop from t1 territory to player territory. Press any key to continue..";
+	cin.get();
+	p->issueOrder("Airlift", t, 250, playerTerr, t1);
+	p->getOrderList()->execute();
+
+	cout << "\n\nNumber of armies in Player 1 territory: " << playerTerr->numArmies << "\n";
+	cout << "Number of armies in t1 territory: " << t1->numArmies << "\n";
+	cout << "Ownedship of Player 1 Territory: " << playerTerr->owner->getName() << "\n";
+	cout << "Ownedship of t1 Territory: " << t1->owner->getName() << "\n";
+	
+
+	delete p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2 ,t3, t4, t5, t6;
 
 	return 0;
 }

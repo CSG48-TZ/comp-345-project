@@ -51,7 +51,9 @@ public:
 
 	void add(Orders* order);
 	void move(int index, int toIndex);
-	void remove(int index);
+	void remove(int index); \
+	void removeOrder(Orders* order);
+	void clearOrdersList();
 	bool validate();
 	bool execute();
 	int getCurrentNumberOfOrders();

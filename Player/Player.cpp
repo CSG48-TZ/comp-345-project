@@ -10,6 +10,7 @@ Player::Player(){
     this->hand = new Hand();
     this->playerID = 0;
     this->orderList = new OrdersList(this->playerID);
+    this->orderNumber = 0;
 }
 
 // parametrized constructor
@@ -19,6 +20,7 @@ Player::Player(string pName, int id){
     this->hand = new Hand();
     this->playerID = id;
     this->orderList = new OrdersList(id);
+    this->orderNumber = 0;
 }
 
 // copy constructor
@@ -27,6 +29,8 @@ Player::Player(const Player &player){
     territories = player.territories;
     hand = player.hand;
     orderList = player.orderList;
+    this->playerID = player.playerID;
+    this->orderNumber = player.orderNumber;
 }
 
 // destructor
@@ -44,6 +48,8 @@ Player& Player::operator=(const Player& player){
     this->territories = player.territories;
     this->hand = player.hand;
     this->orderList = player.orderList;
+    this->playerID = player.playerID;
+    this->orderNumber = player.orderNumber;
     return *this;
 }
 
@@ -71,6 +77,10 @@ void Player::setPlayerID(int id) {
     playerID = id;
 }
 
+//clears the Orders List
+void Player::clearOrdersList() {
+    orderList->clearOrdersList();
+}
 
 string Player::getName(){
     return pName;
@@ -93,8 +103,21 @@ OrdersList* Player::getOrderList(){
 
 //Adds a Territory to the list of owned Territory
 void Player::addOwnedTerritory(Territory* t) {
+    if (t->owner != NULL) {
+        t->owner->removeOwnedTerritory(t->id);
+    }
     t->changeOwner(this);
-    territories.push_back(t);
+    bool found = false;
+    for (int i = 0; i < territories.size(); i++) {
+        if (territories.at(i) == t) {
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        territories.push_back(t);
+    }
+
 }
 
 //Removes a Territory from the list of owned Territory with the same territory ID
@@ -160,7 +183,7 @@ void Player::printAttackList(vector<Territory *> attackList){
 }
 
 //  creates an order object and adds it to the list of orders.
-void Player::issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber) {
+void Player::issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation) {
     Orders* order{};
     
     std::transform(type.begin(), type.end(), type.begin(),
@@ -185,6 +208,7 @@ void Player::issueOrder(string type, Player* target, int armyCount, Territory* t
         order = new Negociate(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
 
+    orderNumber++;
     orderList->add(order);  // adding order to the list
     cout << "Order has been added to the list" << endl;
 }
