@@ -272,3 +272,28 @@ bool GameEngine::startupPhase() {
     setCurrentState(ISSUE_ORDERS);
 
 }
+
+bool GameEngine::reinforcementPhase(){
+    int reinforcementAmount;
+    int numPlayers = players.size();
+    for (int i = 0; i< numPlayers;i++){
+        // for total amount of territories
+        //map->territories.size();
+
+        // access each territory in the continent in the amp
+        //map->continents[1][2];
+
+    }
+}
+
+bool GameEngine::issueOrdersPhase(){
+
+}
+
+bool GameEngine::executeOrdersPhase(){
+
+}
+
+void GameEngine::mainGameLoop(){
+
+}

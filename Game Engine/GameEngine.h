@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <vector>
 #include <sstream>
+#include "../Player/Player.h"
 
 class GameEngine{
     public:
@@ -39,6 +40,21 @@ class GameEngine{
 
         // Method called during startup of game
         bool startupPhase();
+
+        // Method called during reinforcement phase
+        bool reinforcementPhase();
+
+        // Method called during issue orders phase
+        bool issueOrdersPhase();
+
+        // Method called during execute orders phase
+        bool executeOrdersPhase();
+
+        // Method called for the main game loop
+        void mainGameLoop(); 
+
+        vector <Player *> players;
+        Map * map;
 
     private:
         // A private attribute to track current state
