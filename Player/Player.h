@@ -26,6 +26,7 @@ public:
     int playerID;
     bool conqueredTerritoryThisTurn;
     int orderNumber;
+    Player* negociatedPlayers[20];
 
     Player(); // default constructor
     Player(string pName, int id);
@@ -41,6 +42,8 @@ public:
     void removeOwnedTerritory(int id);
     void clearOrdersList();
     Hand *getHand();
+    void addPlayerToNegociatedList(Player* p);
+    void clearNegociatedList();
     OrdersList *getOrderList();
 
     void setConqueredFlag(bool value);

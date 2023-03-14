@@ -11,6 +11,8 @@ Player::Player(){
     this->playerID = 0;
     this->orderList = new OrdersList(this->playerID);
     this->orderNumber = 0;
+
+    
 }
 
 // parametrized constructor
@@ -196,7 +198,14 @@ void Player::issueOrder(string type, Player* target, int armyCount, Territory* t
         order = new Airlift(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
     else if (type == "blockade") {
-        order = new Blockade(target, this, armyCount, targetLocation, fromLocation, orderNumber);
+        if (target->getName() != "NEUTRAL") {
+            cout << "Target name for BLOCKADE order is not \"NEUTRAL\" a new player will be created.";
+            Player* n = new Player("NEUTRAL", 0);\
+            order = new Blockade(n, this, armyCount, targetLocation, fromLocation, orderNumber);
+        }
+        else {
+            order = new Blockade(target, this, armyCount, targetLocation, fromLocation, orderNumber);
+        }
     }
     else if (type == "bomb") {
         order = new Bomb(target, this, armyCount, targetLocation, fromLocation, orderNumber);
@@ -225,5 +234,29 @@ void Player::printCurrentHand() {
 
 //Sets a flag if the player conquered a territory or not this turn
 void Player::setConqueredFlag(bool value) {
+    cout << "\nPlayer: " << pName << " is now set to recieve an extra card at the end of turn!\n";
     conqueredTerritoryThisTurn = value;
+}
+
+//Adds a player to the list of negociated PLayers
+void Player::addPlayerToNegociatedList(Player* p) {
+    int count = 0;
+    for (Player* i : negociatedPlayers) {
+        if (i == NULL) {
+            break;
+        }
+        count++;
+    }
+    negociatedPlayers[count] = p;
+}
+
+
+//Empty the array of negociated PLayers
+void Player::clearNegociatedList() {
+    int count = 0;
+    for (Player* i : negociatedPlayers) {
+        delete i;
+        i = NULL;
+    }
+
 }

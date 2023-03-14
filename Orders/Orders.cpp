@@ -26,7 +26,14 @@ Orders::Orders() {
 * Deconstructor
 */
 Orders::~Orders() {
-
+	delete target;
+	target = nullptr;
+	delete player;
+	player = nullptr;
+	delete targetLocation;
+	targetLocation = nullptr;
+	delete fromLocation;
+	fromLocation = nullptr;
 }
 
 /*
@@ -396,16 +403,23 @@ Deploy::Deploy(Player* target, Player* player, int armyCount, Territory* targetL
 * Deconstructor
 */
 Deploy::~Deploy() {
-
+	delete target;
+	target = nullptr;
+	delete player;
+	player = nullptr;
+	delete targetLocation;
+	targetLocation = nullptr;
+	delete fromLocation;
+	fromLocation = nullptr;
 }
 
 /*
 * Validates the order, returns true or false
 */
 bool Deploy::validate() {
-	cout << "Validating Deploy order: \"" << this->toString();
+	cout << "\nValidating Deploy order: \"" << this->toString();
 	if (targetLocation->owner != player){
-		cout << "The player doesn't own the selected territory.\"";
+		cout << "\nThe player doesn't own the selected territory.";
 		return false;
 	}
 	return true;
@@ -451,6 +465,14 @@ Advance::Advance(Player* target, Player* player, int armyCount, Territory* targe
 * Deconstructor
 */
 Advance::~Advance() {
+	delete target;
+	target = nullptr;
+	delete player;
+	player = nullptr;
+	delete targetLocation;
+	targetLocation = nullptr;
+	delete fromLocation;
+	fromLocation = nullptr;
 
 }
 
@@ -458,19 +480,19 @@ Advance::~Advance() {
 * Validates the order, returns true or false
 */
 bool Advance::validate() {
-	cout << "\nValidating Advance order: \"" << this->toString();
+	cout << "\nValidating Advance order: \n\"" << this->toString() << "\"";
 	bool flag = true;
 	
 	//Check ownerships
 	if (fromLocation->owner != player) {
-		cout << "\nFAILED: The player doesn't own the source territory to advance.\"";
+		cout << "\nFAILED: The player doesn't own the source territory to advance.";
 		flag = false;
 		return flag;
 	}
 
 	//check if the player has enough army.
 	if (fromLocation->numArmies < armyCount) {
-		cout << "\nFAILED: The player doesn't have enough armies asked by the order in the source territory to advance.\"";
+		cout << "\nFAILED: The player doesn't have enough armies asked by the order in the source territory to advance.";
 		return false;
 	}
 	
@@ -487,9 +509,16 @@ bool Advance::validate() {
 	}
 
 	if (!found) {
-		cout << "\nFAILED: The source territory doesn't have a connected edge with the target territory to advance.\"";
+		cout << "\nFAILED: The source territory doesn't have a connected edge with the target territory to advance.";
 		flag = false;
 		return flag;
+	}
+
+	for (Player* p : player->negociatedPlayers) {
+		if (p == target) {
+			cout << "\nFAILED: The target player currently has a negociated contract and cannot be attacked.";
+			return false;
+		}
 	}
 
 	cout << "\nVALIDATED.";
@@ -577,7 +606,14 @@ Bomb::Bomb(Player* target, Player* player, int armyCount, Territory* targetLocat
 * Deconstructor
 */
 Bomb::~Bomb() {
-
+	delete target;
+	target = nullptr;
+	delete player;
+	player = nullptr;
+	delete targetLocation;
+	targetLocation = nullptr;
+	delete fromLocation;
+	fromLocation = nullptr;
 }
 
 /*
@@ -586,12 +622,12 @@ Bomb::~Bomb() {
 bool Bomb::validate() {
 	cout << "\nValidating Bomb order: \"" << this->toString();
 	if (targetLocation->owner == player) {
-		cout << "\nFAILED: The target territory is owned by the same player issuing the bomb order.\"";
+		cout << "\nFAILED: The target territory is owned by the same player issuing the bomb order.";
 		return false;
 	}
 	int count = player->getHand()->contains(2); //2 for BOMB
 	if (count == 0) {
-		cout << "\nFAILED: The player does not have a BOMB card.\"";
+		cout << "\nFAILED: The player does not have a BOMB card.";
 		return false;
 	}
 
@@ -608,9 +644,19 @@ bool Bomb::validate() {
 	}
 
 	if (!found) {
-		cout << "\nFAILED: The source territory doesn't have a connected edge with the target territory to BOMB.\"";
+		cout << "\nFAILED: The source territory doesn't have a connected edge with the target territory to BOMB.";
 		return false;
 	}
+
+	for (Player* p : player->negociatedPlayers) {
+		if (p == target) {
+			cout << "\nFAILED: The target player currently has a negociated contract and cannot be attacked.";
+			return false;
+		}
+	}
+
+
+
 	cout << "\nVALIDATED.";
 	return true;
 }
@@ -654,7 +700,14 @@ Blockade::Blockade(Player* target, Player* player, int armyCount, Territory* tar
 * Deconstructor
 */
 Blockade::~Blockade() {
-
+	delete target;
+	target = nullptr;
+	delete player;
+	player = nullptr;
+	delete targetLocation;
+	targetLocation = nullptr;
+	delete fromLocation;
+	fromLocation = nullptr;
 }
 
 /*
@@ -662,7 +715,19 @@ Blockade::~Blockade() {
 */
 bool Blockade::validate() {
 	cout << "\nValidating Blockade order: \"" << this->toString();
-	return false;
+	if (targetLocation->owner != player) {
+		cout << "\nFAILED: The target territory is not owned by the same player issuing the blockade order.";
+		return false;
+	}
+
+	int count = player->getHand()->contains(1); //1 for Blockade
+	if (count == 0) {
+		cout << "\nFAILED: The player does not have a BLOCKADE card in hand.";
+		return false; //checks for card in hand.
+	}
+
+	cout << "\nVALIDATED.";
+	return true;
 }
 
 /*
@@ -670,6 +735,9 @@ bool Blockade::validate() {
 */
 bool Blockade::execute() {
 	if (validate()) {
+		targetLocation->addArmies(targetLocation->numArmies);
+		player->removeOwnedTerritory(targetLocation->id);
+		targetLocation->changeOwner(target);
 		return true;
 	}
 	return false;
@@ -704,7 +772,14 @@ Airlift::Airlift(Player* target, Player* player, int armyCount, Territory* targe
 * Deconstructor
 */
 Airlift::~Airlift() {
-
+	delete target;
+	target = nullptr;
+	delete player;
+	player = nullptr;
+	delete targetLocation;
+	targetLocation = nullptr;
+	delete fromLocation;
+	fromLocation = nullptr;
 }
 
 /*
@@ -715,12 +790,13 @@ bool Airlift::validate() {
 	
 	//Checks if both the source and target belong to the player.
 	if (targetLocation->owner != player && fromLocation->owner == player) {
+		cout << "\nFAILED: The player doesn't own the target territory.\n";
 		return false;
 	}
 	
 	//check if the player has enough army.
 	if (fromLocation->numArmies < armyCount) {
-		cout << "\nFAILED: The player doesn't have enough armies asked by the order in the source territory to airlift.\"";
+		cout << "\nFAILED: The player doesn't have enough armies asked by the order in the source territory to airlift.";
 		return false;
 	}
 	Hand* playerHand = player->getHand();
@@ -728,7 +804,7 @@ bool Airlift::validate() {
 	int count = playerHand->contains(0); //0 for Airlift
 
 	if (count == 0) {
-		cout << "\nFAILED: The player doesn't have an airlift card in hand.\"";
+		cout << "\nFAILED: The player doesn't have an airlift card in hand.";
 		return false; //doesn't have the card type.
 	}
 	cout << "\nVALIDATED.";
@@ -776,15 +852,36 @@ Negociate::Negociate(Player* target, Player* player, int armyCount, Territory* t
 * Deconstructor
 */
 Negociate::~Negociate() {
-
+	delete target;
+	target = nullptr;
+	delete player;
+	player = nullptr;
+	delete targetLocation;
+	targetLocation = nullptr;
+	delete fromLocation;
+	fromLocation = nullptr;
 }
 
 /*
 * Validates the Negociate order, returns true or false
 */
 bool Negociate::validate() {
-	cout << "Validating Negociate order: \"" << this->toString();
-	return false;
+	cout << "\nValidating Negociate order: \"" << this->toString();
+	Hand* playerHand = player->getHand();
+
+	int count = playerHand->contains(3); //3 for Diplomacy
+
+	if (count == 0) {
+		cout << "\nFAILED: The player doesn't have an Diplomacy card in hand.";
+		return false; //doesn't have the card type.
+	}
+
+	if (targetLocation->owner == player) {
+		cout << "\nFAILED: The target territory is owned by the same player issuing the negociate order.";
+		return false;
+	}
+	cout << "\nVALIDATED.";
+	return true;
 }
 
 /*
@@ -792,6 +889,7 @@ bool Negociate::validate() {
 */
 bool Negociate::execute() {
 	if (validate()) {
+		player->addPlayerToNegociatedList(target);
 		return true;
 	}
 	return false;
