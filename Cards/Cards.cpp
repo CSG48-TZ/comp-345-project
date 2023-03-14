@@ -82,7 +82,7 @@ void Card::play(Hand* hand, int cardNum, Deck* deck, OrdersList* orderList) {
         orderList->add(order);
     }
     order = NULL;
-    hand->removeCard(cardNum);	
+    hand->removeCardAtIndex(cardNum);	
 	deck->returnCard(this);
 }
 
@@ -90,7 +90,7 @@ void Card::play(Hand* hand, int cardNum, Deck* deck, OrdersList* orderList) {
 
 // Default constructor
 Hand::Hand(){
-    for (int i =0; i < 7; i++){
+    for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
         cardHand[i] = NULL;
     }
     cardAmount = 0;
@@ -98,14 +98,14 @@ Hand::Hand(){
 
 // copy constructor
 Hand::Hand(const Hand& hand) {
-    for (int i =0; i < 7; i++){
+    for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
         this->cardHand[i] = hand.cardHand[i];
     }
 }
 
 // assignment operator
 Hand& Hand::operator=(const Hand& hand) {
-    for (int i =0; i < 7; i++){
+    for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
         this->cardHand[i] = hand.cardHand[i];
     }
     return *this;
@@ -125,7 +125,7 @@ ostream& operator<<(ostream& out, const Hand& hand) {
 
 // Destructor
 Hand::~Hand() {
-    for (int i =0; i < 7; i++){
+    for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
         delete cardHand[i];
         cardHand[i] = NULL;
     }
@@ -133,7 +133,7 @@ Hand::~Hand() {
 
 // delete hand
 void Hand::del(){
-    for (int i =0; i < 7; i++){
+    for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
         delete cardHand[i];
         cardHand[i] = NULL;
     }
@@ -142,7 +142,7 @@ void Hand::del(){
 // add a card to the hand (utilized in the deck draw function)
 bool Hand::addCard(Card* card){
     // checks to see if the player doesn't have a full hand of cards (max is set to 7 cards)
-    if (cardAmount < 7){
+    if (cardAmount < MAX_AMOUNT_OF_CARDS){
         cardHand[cardAmount] = card;
         cardAmount += 1;
         return true;
@@ -152,8 +152,30 @@ bool Hand::addCard(Card* card){
     }
 }
 
+//checks if a card of a specific type is in the hand and returns the quantity
+int Hand::contains(int type) {
+    int count = 0;
+
+    for (int i = 0; i < MAX_AMOUNT_OF_CARDS; i++) {
+        if (cardHand[i]->getType() == type) {
+            count++;
+           }
+    }
+    
+    return count;
+}
+
+// remove card of the specified type from the hand
+void Hand::removeCardOfType(int type) {
+    for (int i = 0; i < MAX_AMOUNT_OF_CARDS; i++) {
+        if (cardHand[i]->getType() == type) {
+            removeCardAtIndex(i);
+        }
+    }
+}
+
 // remove card from the hand
-void Hand::removeCard(int cardNum) {
+void Hand::removeCardAtIndex(int cardNum) {
     cardHand[cardNum] = cardHand[cardAmount - 1];
     cardHand[cardAmount - 1] = NULL;
     cardAmount -= 1;
@@ -195,19 +217,19 @@ Deck::Deck() {
         cardDeck[i] = new Card(4);
     }
     // 49 because index starts at 0
-    deckAmount = 50;
+    deckAmount = MAX_AMOUNT_IN_DECK;
 }
 
 // copy constructor
 Deck::Deck(const Deck& deck) {
-    for (int i = 0; i < 50; i++){
+    for (int i = 0; i < MAX_AMOUNT_IN_DECK; i++){
         this->cardDeck[i] = deck.cardDeck[i];
     }
 }
 
 // assignment operator
 Deck& Deck::operator=(const Deck& deck) {
-    for (int i = 0; i < 50; i++){
+    for (int i = 0; i < MAX_AMOUNT_IN_DECK; i++){
         this->cardDeck[i] = deck.cardDeck[i];
     }
     return *this;
@@ -221,7 +243,7 @@ ostream& operator<<(ostream& out, const Deck& deck) {
 
 // Destructor
 Deck::~Deck() {
-    for (int i = 0; i < 49; i++){
+    for (int i = 0; i < MAX_AMOUNT_IN_DECK - 1; i++){
         delete cardDeck[i];
         cardDeck[i] = NULL;
     }
@@ -229,7 +251,7 @@ Deck::~Deck() {
 
 // Deletes the whole deck
 void Deck::del() {
-    for (int i = 0; i < 49; i++){
+    for (int i = 0; i < MAX_AMOUNT_IN_DECK - 1; i++){
         delete cardDeck[i];
         cardDeck[i] = NULL;
     }
