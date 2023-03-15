@@ -141,7 +141,7 @@ void GameEngine::startupPhase() {
         Command* command = this->cmdPcs->getCommand();
         if (command == NULL) {
             cout << "No command was input." << endl;
-            continue;
+            exit(0);
         }
         // Check if the command is valid and save effect
         string currentState = this->getCurrentState();
@@ -208,6 +208,9 @@ void GameEngine::startupPhase() {
         this->setCurrentState(nextState);
         delete command;
         command = NULL;
+        cout << "\nInput any letter to continue" << endl;
+        string ctn;
+        cin >> ctn;
     }
 
     // TODO - allocate territories fairly to players
@@ -226,7 +229,7 @@ void GameEngine::startupPhase() {
     }
 
     for (int i = 0; i < orderedPlayers.size(); i++) {
-        orderedPlayers[i]->addArmies(50);
+        // orderedPlayers[i]->addArmies(50);
     }
 
     cout << "Added 50 armies to each player's reinforcement pool" << endl;
