@@ -97,6 +97,7 @@ string CommandProcessor::readCommand() const {
 }
 // Provides a public method to other objects for using the command processor
 Command* CommandProcessor::getCommand() {
+	cout << "\nPlease Enter command or enter nothing to exit: ";
 	string command = this->readCommand();
 	if (command == "") {
 		return NULL;
@@ -236,8 +237,8 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter() : CommandProcessor(){
 	this->flr = new FileLineReader();
 }
 // General Constructor
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(string fileName) : CommandProcessor() {
-	this->flr = new FileLineReader(fileName);
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileLineReader* reader) : CommandProcessor() {
+	this->flr = reader;
 }
 // Copy Constructor
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(FileCommandProcessorAdapter* other) : CommandProcessor() {

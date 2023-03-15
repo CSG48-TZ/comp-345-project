@@ -65,7 +65,7 @@ protected:
     string readCommand() const;
 public:
     FileCommandProcessorAdapter();
-    FileCommandProcessorAdapter(string fileName);
+    FileCommandProcessorAdapter(FileLineReader* reader);
     FileCommandProcessorAdapter(FileCommandProcessorAdapter* other);
     FileCommandProcessorAdapter& operator=(FileCommandProcessorAdapter& other);
     friend ostream& operator<<(ostream& out, FileCommandProcessorAdapter& const fprs);
