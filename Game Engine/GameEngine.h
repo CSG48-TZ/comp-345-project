@@ -2,6 +2,9 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include "../CommandProcess/CommandProcessing.h"
+#include "../Map/Map.h"
+#include "../Cards/Cards.h"
 
 class GameEngine{
     public:
@@ -29,14 +32,19 @@ class GameEngine{
         // Destructor
         ~GameEngine();
 
-        // To process the command entered in the program console
-        bool processCommand(std::string& command);
-
-        // Accessors for private variables
+        // Accessor and Mutator for private variables
         std::string getCurrentState() const;
         void setCurrentState(std::string& state);
+
+        // Method called during startup of game
+        void startupPhase();
+
 
     private:
         // A private attribute to track current state
         State* currentState;
+        CommandProcessor* cmdPcs;
+        Map* map;
+        vector<Player*> players;
+        void initializeCommandProcessor();
 };
