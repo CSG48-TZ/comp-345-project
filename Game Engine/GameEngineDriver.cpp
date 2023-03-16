@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 using namespace std;
+
 int main() {
     cout << "***********Game Start***********\nWelcome to the game!" << endl;
     GameEngine* game = new GameEngine;

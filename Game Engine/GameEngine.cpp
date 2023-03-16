@@ -210,7 +210,8 @@ void GameEngine::startupPhase() {
         command = NULL;
         cout << "\nInput any letter to continue" << endl;
         string ctn;
-        cin >> ctn;
+        getline(cin, ctn);
+        cout << endl;
     }
 
     // TODO - allocate territories fairly to players

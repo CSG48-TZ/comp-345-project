@@ -21,6 +21,9 @@ class GameEngine{
             END
         };
 
+
+        CommandProcessor* cmdPcs;
+
         // default constructor
         GameEngine();
         // copy constructor
@@ -43,7 +46,6 @@ class GameEngine{
     private:
         // A private attribute to track current state
         State* currentState;
-        CommandProcessor* cmdPcs;
         Map* map;
         vector<Player*> players;
         void initializeCommandProcessor();
