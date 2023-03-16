@@ -86,6 +86,7 @@ void CommandProcessor::saveCommand(string input, string effect) {
 }
 // Read command line from the console
 string CommandProcessor::readCommand() const {
+	cout << "\nPlease Enter command or enter nothing to exit: ";
 	string command;
 	getline(cin, command);
 	// Allow users to terminate the program by inputting E
@@ -97,7 +98,6 @@ string CommandProcessor::readCommand() const {
 }
 // Provides a public method to other objects for using the command processor
 Command* CommandProcessor::getCommand() {
-	cout << "\nPlease Enter command or enter nothing to exit: ";
 	string command = this->readCommand();
 	if (command == "") {
 		return NULL;
