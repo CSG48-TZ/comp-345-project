@@ -318,8 +318,10 @@ bool GameEngine::reinforcementPhase(){
  * Players issue orders and place them in their order list
  */
 void GameEngine::issueOrdersPhase() {
+    
     // inform current game play phrase
     cout << "Issue Orders Phase " << endl;
+    
     // loop around through all the players and issue their orders to the order list
     std::vector<Player*>::iterator it;
     for(it = players.begin(); it != players.end(); it++){
@@ -337,11 +339,14 @@ void GameEngine::executeOrdersPhase() {
 
     bool allOrderExecuted = false;
     int orderListLength = 0;  // length after executing deploy
+    
     // inform current game play phrase
     cout << "Order Execution Phase " << endl;
+    
     //execute deploy order first
     for (auto currPlayer : players) {
         OrdersList* currOrderList = currPlayer->getOrderList();
+        
         // loop through the list to find deploy order
         for (Orders* order : currOrderList->getCurrentOrdersList()) {
             if (order->getCurrentOrder() == "Deploy") {
@@ -365,29 +370,32 @@ void GameEngine::mainGameLoop() {
     bool gameIsFinished = false;
     int gameRound = 0;
     int numOfAllTerritories = 0;
-
+    
     if(map != nullptr){
         numOfAllTerritories = map->territories.size();
     }
     while(!gameIsFinished){
-        // if a player owns all the territories, announce the player and end the game
-        // if a player owns 0 territory, remove from the game
+               
         for (auto & player : players) {
+            // if a player owns all the territories, announce the player and end the game
             if(player->territories.size() == numOfAllTerritories){
-                cout << "The player is " << player->getName() << "!" << endl;
+                cout << "The player is " << player->getName() << "! Congratulations!" << endl;
                 //exit the loop
                 gameIsFinished = true;
             }
+            
+            // if a player owns 0 territory, remove from the game
             if(player->territories.empty()){
                 // TODO remove the player and reduce player list size
                 cout << player->getName() << " is removed from the game for having 0 territory" << endl;
             }
         }
-        // reinforcement phase: skip if is first round
+        
+        // reinforcement phase: skip for the first round
         if(gameRound > 0){
             reinforcementPhase();
         }
-        // issue order phase
+        // order issuing phase
         issueOrdersPhase();
         // order execution phase
         executeOrdersPhase();
