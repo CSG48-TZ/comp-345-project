@@ -380,7 +380,7 @@ void GameEngine::mainGameLoop() {
             }
             if(player->territories.empty()){
                 // TODO remove the player and reduce player list size
-                cout << player->getName() << " is removed from the game since he/she owns 0 territory" << endl;
+                cout << player->getName() << " is removed from the game for having 0 territory" << endl;
             }
         }
         // reinforcement phase: skip if is first round
