@@ -135,83 +135,68 @@ void GameEngine::initializeCommandProcessor() {
 // Implementation of the startup phase
 // Returns true if startup completed without any issues
 // Returns false if an error occurs
-void GameEngine::startupPhase() {
-    while (*currentState != State::ASSIGN_REINFORCEMENT) {
-        // Ask for input command
-        Command* command = this->cmdPcs->getCommand();
-        if (command == NULL) {
-            cout << "No command was input." << endl;
-            exit(0);
+bool GameEngine::startupPhase() {
+    // TODO - replace all cin instances with commandProcessor methods
+    // TODO - replace with a call to loadmap <filename>
+    cout << "Please enter the name of the map file you wish to use: ";
+    string line;
+    string command = "";
+
+    cin >> line;
+
+    stringstream stream(line);
+
+    string filename;
+
+    stream >> command >> filename;
+    Maploader maploader(filename);
+
+    Map map = maploader.load();
+
+    setCurrentState(MAP_LOADED);
+
+    // TODO - replace with a call to validatemap command
+
+    if (map.validate()) {
+        cout << "Map validated successfully" << endl;
+        setCurrentState(MAP_VALIDATED);
+    }
+    else {
+        cout << "Map is not valid. Terminating program" << endl;
+        exit(0);
+    }
+
+    //
+
+    int numPlayers = 0;
+    vector<Player*> players;
+
+    while (numPlayers < 2 || command != "gamestart") {
+        if (numPlayers == 6) {
+            cout << "A maximum of 6 players are allowed in this game" << endl;
+            cout << "Starting game" << endl;
+            break;
         }
-        // Check if the command is valid and save effect
-        string currentState = this->getCurrentState();
-        string nextState = cmdPcs->validate(command, currentState);
-        cout << "Details of the input command: \n" << *command << endl;
-
-        // Do corresponding operation if the command is valid
-        if (nextState != "") {
-            string commandName = command->getCommandName();
-            istringstream iss(commandName);
-            vector<string> result;
-            string word;
-            while (getline(iss, word, ' ')) {
-                result.push_back(word);
+        else if (numPlayers < 2) {
+            cout << "At least two players are necessary to start the game, please add more players" << endl;
+            cin >> command;
+            if (command == "addplayer") {
+                numPlayers++;
+                Player* player = new Player();
+                players.push_back(player);
             }
-            string behavior = result[0];
-
-            if (behavior == "loadmap") {
-                cout << "Please enter the name of the map file you wish to use: ";
-                string line;
-                string command = "";
-
-                cin >> line;
-
-                stringstream stream(line);
-
-                string filename;
-
-                stream >> command >> filename;
-                Maploader maploader(filename);
-
-                this->map = new Map(maploader.load());
-            }
-            else if (behavior == "validatemap") {
-                if (this->map->validate()) {
-                    cout << "Map validated successfully" << endl;
-                }
-                else {
-                    cout << "Map is not valid. Terminating program" << endl;
-                    exit(0);
-                }
-            }
-            else if (behavior == "gamestart") {
-                if (this->players.size() < 2) {
-                    cout << "At least two players are necessary to start the game, please add more players" << endl;
-                }
-                else {
-                    // TODO: Finish the game start part
-                }
-            }
-            else if (behavior == "addplayer") {
-                int num = this->players.size();
-                if (num == 6) {
-                    cout << "A maximum of 6 players are allowed in this game" << endl;
-                    cout << "Please input command \"gamestart\" to start the game now." << endl;
-                }
-                else {
-                    Player* player = new Player();
-                    players.push_back(player);
-                }
-            }
-
         }
-        this->setCurrentState(nextState);
-        delete command;
-        command = NULL;
-        cout << "\nInput any letter to continue" << endl;
-        string ctn;
-        getline(cin, ctn);
-        cout << endl;
+        else if (command == "addplayer") {
+            numPlayers++;
+            Player* player = new Player();
+            players.push_back(player);
+        }
+    }
+
+    setCurrentState(PLAYERS_ADDED);
+
+    while (command != "gamestart") {
+        cin >> command;
     }
 
     // TODO - allocate territories fairly to players
@@ -230,7 +215,7 @@ void GameEngine::startupPhase() {
     }
 
     for (int i = 0; i < orderedPlayers.size(); i++) {
-        // orderedPlayers[i]->addArmies(50);
+        orderedPlayers[i]->addArmies(50);
     }
 
     cout << "Added 50 armies to each player's reinforcement pool" << endl;
@@ -242,6 +227,60 @@ void GameEngine::startupPhase() {
     }
 
     cout << "Drew two cards from the deck for each player" << endl;
+
+    setCurrentState(ISSUE_ORDERS);
+
+}
+
+bool GameEngine::reinforcementPhase() {
+    int reinforcementAmount;
+    int numPlayers = players.size();
+    int continentBonus;
+    // loop for each player
+    cout << "Reinforcement Phase \"";
+    for (int i = 0; i < numPlayers; i++) {
+        reinforcementAmount = map->territories.size() / 3;
+
+        for (int j = 0; j < map->continents.size(); j++) {
+            for (int k = 0; k < map->continents[j].size(); k++) {
+                // TODO: check if every territory in the continent is in the player territory list
+
+                // boolean value to see if the current territory in the continent is in the list of territories of the current player
+                bool present = std::find(begin(players[i]->territories), end(players[i]->territories), map->continents[j][k]) != end(players[i]->territories);
+
+                // if the current territory of the continent is not in the player's list of territories break the loop
+                if (!present) {
+                    break;
+                }
+
+                // check if we are at last index to add continent bonus 
+                if (present && k == map->continents[j].size() - 1) {
+                    // adds continent bonus to current reinforcement amount
+                    reinforcementAmount += continentBonus;
+                }
+            }
+        }
+
+        // Make sure the player gets a minimum of 3 reinforcement troops
+        if (reinforcementAmount < 3) {
+            reinforcementAmount = 3;
+        }
+        cout << "Player: " << players[i]->getName() << " has " << reinforcementAmount << " troops to reinforce \"";
+        players[i]->addArmies(reinforcementAmount);
+    }
+
+    // setCurrentState("issueorders");
+}
+
+bool GameEngine::issueOrdersPhase() {
+
+}
+
+bool GameEngine::executeOrdersPhase() {
+
+}
+
+void GameEngine::mainGameLoop() {
 
 }
 

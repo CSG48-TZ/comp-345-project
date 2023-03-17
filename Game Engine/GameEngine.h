@@ -9,7 +9,7 @@
 class GameEngine{
     public:
         // Define a enum data member to present the all the states of the game engine
-        enum State { 
+        const enum State { 
             START, 
             MAP_LOADED, 
             MAP_VALIDATED, 
@@ -40,7 +40,20 @@ class GameEngine{
         void setCurrentState(std::string& state);
 
         // Method called during startup of game
-        void startupPhase();
+        bool startupPhase();
+
+        // Method called during reinforcement phase
+        bool reinforcementPhase();
+
+        // Method called during issue orders phase
+        bool issueOrdersPhase();
+
+        // Method called during execute orders phase
+        bool executeOrdersPhase();
+
+        // Method called for the main game loop
+        void mainGameLoop();
+
 
 
     private:
@@ -50,3 +63,4 @@ class GameEngine{
         vector<Player*> players;
         void initializeCommandProcessor();
 };
+

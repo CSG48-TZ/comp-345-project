@@ -1,5 +1,5 @@
 #pragma once
-#include "Player.h"
+#include "../Player/Player.h"
 #include <algorithm>
 #include <cctype>
 
@@ -8,10 +8,11 @@ Player::Player(){
     this->pName = "default";
     this->territories = vector<Territory *>();
     this->hand = new Hand();
-    this->playerID = 0;
+    this->playerID = numPlayers;
+    numPlayers++;
     this->orderList = new OrdersList(this->playerID);
     this->orderNumber = 0;
-
+    this->reinforcementPool = 0;
     
 }
 
@@ -259,4 +260,9 @@ void Player::clearNegociatedList() {
         i = NULL;
     }
 
+}
+
+// Adds specified number to the player's reinforcement pool
+void Player::addArmies(int num) {
+    this->reinforcementPool += num;
 }
