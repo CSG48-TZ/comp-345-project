@@ -45,34 +45,8 @@ GameEngine::~GameEngine() {
 }
 
 // Implementation of Accessors
-void GameEngine::setCurrentState(string& state) {
-    if (state == "start") {
-        *currentState = State::START;
-    }
-    else if (state == "maploaded") {
-        *currentState = State::MAP_LOADED;
-    }
-    else if (state == "mapvalidated") {
-        *currentState = State::MAP_VALIDATED;
-    }
-    else if (state == "playersadded") {
-        *currentState = State::PLAYERS_ADDED;
-    }
-    else if (state == "assignreinforcement") {
-        *currentState = State::ASSIGN_REINFORCEMENT;
-    }
-    else if (state == "issueorders") {
-        *currentState = State::ISSUE_ORDERS;
-    }
-    else if (state == "executeorders") {
-        *currentState = State::EXECUTE_ORDERS;
-    }
-    else if (state == "win") {
-        *currentState = State::WIN;
-    }
-    else if (state == "exit program") {
-        *currentState = State::END;
-    }
+void GameEngine::setCurrentState(State state) {
+    *currentState = state;
 }
 
 std::string GameEngine::getCurrentState() const {
@@ -235,7 +209,7 @@ bool GameEngine::startupPhase() {
 bool GameEngine::reinforcementPhase() {
     int reinforcementAmount;
     int numPlayers = players.size();
-    int continentBonus;
+    int continentBonus = 0;
     // loop for each player
     cout << "Reinforcement Phase \"";
     for (int i = 0; i < numPlayers; i++) {
@@ -270,18 +244,18 @@ bool GameEngine::reinforcementPhase() {
     }
 
     // setCurrentState("issueorders");
+    return true;
 }
 
 bool GameEngine::issueOrdersPhase() {
-
+    return false;
 }
 
 bool GameEngine::executeOrdersPhase() {
-
+    return false;
 }
 
 void GameEngine::mainGameLoop() {
-
 }
 
 

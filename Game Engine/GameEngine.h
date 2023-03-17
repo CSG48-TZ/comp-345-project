@@ -37,7 +37,7 @@ class GameEngine{
 
         // Accessor and Mutator for private variables
         std::string getCurrentState() const;
-        void setCurrentState(std::string& state);
+        void setCurrentState(State state);
 
         // Method called during startup of game
         bool startupPhase();

@@ -28,6 +28,7 @@ public:
     int orderNumber;
     Player* negociatedPlayers[20];
     int reinforcementPool;
+    int numPlayers;
 
     Player(); // default constructor
     Player(string pName, int id);
@@ -57,8 +58,8 @@ public:
     void issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation);
     void printCurrentHand();
 
-private:
-    static int numPlayers;
+
+
 };
 
 #endif //COMP345_PLAYER_H
