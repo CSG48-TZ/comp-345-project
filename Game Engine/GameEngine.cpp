@@ -206,12 +206,12 @@ bool GameEngine::startupPhase() {
 
 }
 
-bool GameEngine::reinforcementPhase() {
+void GameEngine::reinforcementPhase() {
     int reinforcementAmount;
     int numPlayers = players.size();
     int continentBonus = 0;
     // loop for each player
-    cout << "Reinforcement Phase \"";
+    cout << "Reinforcement Phase " << endl;
     for (int i = 0; i < numPlayers; i++) {
         reinforcementAmount = map->territories.size() / 3;
 
@@ -229,6 +229,7 @@ bool GameEngine::reinforcementPhase() {
 
                 // check if we are at last index to add continent bonus 
                 if (present && k == map->continents[j].size() - 1) {
+                    // TODO: Add continent bonus
                     // adds continent bonus to current reinforcement amount
                     reinforcementAmount += continentBonus;
                 }
@@ -242,17 +243,16 @@ bool GameEngine::reinforcementPhase() {
         cout << "Player: " << players[i]->getName() << " has " << reinforcementAmount << " troops to reinforce \"";
         players[i]->addArmies(reinforcementAmount);
     }
-
-    // setCurrentState("issueorders");
-    return true;
+    // set state to issue orders
 }
 
-bool GameEngine::issueOrdersPhase() {
-    return false;
+void GameEngine::issueOrdersPhase() {
+    cout << "Issue Orders Phase " << endl;
+    
 }
 
-bool GameEngine::executeOrdersPhase() {
-    return false;
+void GameEngine::executeOrdersPhase() {
+    
 }
 
 void GameEngine::mainGameLoop() {

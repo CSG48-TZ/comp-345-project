@@ -43,13 +43,13 @@ class GameEngine{
         bool startupPhase();
 
         // Method called during reinforcement phase
-        bool reinforcementPhase();
+        void reinforcementPhase();
 
         // Method called during issue orders phase
-        bool issueOrdersPhase();
+        void issueOrdersPhase();
 
         // Method called during execute orders phase
-        bool executeOrdersPhase();
+        void executeOrdersPhase();
 
         // Method called for the main game loop
         void mainGameLoop();
@@ -63,4 +63,3 @@ class GameEngine{
         vector<Player*> players;
         void initializeCommandProcessor();
 };
-
