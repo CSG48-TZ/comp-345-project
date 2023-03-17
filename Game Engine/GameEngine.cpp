@@ -276,14 +276,42 @@ bool GameEngine::startupPhase() {
 bool GameEngine::reinforcementPhase(){
     int reinforcementAmount;
     int numPlayers = players.size();
+    int continentBonus;
+    // loop for each player
+    cout << "Reinforcement Phase \"";
     for (int i = 0; i< numPlayers;i++){
-        // for total amount of territories
-        //map->territories.size();
+        
+        reinforcementAmount = map->territories.size()/3;
+       
+        for (int j = 0; j < map->continents.size(); j++){
+            for (int k = 0; k < map->continents[j].size(); k++){ 
+                // TODO: check if every territory in the continent is in the player territory list
+                
+                // boolean value to see if the current territory in the continent is in the list of territories of the current player
+                bool present = std::find(begin(players[i]->territories), end(players[i]->territories), map->continents[j][k]) != end(players[i]->territories);
+                
+                // if the current territory of the continent is not in the player's list of territories break the loop
+                if (!present){
+                    break;
+                }
 
-        // access each territory in the continent in the amp
-        //map->continents[1][2];
+                // check if we are at last index to add continent bonus 
+                if (present && k == map->continents[j].size()-1) {
+                    // adds continent bonus to current reinforcement amount
+                    reinforcementAmount += continentBonus;
+                }
+            }
+        }
 
+        // Make sure the player gets a minimum of 3 reinforcement troops
+        if (reinforcementAmount < 3) {
+            reinforcementAmount = 3;
+        }
+        cout << "Player: " << players[i]->getName() << " has " << reinforcementAmount << " troops to reinforce \"";
+        players[i]->addArmies(reinforcementAmount);
     }
+
+    // setCurrentState("issueorders");
 }
 
 bool GameEngine::issueOrdersPhase(){
@@ -296,4 +324,11 @@ bool GameEngine::executeOrdersPhase(){
 
 void GameEngine::mainGameLoop(){
 
+}
+
+int main() {
+    GameEngine *g = new GameEngine();
+    Player * p1 = new Player();
+    Player * p2 = new Player();
+    g->reinforcementPhase();
 }

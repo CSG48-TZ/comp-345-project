@@ -59,7 +59,6 @@ void Card::setType(int newType){
 
 // plays a card from hand which removes it and returns it to the deck
 void Card::play(Hand* hand, int cardNum, Deck* deck, OrdersList* orderList) {		
-	// TODO: Create an order and add it to an order list
     Orders* order;
     if (this->cardType == 0){
         order = new Airlift(0,0,0,0,0,0);
