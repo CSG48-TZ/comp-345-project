@@ -73,6 +73,7 @@ void GameEngine::transition(string& state) {
     else if (state == "exit program") {
         *currentState = State::END;
     }
+    notify(this);
 }
 
 std::string GameEngine::getCurrentState() const {
