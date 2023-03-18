@@ -1,15 +1,18 @@
-
-#pragma once
 #ifndef COMP345_ORDERS_H
 #define COMP345_ORDERS_H
 
 #include <string>
 #include <iterator>
 #include <list>
+#include "../Player/Player.h"
+#include "../Map/Map.h"
 #include "../Observer/LoggingObserver.h"
 
 
 using namespace std;
+
+class Player;
+class Territory;
 
 class Orders : public Iloggable, public Subject
 {
@@ -18,11 +21,11 @@ public:
 	Orders();
 	~Orders();
 	string getCurrentOrder(void);
-	int getOrderTargetPlayer(void);
+	Player* getOrderTargetPlayer(void);
 	int getOrderArmyCount(void);
-	int getOrderIssuer(void);
-	int getTargetLocation(void);
-	int getIssuerLocation(void);
+	Player* getOrderIssuer(void);
+	Territory* getTargetLocation(void);
+	Territory* getIssuerLocation(void);
 	int getOrderNumber(void);
 	string toString(void);
 	virtual bool validate();
@@ -35,11 +38,11 @@ public:
 
 protected:
 	string currentOrder;
-	int target;
-	int from;
+	Player* target;
+	Player* player;
 	int armyCount;
-	int targetLocation;
-	int fromLocation;
+	Territory* targetLocation;
+	Territory* fromLocation;
 	int orderNumber;
 };
 
@@ -49,7 +52,9 @@ public:
 
 	void add(Orders* order);
 	void move(int index, int toIndex);
-	void remove(int index);
+	void remove(int index); \
+		void removeOrder(Orders* order);
+	void clearOrdersList();
 	bool validate();
 	bool execute();
 	int getCurrentNumberOfOrders();
@@ -78,7 +83,7 @@ protected:
 
 class Deploy : public Orders {
 public:
-	Deploy(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
+	Deploy(Player* target, Player* from, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber);
 	~Deploy();
 	bool validate(void) override;
 	bool execute() override;
@@ -87,7 +92,7 @@ public:
 
 class Advance : public Orders {
 public:
-	Advance(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
+	Advance(Player* target, Player* from, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber);
 	~Advance();
 	bool validate(void) override;
 	bool execute() override;
@@ -96,7 +101,7 @@ public:
 
 class Bomb : public Orders {
 public:
-	Bomb(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
+	Bomb(Player* target, Player* from, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber);
 	~Bomb();
 	bool validate(void) override;
 	bool execute() override;
@@ -105,7 +110,7 @@ public:
 
 class Blockade : public Orders {
 public:
-	Blockade(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
+	Blockade(Player* target, Player* from, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber);
 	~Blockade();
 	bool validate(void) override;
 	bool execute() override;
@@ -114,7 +119,7 @@ public:
 
 class Airlift : public Orders {
 public:
-	Airlift(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
+	Airlift(Player* target, Player* from, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber);
 	~Airlift();
 	bool validate(void) override;
 	bool execute() override;
@@ -123,7 +128,7 @@ public:
 
 class Negociate : public Orders {
 public:
-	Negociate(int target, int from, int armyCount, int targetLocation, int fromLocation, int orderNumber);
+	Negociate(Player* target, Player* from, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber);
 	~Negociate();
 	bool validate(void) override;
 	bool execute() override;
