@@ -40,9 +40,24 @@ class GameEngine : public Iloggable, public Subject{
         std::string getCurrentState() const;
         void transition(std::string& state);
 
-        // Method called during startup of game
-        void startupPhase();
+        // Accessor and Mutator for private variables
+        std::string getCurrentState() const;
+        void setCurrentState(State state);
 
+        // Method called during startup of game
+        bool startupPhase();
+
+        // Method called during reinforcement phase
+        void reinforcementPhase();
+
+        // Method called during issue orders phase
+        void issueOrdersPhase();
+
+        // Method called during execute orders phase
+        void executeOrdersPhase();
+
+        // Method called for the main game loop
+        void mainGameLoop();
         string stringToLog();
 
     private:
