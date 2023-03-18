@@ -9,13 +9,30 @@ namespace {
 Implementation for Observer
 */
 Observer::Observer(){}
+Observer::Observer(Observer* o) { (*this) = (*o); }
 Observer::~Observer(){}
+Observer& Observer::operator=(Observer& other) { (*this) = other; }
+ostream& operator<<(ostream& out, Observer& const command) {
+	out << "An Observer created." << endl;
+	return out;
+}
 
 /*
 Implementation for Subject
 */
 Subject::Subject() {
 	this->_observers = new list<Observer*>;
+}
+Subject::Subject(Subject* sub) {
+	this->_observers = sub->_observers;
+}
+Subject& Subject::operator=(Subject& other) {
+	this->_observers = other._observers;
+	return (*this);
+}
+ostream& operator<<(ostream& out, Subject& const sub) {
+	out << "The Subject has " << sub._observers->size() << " Observers." << endl;
+	return out;
 }
 Subject::~Subject() {
 	delete _observers;
@@ -37,6 +54,13 @@ Implementation for Iloggable
 */
 Iloggable::Iloggable(){}
 Iloggable::~Iloggable(){}
+Iloggable::Iloggable() {}
+Iloggable::Iloggable(Iloggable* log) { (*this) = (*log); }
+Iloggable& Iloggable::operator=(Iloggable& other) { (*this) = other; }
+ostream& operator<<(ostream& out, Iloggable& const command) {
+	out << "An Iloggable created." << endl;
+	return out;
+}
 
 /*
 Implementation for LogObserver
@@ -48,6 +72,17 @@ LogObserver::LogObserver(Subject* s) {
 }
 LogObserver::~LogObserver() {
 	this->_subject->detach(this);
+}
+LogObserver::LogObserver(LogObserver* l) {
+	this->_subject = l->_subject;
+}
+LogObserver& LogObserver::operator=(LogObserver& other) {
+	this->_subject = other._subject;
+	return (*this);
+}
+ostream& operator<<(ostream& out, LogObserver& const o) {
+	out << "LogObserver related to Subject: " << (*o._subject) << endl;
+	return out;
 }
 
 void LogObserver::update(Iloggable* log) {
