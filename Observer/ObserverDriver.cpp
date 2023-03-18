@@ -24,6 +24,11 @@ int main() {
         string ctn;
         getline(cin, ctn);
         cout << endl;
+        delete processorObserver;
+        delete commandObserver;
+        processorObserver = NULL;
+        commandObserver = NULL;
+
     }
     delete engine;
     engine = NULL;
