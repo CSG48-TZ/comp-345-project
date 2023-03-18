@@ -2,9 +2,10 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "../Observer/LoggingObserver.h"
 using namespace std;
 
-class Command {
+class Command : public Iloggable, public Subject{
 private:
     string commandName;
     string commandEffect;
@@ -22,9 +23,10 @@ public:
     string getCommandEffect() const;
     void saveEffect(const std::string& effect);
     void saveName(const std::string& name);
+    string stringToLog();
 };
 
-class CommandProcessor {
+class CommandProcessor : public Iloggable, public Subject {
 private:
     vector<Command*> commands;
 protected:
@@ -37,8 +39,10 @@ public:
     CommandProcessor& operator=(CommandProcessor& other);
     friend ostream& operator<<(ostream& out, CommandProcessor& const command);
     virtual ~CommandProcessor();
+
     string validate(Command* command, string currentState);
     Command* getCommand();
+    string stringToLog();
 };
 
 class FileLineReader {

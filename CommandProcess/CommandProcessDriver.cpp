@@ -6,6 +6,8 @@
 #include "../Game Engine/GameEngine.h"
 #include "CommandProcessing.h"
 using namespace std;
+
+/*
 int main()
 {   
     // Create a game engine to do transition
@@ -22,7 +24,7 @@ int main()
         string nextState = engine->cmdPcs->validate(command, currentState);
         cout << "Details of the input command: \n" << *command << endl;
 
-        engine->setCurrentState(nextState);
+        engine->transition(nextState);
         delete command;
         command = NULL;
         cout << "\nInput any letter to continue" << endl;
@@ -34,3 +36,4 @@ int main()
     engine = NULL;
     return 0;
 }
+*/

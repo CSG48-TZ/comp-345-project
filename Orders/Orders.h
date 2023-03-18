@@ -1,5 +1,3 @@
-
-#pragma once
 #ifndef COMP345_ORDERS_H
 #define COMP345_ORDERS_H
 
@@ -8,6 +6,7 @@
 #include <list>
 #include "../Player/Player.h"
 #include "../Map/Map.h"
+#include "../Observer/LoggingObserver.h"
 
 
 using namespace std;
@@ -15,7 +14,7 @@ using namespace std;
 class Player;
 class Territory;
 
-class Orders
+class Orders : public Iloggable, public Subject
 {
 
 public:
@@ -35,6 +34,8 @@ public:
 	friend ostream& operator << (ostream& out, const Orders& o);
 	friend istream& operator >> (istream& in, Orders& o);
 
+	string stringToLog();
+
 protected:
 	string currentOrder;
 	Player* target;
@@ -45,14 +46,14 @@ protected:
 	int orderNumber;
 };
 
-class OrdersList
+class OrdersList : public Iloggable, public Subject
 {
 public:
 
 	void add(Orders* order);
 	void move(int index, int toIndex);
 	void remove(int index); \
-	void removeOrder(Orders* order);
+		void removeOrder(Orders* order);
 	void clearOrdersList();
 	bool validate();
 	bool execute();
@@ -66,6 +67,8 @@ public:
 	OrdersList(int playerNumber);
 	~OrdersList();
 	void operator = (const OrdersList& D);
+
+	string stringToLog();
 
 protected:
 

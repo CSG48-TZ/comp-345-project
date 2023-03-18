@@ -45,7 +45,7 @@ GameEngine::~GameEngine() {
 }
 
 // Implementation of Accessors
-void GameEngine::setCurrentState(string& state) {
+void GameEngine::transition(string& state) {
     if (state == "start") {
         *currentState = State::START;
     }
@@ -73,6 +73,7 @@ void GameEngine::setCurrentState(string& state) {
     else if (state == "exit program") {
         *currentState = State::END;
     }
+    notify(this);
 }
 
 std::string GameEngine::getCurrentState() const {
@@ -130,6 +131,12 @@ void GameEngine::initializeCommandProcessor() {
             cout << "Invalid Choice. Please select the source of commands again." << endl;
         }
     }
+}
+
+// Override the method in iloggable to generate the output message
+string GameEngine::stringToLog() {
+    string message = "Game Engine New State: " + this->getCurrentState() + "; ";
+    return message;
 }
 
 // Implementation of the startup phase
@@ -205,7 +212,7 @@ void GameEngine::startupPhase() {
             }
 
         }
-        this->setCurrentState(nextState);
+        this->transition(nextState);
         delete command;
         command = NULL;
         cout << "\nInput any letter to continue" << endl;

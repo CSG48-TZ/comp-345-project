@@ -1,12 +1,3 @@
-/* ==========================================
-; Title:  Orders.cpp
-; Author: Dario Cimmino
-; Student ID: 40068769
-; Date:   12 FEB 2023
-; Description: Orders Class used by the Player class that contains the OrdersList class and all the different types of Orders subclasses. This is the orders management part of the game.
-; ==========================================
-*/
-
 #include "Orders.h"
 #include <iostream>
 
@@ -96,13 +87,14 @@ bool Orders::validate() {
 * execute function, will be overriden by the subclasses
 */
 bool Orders::execute() {
+	notify(this);
 	return false;
 }
 
 /*
 * Stream Insertion operator
 */
-ostream& operator << (ostream& out, const Orders &o)
+ostream& operator << (ostream& out, const Orders& o)
 {
 	out << "Order ID: " << o.orderNumber;
 	out << " - Player " << o.player->pName;
@@ -185,7 +177,7 @@ OrdersList::~OrdersList() {
 */
 OrdersList* OrdersList::copy(OrdersList* orderList) {
 	OrdersList* copy = new OrdersList(orderList->getPlayerID());
-	
+
 	copy->lastOrderModifiedIndex = orderList->getLastOrderModified();
 	copy->ordersList = orderList->getCurrentOrdersList();
 	copy->hasOrdersInList = orderList->hasOrdersInList;
@@ -218,13 +210,14 @@ void OrdersList::add(Orders* order) {
 	//Update lastOrderModifiedIndex
 	lastOrderModifiedIndex = (int)ordersList.size() - 1;
 	hasOrdersInList = true;
+	notify(this);
 }
 
 /*
 * Moves the order in the list. Takes an index of the order to move, and a target index.
-* 
+*
 * Moves order from index "index" to index "toIndex"
-* 
+*
 */
 void OrdersList::move(int index, int toIndex) {
 	//Creates Iterator
@@ -314,7 +307,7 @@ bool OrdersList::execute()
 }
 
 /*
-* Removes a specific order 
+* Removes a specific order
 */
 void OrdersList::removeOrder(Orders* order) {
 	//Creates Iterator
@@ -418,7 +411,7 @@ Deploy::~Deploy() {
 */
 bool Deploy::validate() {
 	cout << "\nValidating Deploy order: \"" << this->toString();
-	if (targetLocation->owner != player){
+	if (targetLocation->owner != player) {
 		cout << "\nThe player doesn't own the selected territory.";
 		return false;
 	}
@@ -431,6 +424,8 @@ bool Deploy::validate() {
 bool Deploy::execute() {
 	if (validate()) {
 		targetLocation->addArmies(armyCount);
+
+		notify(this);
 		return true;
 	}
 	return false;
@@ -438,7 +433,7 @@ bool Deploy::execute() {
 
 
 /*
-* Copy function (REQUIREMENT). 
+* Copy function (REQUIREMENT).
 */
 Deploy Deploy::copy(Deploy order) {
 	Deploy copy = Deploy(this->target, this->player, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
@@ -482,7 +477,7 @@ Advance::~Advance() {
 bool Advance::validate() {
 	cout << "\nValidating Advance order: \n\"" << this->toString() << "\"";
 	bool flag = true;
-	
+
 	//Check ownerships
 	if (fromLocation->owner != player) {
 		cout << "\nFAILED: The player doesn't own the source territory to advance.";
@@ -495,7 +490,7 @@ bool Advance::validate() {
 		cout << "\nFAILED: The player doesn't have enough armies asked by the order in the source territory to advance.";
 		return false;
 	}
-	
+
 	vector<Territory*> currentedges;
 
 	currentedges = fromLocation->edges;
@@ -573,6 +568,7 @@ bool Advance::execute() {
 				targetLocation->addArmies(-defendingKillsCounter);
 			}
 		}
+		notify(this);
 		return true;
 	}
 	return false;
@@ -666,8 +662,9 @@ bool Bomb::validate() {
 */
 bool Bomb::execute() {
 	if (validate()) {
-		targetLocation->addArmies(-(int)targetLocation->numArmies/2);
-		player->getHand()->removeCardOfType(2);
+		targetLocation->addArmies(-(int)targetLocation->numArmies / 2);
+
+		notify(this);
 		return true;
 	}
 	return false;
@@ -739,6 +736,8 @@ bool Blockade::execute() {
 		targetLocation->addArmies(targetLocation->numArmies);
 		player->removeOwnedTerritory(targetLocation->id);
 		targetLocation->changeOwner(target);
+
+		notify(this);
 		return true;
 	}
 	return false;
@@ -788,13 +787,13 @@ Airlift::~Airlift() {
 */
 bool Airlift::validate() {
 	cout << "\nValidating Airlift order: \"" << this->toString();
-	
+
 	//Checks if both the source and target belong to the player.
 	if (targetLocation->owner != player && fromLocation->owner == player) {
 		cout << "\nFAILED: The player doesn't own the target territory.\n";
 		return false;
 	}
-	
+
 	//check if the player has enough army.
 	if (fromLocation->numArmies < armyCount) {
 		cout << "\nFAILED: The player doesn't have enough armies asked by the order in the source territory to airlift.";
@@ -820,6 +819,8 @@ bool Airlift::execute() {
 		fromLocation->addArmies(-armyCount);
 		targetLocation->addArmies(armyCount);
 		player->getHand()->removeCardOfType(0);
+
+		notify(this);
 		return true;
 	}
 	return false;
@@ -891,7 +892,6 @@ bool Negociate::validate() {
 bool Negociate::execute() {
 	if (validate()) {
 		player->addPlayerToNegociatedList(target);
-		player->getHand()->removeCardOfType(3);
 		return true;
 	}
 	return false;
@@ -903,4 +903,16 @@ bool Negociate::execute() {
 Negociate Negociate::copy(Negociate order) {
 	Negociate copy = Negociate(this->target, this->player, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
 	return copy;
+}
+
+// Override method from Iloggable
+string OrdersList::stringToLog() {
+	string message = "Order Issued: " + this->getLastOrder()->getCurrentOrder() + "; ";
+	return message;
+}
+
+// Override method from Iloggable
+string Orders::stringToLog() {
+	string message = "Order Executed: " + this->getCurrentOrder() + "; ";
+	return message;
 }

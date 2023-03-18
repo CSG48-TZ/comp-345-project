@@ -5,8 +5,9 @@
 #include "../CommandProcess/CommandProcessing.h"
 #include "../Map/Map.h"
 #include "../Cards/Cards.h"
+#include "../Observer/LoggingObserver.h"
 
-class GameEngine{
+class GameEngine : public Iloggable, public Subject{
     public:
         // Define a enum data member to present the all the states of the game engine
         enum State { 
@@ -37,11 +38,12 @@ class GameEngine{
 
         // Accessor and Mutator for private variables
         std::string getCurrentState() const;
-        void setCurrentState(std::string& state);
+        void transition(std::string& state);
 
         // Method called during startup of game
         void startupPhase();
 
+        string stringToLog();
 
     private:
         // A private attribute to track current state
