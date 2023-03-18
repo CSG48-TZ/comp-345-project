@@ -47,7 +47,6 @@ LogObserver::LogObserver(Subject* s) {
 	_subject->attach(this);
 }
 LogObserver::~LogObserver() {
-	delete _subject;
 	this->_subject->detach(this);
 }
 

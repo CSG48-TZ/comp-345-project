@@ -1,12 +1,16 @@
 #include "LoggingObserver.h"
 #include "../CommandProcess/CommandProcessing.h"
 #include "../Game Engine/GameEngine.h"
+#include "../Orders/Orders.h"
+
 
 int main() {
     GameEngine* engine = new GameEngine();
-    while (true) {
+    // Create an observer for every object
+    LogObserver* gameEngineObserver = new LogObserver(engine);
+    LogObserver* processorObserver = new LogObserver(engine->cmdPcs);
+    while (engine->getCurrentState() != "assignreinforcement") {
         // Ask for input command
-        LogObserver* processorObserver = new LogObserver(engine->cmdPcs);
         Command* command = engine->cmdPcs->getCommand();
         LogObserver* commandObserver = new LogObserver(command);
         if (command == NULL) {
@@ -17,19 +21,27 @@ int main() {
         string currentState = engine->getCurrentState();
         string nextState = engine->cmdPcs->validate(command, currentState);
 
-        engine->setCurrentState(nextState);
+        engine->transition(nextState);
+
+        // Memory arrangements
+
+        delete commandObserver;
+        commandObserver = NULL;
         delete command;
         command = NULL;
-        cout << "\nInput any letter to continue" << endl;
+
+        cout << "\nInput any letter to continue..." << endl;
         string ctn;
         getline(cin, ctn);
         cout << endl;
-        delete processorObserver;
-        delete commandObserver;
-        processorObserver = NULL;
-        commandObserver = NULL;
-
+        
     }
+
+    // Memory Arrangement
+    delete gameEngineObserver;
+    gameEngineObserver = NULL;
+    delete processorObserver;
+    processorObserver = NULL;
     delete engine;
     engine = NULL;
 	return 0;
