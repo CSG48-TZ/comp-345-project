@@ -24,7 +24,7 @@ int main()
         string nextState = engine->cmdPcs->validate(command, currentState);
         cout << "Details of the input command: \n" << *command << endl;
 
-        engine->setCurrentState(nextState);
+        engine->transition(nextState);
         delete command;
         command = NULL;
         cout << "\nInput any letter to continue" << endl;
