@@ -36,9 +36,17 @@ string Command::getCommandName() const { return commandName; }
 // Accessor for commandEffect
 string Command::getCommandEffect() const { return commandEffect; }
 // Mutator for commandEffect
-void Command::saveEffect(const std::string& effect) { commandEffect = effect; }
+void Command::saveEffect(const std::string& effect) { 
+	commandEffect = effect; 
+	notify(this);
+}
 // Mutator for commandName
 void Command::saveName(const std::string& name) { commandName = name; }
+// Observer pattern
+string Command::stringToLog() {
+	string message = "Command's effect: " + this->getCommandEffect() + ";";
+	return message;
+}
 
 
 /*
@@ -83,6 +91,7 @@ CommandProcessor::~CommandProcessor() {
 void CommandProcessor::saveCommand(string input, string effect) {
 	Command* newCommand = new Command(input, effect);
 	this->commands.push_back(newCommand);
+	notify(this);
 }
 // Read command line from the console
 string CommandProcessor::readCommand() const {
@@ -150,6 +159,13 @@ string CommandProcessor::validate(Command* command, string currentState) {
 	}
 	return nextState;
 }
+
+// Override Iloggable method for Observer pattern
+string CommandProcessor::stringToLog() {
+	string message = "Command: " + this->commands.back()->getCommandName() + "; ";
+	return message;
+}
+
 
 /*
 	Following is implementation of FileLineReader class

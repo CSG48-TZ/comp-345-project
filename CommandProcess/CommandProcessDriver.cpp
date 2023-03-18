@@ -6,6 +6,8 @@
 #include "../Game Engine/GameEngine.h"
 #include "CommandProcessing.h"
 using namespace std;
+
+/*
 int main()
 {   
     // Create a game engine to do transition
@@ -34,3 +36,4 @@ int main()
     engine = NULL;
     return 0;
 }
+*/
