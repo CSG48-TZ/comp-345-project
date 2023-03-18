@@ -40,8 +40,6 @@ class GameEngine : public Iloggable, public Subject{
         std::string getCurrentState() const;
         void transition(std::string& state);
 
-        // Accessor and Mutator for private variables
-        std::string getCurrentState() const;
         void setCurrentState(State state);
 
         // Method called during startup of game

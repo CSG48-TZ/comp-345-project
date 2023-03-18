@@ -142,7 +142,7 @@ string GameEngine::stringToLog() {
 // Implementation of the startup phase
 // Returns true if startup completed without any issues
 // Returns false if an error occurs
-void GameEngine::startupPhase() {
+bool GameEngine::startupPhase() {
     while (*currentState != State::ASSIGN_REINFORCEMENT) {
         // Ask for input command
         Command* command = this->cmdPcs->getCommand();
