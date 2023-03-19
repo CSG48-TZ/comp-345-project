@@ -195,33 +195,40 @@ bool GameEngine::startupPhase() {
                     int numTerritories = this->map->territories.size();
                     int gap = numTerritories/players.size();
                     int playersIndex = 0;
-
-                    for(int i = 0; i < numTerritories; i += gap){
+                    for(int i = 0; i < numTerritories; i += gap){ // Iterates through all the territories
+                        if(playersIndex >= players.size()) // Breaks when you reach the end of players vector
+                        {
+                            break;
+                        }
                         this->map->territories.at(i)->changeOwner(players[playersIndex]);
                         playersIndex ++;
                     }
 
-
+                    // Randomizes the order of players
                     vector<Player*> orderedPlayers;
-
                     while (players.size() != 0) {
                         int index = rand() % players.size();
                         orderedPlayers.push_back(players[index]);
+                        players.erase(players.begin() + index);
                     }
 
+                    // Assigns orderedPlayers vector to GameEngine object's players member
                     this->players = orderedPlayers;
 
                     cout << "Determined the order of play" << endl;
                     for (int i = 0; i < orderedPlayers.size(); i++) {
-                        cout << i << ": " << orderedPlayers[i]->playerID << endl;
+                        cout << i + 1 << ": " << orderedPlayers[i]->playerID << endl;
                     }
 
+
+                    // Adds 50 armies to each player's reinforcement pool
                     for (int i = 0; i < orderedPlayers.size(); i++) {
                         orderedPlayers[i]->addArmies(50);
                     }
 
                     cout << "Added 50 armies to each player's reinforcement pool" << endl;
 
+                    // Draws two cards from the deck for each player
                     Deck deck{};
                     for (int i = 0; i < orderedPlayers.size(); i++) {
                         deck.draw(orderedPlayers[i]->getHand());
