@@ -178,13 +178,16 @@ bool GameEngine::startupPhase() {
                     cout << "Map validated successfully" << endl;
                 }
                 else {
-                    cout << "Map is not valid. Terminating program" << endl;
-                    exit(0);
+                    cout << "Map is not valid. Please re-input the command to load a new map" << endl;
+                    nextState = "start";
+                    this->transition(nextState);
+                    continue;
                 }
             }
             else if (behavior == "gamestart") {
                 if (this->players.size() < 2) {
                     cout << "At least two players are necessary to start the game, please add more players" << endl;
+                    continue;
                 }
                 else {
 
@@ -233,11 +236,16 @@ bool GameEngine::startupPhase() {
                 if (num == 6) {
                     cout << "A maximum of 6 players are allowed in this game" << endl;
                     cout << "Please input command \"gamestart\" to start the game now." << endl;
+                    continue;
                 }
                 else {
                     Player* player = new Player();
                     players.push_back(player);
                 }
+            }
+            else {
+                cout << "Invalid Command. Please input another command." << endl;
+                continue;
             }
 
         }
