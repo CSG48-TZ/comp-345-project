@@ -4,20 +4,22 @@
 using namespace std;
 
 // Implementation of Constructors
-GameEngine::GameEngine(){
+GameEngine::GameEngine() {
     currentState = new State(START);
     this->initializeCommandProcessor();
+    this->map = NULL;
 }
 
 // copy constructor
 GameEngine::GameEngine(const GameEngine& engine) {
     this->currentState = engine.currentState;
     this->cmdPcs = engine.cmdPcs;
+    this->map = engine.map;
 }
 
 // assignment operator
 GameEngine& GameEngine::operator=(const GameEngine& engine) {
-    this->currentState= engine.currentState;
+    this->currentState = engine.currentState;
     this->cmdPcs = engine.cmdPcs;
     return *this;
 }
@@ -142,7 +144,7 @@ string GameEngine::stringToLog() {
 // Implementation of the startup phase
 // Returns true if startup completed without any issues
 // Returns false if an error occurs
-void GameEngine::startupPhase() {
+bool GameEngine::startupPhase() {
     while (*currentState != State::ASSIGN_REINFORCEMENT) {
         // Ask for input command
         Command* command = this->cmdPcs->getCommand();
@@ -166,37 +168,67 @@ void GameEngine::startupPhase() {
             }
             string behavior = result[0];
 
-            if (behavior == "loadmap") {
-                cout << "Please enter the name of the map file you wish to use: ";
-                string line;
-                string command = "";
-
-                cin >> line;
-
-                stringstream stream(line);
-
-                string filename;
-
-                stream >> command >> filename;
+            if (behavior == "loadmap" && result.size() == 2) {
+                string filename = result[1];
                 Maploader maploader(filename);
-
-                this->map = new Map(maploader.load());
+                this->map = maploader.load();
             }
             else if (behavior == "validatemap") {
                 if (this->map->validate()) {
                     cout << "Map validated successfully" << endl;
                 }
                 else {
-                    cout << "Map is not valid. Terminating program" << endl;
-                    exit(0);
+                    cout << "Map is not valid. Please re-input the command to load a new map" << endl;
+                    nextState = "start";
+                    this->transition(nextState);
+                    continue;
                 }
             }
             else if (behavior == "gamestart") {
                 if (this->players.size() < 2) {
                     cout << "At least two players are necessary to start the game, please add more players" << endl;
+                    continue;
                 }
                 else {
-                    // TODO: Finish the game start part
+
+                    // Allocates one territory to each player. Each territory allocated are equidistant from each other
+                    int numTerritories = this->map->territories.size();
+                    int gap = numTerritories/players.size();
+                    int playersIndex = 0;
+
+                    for(int i = 0; i < numTerritories; i += gap){
+                        this->map->territories.at(i)->changeOwner(players[playersIndex]);
+                        playersIndex ++;
+                    }
+
+
+                    vector<Player*> orderedPlayers;
+
+                    while (players.size() != 0) {
+                        int index = rand() % players.size();
+                        orderedPlayers.push_back(players[index]);
+                    }
+
+                    this->players = orderedPlayers;
+
+                    cout << "Determined the order of play" << endl;
+                    for (int i = 0; i < orderedPlayers.size(); i++) {
+                        cout << i << ": " << orderedPlayers[i]->playerID << endl;
+                    }
+
+                    for (int i = 0; i < orderedPlayers.size(); i++) {
+                        orderedPlayers[i]->addArmies(50);
+                    }
+
+                    cout << "Added 50 armies to each player's reinforcement pool" << endl;
+
+                    Deck deck{};
+                    for (int i = 0; i < orderedPlayers.size(); i++) {
+                        deck.draw(orderedPlayers[i]->getHand());
+                        deck.draw(orderedPlayers[i]->getHand());
+                    }
+
+                    cout << "Drew two cards from the deck for each player" << endl;
                 }
             }
             else if (behavior == "addplayer") {
@@ -204,6 +236,7 @@ void GameEngine::startupPhase() {
                 if (num == 6) {
                     cout << "A maximum of 6 players are allowed in this game" << endl;
                     cout << "Please input command \"gamestart\" to start the game now." << endl;
+                    continue;
                 }
                 else {
                     Player* player = new Player();
@@ -220,36 +253,130 @@ void GameEngine::startupPhase() {
         getline(cin, ctn);
         cout << endl;
     }
+    return true;
 
-    // TODO - allocate territories fairly to players
+}
 
+void GameEngine::reinforcementPhase() {
+    int reinforcementAmount;
+    int numPlayers = (int)players.size();
+    int continentBonus = 0;
+    // loop for each player
+    cout << "Reinforcement Phase " << endl;
+    for (int i = 0; i < numPlayers; i++) {
+        reinforcementAmount = (int)map->territories.size() / 3;
 
-    vector<Player*> orderedPlayers; // TODO - Possibly change this to a pointer to a vector of players for usage outside this method
+        for (int j = 0; j < map->continents.size(); j++) {
+            for (int k = 0; k < map->continents[j].size(); k++) {
+                // TODO: check if every territory in the continent is in the player territory list
 
-    while (players.size() != 0) {
-        int index = rand() % players.size();
-        orderedPlayers.push_back(players[index]);
+                // boolean value to see if the current territory in the continent is in the list of territories of the current player
+                bool present = std::find(begin(players[i]->territories), end(players[i]->territories), map->continents[j][k]) != end(players[i]->territories);
+
+                // if the current territory of the continent is not in the player's list of territories break the loop
+                if (!present) {
+                    break;
+                }
+
+                // check if we are at last index to add continent bonus 
+                if (present && k == map->continents[j].size() - 1) {
+                    // TODO: Add continent bonus
+                    // adds continent bonus to current reinforcement amount
+                    reinforcementAmount += continentBonus;
+                }
+            }
+        }
+
+        // Make sure the player gets a minimum of 3 reinforcement troops
+        if (reinforcementAmount < 3) {
+            reinforcementAmount = 3;
+        }
+        cout << "Player: " << players[i]->getName() << " has " << reinforcementAmount << " troops to reinforce \"";
+        players[i]->addArmies(reinforcementAmount);
     }
+    // set state to issue orders
+}
 
-    cout << "Determined the order of play" << endl;
-    for (int i = 0; i < orderedPlayers.size(); i++) {
-        cout << i << ": " << orderedPlayers[i]->playerID << endl;
+/**
+ * Players issue orders and place them in their order list
+ */
+void GameEngine::issueOrdersPhase() {
+    // inform current game play phrase
+    cout << "Issue Orders Phase " << endl;
+    // loop around through all the players and issue their orders to the order list
+    std::vector<Player*>::iterator it;
+    for (it = players.begin(); it != players.end(); it++) {
+        Player* player = *it;
     }
+}
 
-    for (int i = 0; i < orderedPlayers.size(); i++) {
-        // orderedPlayers[i]->addArmies(50);
+/**
+ * Execute all deploy order before other orders, then use
+ * round-robin fashion to execute the rest of the orders
+ */
+void GameEngine::executeOrdersPhase() {
+
+    bool allOrderExecuted = false;
+    int orderListLength = 0;  // length after executing deploy
+    // inform current game play phrase
+    cout << "Order Execution Phase " << endl;
+    //execute deploy order first
+    for (auto currPlayer : players) {
+        OrdersList* currOrderList = currPlayer->getOrderList();
+        // loop through the list to find deploy order
+        for (Orders* order : currOrderList->getCurrentOrdersList()) {
+            if (order->getCurrentOrder() == "Deploy") {
+                order->validate();
+                order->execute();
+                currPlayer->getOrderList()->removeOrder(order);
+            }
+        }
+
+        // TODO execute other orders
     }
+}
 
-    cout << "Added 50 armies to each player's reinforcement pool" << endl;
+/**
+ * Continue the loop(reinforcement, issue orders, execution) until
+ * a player owns all the territories, then the winner is announced.
+ * If any player owns < 1 territory, the player got removed from the game
+ */
+void GameEngine::mainGameLoop() {
 
-    Deck deck{};
-    for (int i = 0; i < orderedPlayers.size(); i++) {
-        deck.draw(orderedPlayers[i]->getHand());
-        deck.draw(orderedPlayers[i]->getHand());
+    bool gameIsFinished = false;
+    int gameRound = 0;
+    int numOfAllTerritories = 0;
+
+    if (map != nullptr) {
+        numOfAllTerritories = (int)map->territories.size();
     }
+    while (!gameIsFinished) {
 
-    cout << "Drew two cards from the deck for each player" << endl;
+        for (auto& player : players) {
+            // if a player owns all the territories, announce the player and end the game
+            if (player->territories.size() == numOfAllTerritories) {
+                cout << "The player is " << player->getName() << "! Congratulations!" << endl;
+                //exit the loop
+                gameIsFinished = true;
+            }
 
+            // if a player owns 0 territory, remove from the game
+            if (player->territories.empty()) {
+                // TODO remove the player and reduce player list size
+                cout << player->getName() << " is removed from the game for having 0 territory" << endl;
+            }
+        }
+
+        // reinforcement phase: skip for the first round
+        if (gameRound > 0) {
+            reinforcementPhase();
+        }
+        // order issuing phase
+        issueOrdersPhase();
+        // order execution phase
+        executeOrdersPhase();
+        gameRound++;
+    }
 }
 
 
