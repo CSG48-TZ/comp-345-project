@@ -11,7 +11,10 @@ Implementation for Observer
 Observer::Observer(){}
 Observer::Observer(Observer* o) { (*this) = (*o); }
 Observer::~Observer(){}
-Observer& Observer::operator=(Observer& other) { (*this) = other; }
+Observer& Observer::operator=(Observer& other) { 
+	(*this) = other; 
+	return (*this);
+}
 ostream& operator<<(ostream& out, Observer& const command) {
 	out << "An Observer created." << endl;
 	return out;
@@ -54,9 +57,11 @@ Implementation for Iloggable
 */
 Iloggable::Iloggable(){}
 Iloggable::~Iloggable(){}
-Iloggable::Iloggable() {}
 Iloggable::Iloggable(Iloggable* log) { (*this) = (*log); }
-Iloggable& Iloggable::operator=(Iloggable& other) { (*this) = other; }
+Iloggable& Iloggable::operator=(Iloggable& other) { 
+	(*this) = other; 
+	return (*this);
+}
 ostream& operator<<(ostream& out, Iloggable& const command) {
 	out << "An Iloggable created." << endl;
 	return out;
