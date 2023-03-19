@@ -243,6 +243,10 @@ bool GameEngine::startupPhase() {
                     players.push_back(player);
                 }
             }
+            else {
+                cout << "Invalid Command. Please input another command." << endl;
+                continue;
+            }
 
         }
         this->transition(nextState);
