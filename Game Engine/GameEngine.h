@@ -40,8 +40,6 @@ class GameEngine : public Iloggable, public Subject{
         std::string getCurrentState() const;
         void transition(std::string& state);
 
-        void setCurrentState(State state);
-
         // Method called during startup of game
         bool startupPhase();
 

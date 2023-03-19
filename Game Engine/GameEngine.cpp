@@ -7,12 +7,14 @@ using namespace std;
 GameEngine::GameEngine() {
     currentState = new State(START);
     this->initializeCommandProcessor();
+    this->map = NULL;
 }
 
 // copy constructor
 GameEngine::GameEngine(const GameEngine& engine) {
     this->currentState = engine.currentState;
     this->cmdPcs = engine.cmdPcs;
+    this->map = engine.map;
 }
 
 // assignment operator
@@ -250,7 +252,6 @@ bool GameEngine::startupPhase() {
 
     cout << "Drew two cards from the deck for each player" << endl;
 
-    setCurrentState(ISSUE_ORDERS);
 
     return true;
 

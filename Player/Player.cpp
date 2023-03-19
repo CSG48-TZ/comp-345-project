@@ -260,3 +260,8 @@ void Player::clearNegociatedList() {
     }
 
 }
+
+// Adds specified number to the player's reinforcement pool
+void Player::addArmies(int num) {
+    this->reinforcementPool += num;
+}
