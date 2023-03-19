@@ -27,6 +27,8 @@ public:
     bool conqueredTerritoryThisTurn;
     int orderNumber;
     Player* negociatedPlayers[20];
+    int reinforcementPool;
+    int numPlayers;
 
     Player(); // default constructor
     Player(string pName, int id);
@@ -45,6 +47,7 @@ public:
     void addPlayerToNegociatedList(Player* p);
     void clearNegociatedList();
     OrdersList *getOrderList();
+    void addArmies(int num);
 
     void setConqueredFlag(bool value);
     vector<Territory *> toDefend();

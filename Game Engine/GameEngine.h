@@ -41,8 +41,19 @@ class GameEngine : public Iloggable, public Subject{
         void transition(std::string& state);
 
         // Method called during startup of game
-        void startupPhase();
+        bool startupPhase();
 
+        // Method called during reinforcement phase
+        void reinforcementPhase();
+
+        // Method called during issue orders phase
+        void issueOrdersPhase();
+
+        // Method called during execute orders phase
+        void executeOrdersPhase();
+
+        // Method called for the main game loop
+        void mainGameLoop();
         string stringToLog();
 
     private:
