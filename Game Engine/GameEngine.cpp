@@ -104,16 +104,16 @@ std::string GameEngine::getCurrentState() const {
 void GameEngine::initializeCommandProcessor() {
     cout << "Please enter a command line argument that enables the user to choose between accepting the "
         << "commands from the console(-console) or from a file(-file <filename>)." << endl;
-    string cla;
-    getline(cin, cla);
-    istringstream iss(cla);
-    vector<string> result;
-    string word;
-    while (getline(iss, word, ' ')) {
-        result.push_back(word);
-    }
-    string arg = result[0];
     while (true) {
+        string cla;
+        getline(cin, cla);
+        istringstream iss(cla);
+        vector<string> result;
+        string word;
+        while (getline(iss, word, ' ')) {
+            result.push_back(word);
+        }
+        string arg = result[0];
         if (arg == "-console") {
             // If the user wants to read from console, create a command processor to read command and to save effect
             this->cmdPcs = new CommandProcessor();
