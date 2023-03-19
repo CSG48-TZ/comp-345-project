@@ -168,21 +168,10 @@ bool GameEngine::startupPhase() {
             }
             string behavior = result[0];
 
-            if (behavior == "loadmap") {
-                cout << "Please enter the name of the map file you wish to use: ";
-                string line;
-                string command = "";
-
-                cin >> line;
-
-                stringstream stream(line);
-
-                string filename;
-
-                stream >> command >> filename;
+            if (behavior == "loadmap" && result.size() == 2) {
+                string filename = result[1];
                 Maploader maploader(filename);
-
-                this->map = new Map(maploader.load());
+                this->map = maploader.load();
             }
             else if (behavior == "validatemap") {
                 if (this->map->validate()) {
@@ -198,11 +187,49 @@ bool GameEngine::startupPhase() {
                     cout << "At least two players are necessary to start the game, please add more players" << endl;
                 }
                 else {
-                    // TODO: Finish the game start part
+
+                    // Allocates one territory to each player. Each territory allocated are equidistant from each other
+                    int numTerritories = this->map->territories.size();
+                    int gap = numTerritories/players.size();
+                    int playersIndex = 0;
+
+                    for(int i = 0; i < numTerritories; i += gap){
+                        this->map->territories.at(i)->changeOwner(players[playersIndex]);
+                        playersIndex ++;
+                    }
+
+
+                    vector<Player*> orderedPlayers;
+
+                    while (players.size() != 0) {
+                        int index = rand() % players.size();
+                        orderedPlayers.push_back(players[index]);
+                    }
+
+                    this->players = orderedPlayers;
+
+                    cout << "Determined the order of play" << endl;
+                    for (int i = 0; i < orderedPlayers.size(); i++) {
+                        cout << i << ": " << orderedPlayers[i]->playerID << endl;
+                    }
+
+                    for (int i = 0; i < orderedPlayers.size(); i++) {
+                        orderedPlayers[i]->addArmies(50);
+                    }
+
+                    cout << "Added 50 armies to each player's reinforcement pool" << endl;
+
+                    Deck deck{};
+                    for (int i = 0; i < orderedPlayers.size(); i++) {
+                        deck.draw(orderedPlayers[i]->getHand());
+                        deck.draw(orderedPlayers[i]->getHand());
+                    }
+
+                    cout << "Drew two cards from the deck for each player" << endl;
                 }
             }
             else if (behavior == "addplayer") {
-                int num = (int)this->players.size();
+                int num = this->players.size();
                 if (num == 6) {
                     cout << "A maximum of 6 players are allowed in this game" << endl;
                     cout << "Please input command \"gamestart\" to start the game now." << endl;
@@ -222,37 +249,6 @@ bool GameEngine::startupPhase() {
         getline(cin, ctn);
         cout << endl;
     }
-
-    // TODO - allocate territories fairly to players
-
-
-    vector<Player*> orderedPlayers; // TODO - Possibly change this to a pointer to a vector of players for usage outside this method
-
-    while (players.size() != 0) {
-        int index = rand() % players.size();
-        orderedPlayers.push_back(players[index]);
-    }
-
-    cout << "Determined the order of play" << endl;
-    for (int i = 0; i < orderedPlayers.size(); i++) {
-        cout << i << ": " << orderedPlayers[i]->playerID << endl;
-    }
-
-    for (int i = 0; i < orderedPlayers.size(); i++) {
-        orderedPlayers[i]->addArmies(50);
-    }
-
-    cout << "Added 50 armies to each player's reinforcement pool" << endl;
-
-    Deck deck{};
-    for (int i = 0; i < orderedPlayers.size(); i++) {
-        deck.draw(orderedPlayers[i]->getHand());
-        deck.draw(orderedPlayers[i]->getHand());
-    }
-
-    cout << "Drew two cards from the deck for each player" << endl;
-
-
     return true;
 
 }

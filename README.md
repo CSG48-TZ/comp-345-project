@@ -22,7 +22,12 @@
 <br>
 <br>
 [**Assignment Part 1 Grading Scheme**](./Assets/a1gs.pdf)
-
+<br>
+<br>
+[**Assignment Part 2**](./Assets/a2.pdf)
+<br>
+<br>
+[**Assignment Part 2 Grading Scheme**](./Assets/a2gs.pdf)
 ## Team Members 
 
 <div align="center">

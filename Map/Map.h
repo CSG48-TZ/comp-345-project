@@ -65,7 +65,7 @@ private:
 class Maploader{
 public:
     Maploader(string filename);
-    Map load();
+    Map * load();
     ~Maploader();
     void operator=(const Maploader& maploader);
     Maploader(const Maploader& maploader);
