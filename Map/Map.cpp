@@ -69,11 +69,11 @@ ostream& operator<<(ostream& out, Territory& territory){
     out << "Continent number: " << territory.continent << endl;
     out << "Number of armies in territory: " << territory.numArmies << endl;
     out << "Owner: " << territory.owner << endl; // TODO - add player name "owner.name"
-    out << "Number 1: " << territory.continent << endl;
-    out << "Number 2: " << territory.name << endl;
+    out << "X: " << territory.continent << endl;
+    out << "Y: " << territory.name << endl;
     out << "Territories connected to: " << endl;
     for(int i = 0; i < territory.edges.size(); i ++){
-        cout << "\t" << territory.edges.at(i)->name << endl;
+        out << "\t" << territory.edges.at(i)->name << endl;
     }
 
     return out;
@@ -249,7 +249,7 @@ Maploader::Maploader(const Maploader &maploader) {
 }
 
 // Loads the map and returns a reference to a Map object
-Map Maploader::load() {
+Map * Maploader::load() {
 
     ifstream infile(filename);
 
@@ -325,9 +325,7 @@ Map Maploader::load() {
 
     cout << "Loaded map" << endl;
 
-    Map map(continentsVector, territoriesVector);
-
     infile.close();
 
-    return map;
+    return new Map(continentsVector, territoriesVector);
 }
