@@ -5,8 +5,6 @@
 * Constructor
 */
 Orders::Orders() {
-	this->target;
-	this->player;
 	this->armyCount = 0;
 	this->targetLocation = 0;
 	this->fromLocation = 0;
@@ -530,7 +528,7 @@ bool Advance::execute() {
 	bool prob;
 	int attackingKillsCounter = 0;
 	int defendingKillsCounter = 0;
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	if (validate()) {
 		//if the target location is owned by the player:

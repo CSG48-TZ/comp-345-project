@@ -4,20 +4,22 @@
 using namespace std;
 
 // Implementation of Constructors
-GameEngine::GameEngine(){
+GameEngine::GameEngine() {
     currentState = new State(START);
     this->initializeCommandProcessor();
+    this->map = NULL;
 }
 
 // copy constructor
 GameEngine::GameEngine(const GameEngine& engine) {
     this->currentState = engine.currentState;
     this->cmdPcs = engine.cmdPcs;
+    this->map = engine.map;
 }
 
 // assignment operator
 GameEngine& GameEngine::operator=(const GameEngine& engine) {
-    this->currentState= engine.currentState;
+    this->currentState = engine.currentState;
     this->cmdPcs = engine.cmdPcs;
     return *this;
 }
@@ -142,7 +144,7 @@ string GameEngine::stringToLog() {
 // Implementation of the startup phase
 // Returns true if startup completed without any issues
 // Returns false if an error occurs
-void GameEngine::startupPhase() {
+bool GameEngine::startupPhase() {
     while (*currentState != State::ASSIGN_REINFORCEMENT) {
         // Ask for input command
         Command* command = this->cmdPcs->getCommand();
@@ -200,7 +202,7 @@ void GameEngine::startupPhase() {
                 }
             }
             else if (behavior == "addplayer") {
-                int num = this->players.size();
+                int num = (int)this->players.size();
                 if (num == 6) {
                     cout << "A maximum of 6 players are allowed in this game" << endl;
                     cout << "Please input command \"gamestart\" to start the game now." << endl;
@@ -237,7 +239,7 @@ void GameEngine::startupPhase() {
     }
 
     for (int i = 0; i < orderedPlayers.size(); i++) {
-        // orderedPlayers[i]->addArmies(50);
+        orderedPlayers[i]->addArmies(50);
     }
 
     cout << "Added 50 armies to each player's reinforcement pool" << endl;
@@ -250,6 +252,131 @@ void GameEngine::startupPhase() {
 
     cout << "Drew two cards from the deck for each player" << endl;
 
+
+    return true;
+
+}
+
+void GameEngine::reinforcementPhase() {
+    int reinforcementAmount;
+    int numPlayers = (int)players.size();
+    int continentBonus = 0;
+    // loop for each player
+    cout << "Reinforcement Phase " << endl;
+    for (int i = 0; i < numPlayers; i++) {
+        reinforcementAmount = (int)map->territories.size() / 3;
+
+        for (int j = 0; j < map->continents.size(); j++) {
+            for (int k = 0; k < map->continents[j].size(); k++) {
+                // TODO: check if every territory in the continent is in the player territory list
+
+                // boolean value to see if the current territory in the continent is in the list of territories of the current player
+                bool present = std::find(begin(players[i]->territories), end(players[i]->territories), map->continents[j][k]) != end(players[i]->territories);
+
+                // if the current territory of the continent is not in the player's list of territories break the loop
+                if (!present) {
+                    break;
+                }
+
+                // check if we are at last index to add continent bonus 
+                if (present && k == map->continents[j].size() - 1) {
+                    // TODO: Add continent bonus
+                    // adds continent bonus to current reinforcement amount
+                    reinforcementAmount += continentBonus;
+                }
+            }
+        }
+
+        // Make sure the player gets a minimum of 3 reinforcement troops
+        if (reinforcementAmount < 3) {
+            reinforcementAmount = 3;
+        }
+        cout << "Player: " << players[i]->getName() << " has " << reinforcementAmount << " troops to reinforce \"";
+        players[i]->addArmies(reinforcementAmount);
+    }
+    // set state to issue orders
+}
+
+/**
+ * Players issue orders and place them in their order list
+ */
+void GameEngine::issueOrdersPhase() {
+    // inform current game play phrase
+    cout << "Issue Orders Phase " << endl;
+    // loop around through all the players and issue their orders to the order list
+    std::vector<Player*>::iterator it;
+    for (it = players.begin(); it != players.end(); it++) {
+        Player* player = *it;
+    }
+}
+
+/**
+ * Execute all deploy order before other orders, then use
+ * round-robin fashion to execute the rest of the orders
+ */
+void GameEngine::executeOrdersPhase() {
+
+    bool allOrderExecuted = false;
+    int orderListLength = 0;  // length after executing deploy
+    // inform current game play phrase
+    cout << "Order Execution Phase " << endl;
+    //execute deploy order first
+    for (auto currPlayer : players) {
+        OrdersList* currOrderList = currPlayer->getOrderList();
+        // loop through the list to find deploy order
+        for (Orders* order : currOrderList->getCurrentOrdersList()) {
+            if (order->getCurrentOrder() == "Deploy") {
+                order->validate();
+                order->execute();
+                currPlayer->getOrderList()->removeOrder(order);
+            }
+        }
+
+        // TODO execute other orders
+    }
+}
+
+/**
+ * Continue the loop(reinforcement, issue orders, execution) until
+ * a player owns all the territories, then the winner is announced.
+ * If any player owns < 1 territory, the player got removed from the game
+ */
+void GameEngine::mainGameLoop() {
+
+    bool gameIsFinished = false;
+    int gameRound = 0;
+    int numOfAllTerritories = 0;
+
+    if (map != nullptr) {
+        numOfAllTerritories = (int)map->territories.size();
+    }
+    while (!gameIsFinished) {
+
+        for (auto& player : players) {
+            // if a player owns all the territories, announce the player and end the game
+            if (player->territories.size() == numOfAllTerritories) {
+                cout << "The player is " << player->getName() << "! Congratulations!" << endl;
+                //exit the loop
+                gameIsFinished = true;
+            }
+
+            // if a player owns 0 territory, remove from the game
+            if (player->territories.empty()) {
+                // TODO remove the player and reduce player list size
+                cout << player->getName() << " is removed from the game for having 0 territory" << endl;
+            }
+        }
+
+        // reinforcement phase: skip for the first round
+        if (gameRound > 0) {
+            reinforcementPhase();
+        }
+        // order issuing phase
+        issueOrdersPhase();
+        // order execution phase
+        executeOrdersPhase();
+        gameRound++;
+    }
 }
 
 

@@ -17,7 +17,7 @@ public:
     Command(Command* anotherCommand);
     ~Command();
     Command& operator=(Command& other);
-    friend ostream& operator<<(ostream& out, Command& const command);
+    friend ostream& operator<<(ostream&, Command&);
 
     string getCommandName() const;
     string getCommandEffect() const;
@@ -37,7 +37,7 @@ public:
     CommandProcessor();
     CommandProcessor(CommandProcessor* cmdPcs);
     CommandProcessor& operator=(CommandProcessor& other);
-    friend ostream& operator<<(ostream& out, CommandProcessor& const command);
+    friend ostream& operator<<(ostream&, CommandProcessor&);
     virtual ~CommandProcessor();
 
     string validate(Command* command, string currentState);
@@ -55,7 +55,7 @@ public:
     FileLineReader(string fileName);
     FileLineReader(FileLineReader* flrder);
     FileLineReader& operator=(FileLineReader& other);
-    friend ostream& operator<<(ostream& out, FileLineReader& const flr);
+    friend ostream& operator<<(ostream&, FileLineReader&);
     ~FileLineReader();
     void readCommands(string fileName);
     string readLineFromFile();
@@ -72,6 +72,6 @@ public:
     FileCommandProcessorAdapter(FileLineReader* reader);
     FileCommandProcessorAdapter(FileCommandProcessorAdapter* other);
     FileCommandProcessorAdapter& operator=(FileCommandProcessorAdapter& other);
-    friend ostream& operator<<(ostream& out, FileCommandProcessorAdapter& const fprs);
+    friend ostream& operator<<(ostream&, FileCommandProcessorAdapter&);
     ~FileCommandProcessorAdapter();
 };

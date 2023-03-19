@@ -71,7 +71,7 @@ CommandProcessor& CommandProcessor::operator= (CommandProcessor& another) {
 	return *this;
 }
 // Insertion Operator
-ostream& operator<<(ostream& out, CommandProcessor& const cmdPcs) {
+ostream& operator<<(ostream& out, CommandProcessor& cmdPcs) {
 	out << "The commands in the command processor at the current stage shown as follows:";
 	for (int i = 0; i < cmdPcs.commands.size(); i++) {
 		out << "\n" << * (cmdPcs.commands[i]);
@@ -130,7 +130,7 @@ string CommandProcessor::valCommand(string command, string currentState) const {
 	}else if (command == "loadmap" && (currentState == "maploaded" || currentState == "start")) {
 		nextState = "maploaded";
 	}
-	else if (command == "addplayer" && (currentState == "mapvalidated" || currentState == "playersadded ")) {
+	else if (command == "addplayer" && (currentState == "mapvalidated" || currentState == "playersadded")) {
 		nextState = "playersadded";
 	}
 
@@ -198,7 +198,7 @@ FileLineReader& FileLineReader::operator=(FileLineReader& flr) {
 	return *this;
 }
 // Contrutor Operator
-ostream& operator<<(ostream& out, FileLineReader& const flr) {
+ostream& operator<<(ostream& out, FileLineReader& flr) {
 	out << "Reading file: " << flr.fileName;
 	out << "\nThe commands in the file are shown as follows:";
 	for (int i = 0; i < flr.commandsBuffer.size(); i++) {
@@ -271,7 +271,7 @@ FileCommandProcessorAdapter& FileCommandProcessorAdapter::operator=(FileCommandP
 	return *this;
 }
 // Insertion Operator
-ostream& operator<<(ostream& out, FileCommandProcessorAdapter& const fprs) {
+ostream& operator<<(ostream& out, FileCommandProcessorAdapter& fprs) {
 	out << *(fprs.flr) << endl;
 	return out;
 }

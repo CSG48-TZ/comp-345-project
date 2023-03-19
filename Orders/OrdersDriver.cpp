@@ -79,7 +79,7 @@ int main()
 	//Showing off Advance Order:
 	//Here player 1 will attack player 2 from a territory isn't owned by p1.
 	SetConsoleTextAttribute(hConsole, 6);
-	cout << "\nAdvance Order 0 will be issued with a territory that is not owned by the player.\nPress any key to continue..";
+	cout << "\n\nAdvance Order 0 will be issued with a territory that is not owned by the player.\nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Advance", t, 500, targetTerr, t1);
 	cout << "*********************************************************************************";
@@ -172,7 +172,7 @@ int main()
 
 	//Here player 1 will bomb its own territory.
 	SetConsoleTextAttribute(hConsole, 6);
-	cout << "\Bomb Order 3 will be issued with a territory that owned by the same player issuing the order. \nPress any key to continue..";
+	cout << "\nBomb Order 3 will be issued with a territory that owned by the same player issuing the order. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Bomb", t, 0, playerTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -183,7 +183,7 @@ int main()
 	cout << "\n*********************************************************************************\n\n";
 
 	//Here player 1 will bomb player 3 without a card.
-	cout << "\n\Bomb Order 4 will be issued with no bomb card. \nPress any key to continue..";
+	cout << "\nBomb Order 4 will be issued with no bomb card. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Bomb", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -199,7 +199,7 @@ int main()
 
 	//Here player 1 will bomb player 3 from a territory isn't adjacent.
 	SetConsoleTextAttribute(hConsole, 6);
-	cout << "\n\Bomb Order 5 will be issued with a territory that is not adjacent to the target territory. \nPress any key to continue..";
+	cout << "\n\nBomb Order 5 will be issued with a territory that is not adjacent to the target territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Bomb", t, 500, neutralTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -210,7 +210,7 @@ int main()
 	cout << "\n*********************************************************************************\n\n";
 
 	//Here player 1 will attack player 3 from a territory that is owned.
-	cout << "\n\Bomb Order 6 will be issued with a territory that is owned and adjacent to the target territory. \nPress any key to continue..";
+	cout << "\n\nBomb Order 6 will be issued with a territory that is owned and adjacent to the target territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Bomb", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -327,7 +327,7 @@ int main()
 	cout << "\n*********************************************************************************\n\n";
 
 	//Here player 1 will airlift troop from 2 owned territories.
-	cout << "\n\Airlift Order 10 will be issued with 250 troop from t1 territory to player territory. \nPress any key to continue..";
+	cout << "\n\nAirlift Order 10 will be issued with 250 troop from t1 territory to player territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Airlift", p, 250, playerTerr, t1);
 	cout << "*********************************************************************************";
@@ -377,7 +377,7 @@ int main()
 	cout << "\n*********************************************************************************\n\n";
 
 	//Here player 1 will DEPLOY troop to a owned territory.
-	cout << "\n\Deploy Order 12 will be issued with 500 troop by player 1 to own territory. \nPress any key to continue..";
+	cout << "\n\nDeploy Order 12 will be issued with 500 troop by player 1 to own territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Deploy", t, 500, playerTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -430,7 +430,7 @@ int main()
 	SetConsoleTextAttribute(hConsole, 6);
 
 	//Here player 1 will try to blockade enemy territory.
-	cout << "\n\BLOCKADE Order 14 will be issued into enemy territory. \nPress any key to continue..";
+	cout << "\n\nBLOCKADE Order 14 will be issued into enemy territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Blockade", t, 500, targetTerr, playerTerr);
 	cout << "*********************************************************************************";
@@ -441,7 +441,7 @@ int main()
 	cout << "\n*********************************************************************************\n\n";
 
 	//Here player 1 will blockade his own territory.
-	cout << "\n\BLOCKADE Order 15 will be issued into owned territory. \nPress any key to continue..";
+	cout << "\n\nBLOCKADE Order 15 will be issued into owned territory. \nPress any key to continue..";
 	cin.get();
 	p->issueOrder("Blockade", t, 500, playerTerr, playerTerr);
 	cout << "*********************************************************************************";
