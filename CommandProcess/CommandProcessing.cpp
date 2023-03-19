@@ -130,7 +130,7 @@ string CommandProcessor::valCommand(string command, string currentState) const {
 	}else if (command == "loadmap" && (currentState == "maploaded" || currentState == "start")) {
 		nextState = "maploaded";
 	}
-	else if (command == "addplayer" && (currentState == "mapvalidated" || currentState == "playersadded ")) {
+	else if (command == "addplayer" && (currentState == "mapvalidated" || currentState == "playersadded")) {
 		nextState = "playersadded";
 	}
 
