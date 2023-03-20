@@ -15,7 +15,7 @@ Observer& Observer::operator=(Observer& other) {
 	(*this) = other; 
 	return (*this);
 }
-ostream& operator<<(ostream& out, Observer& const command) {
+ostream& operator<<(ostream& out, Observer& command) {
 	out << "An Observer created." << endl;
 	return out;
 }
@@ -33,7 +33,7 @@ Subject& Subject::operator=(Subject& other) {
 	this->_observers = other._observers;
 	return (*this);
 }
-ostream& operator<<(ostream& out, Subject& const sub) {
+ostream& operator<<(ostream& out, Subject& sub) {
 	out << "The Subject has " << sub._observers->size() << " Observers." << endl;
 	return out;
 }
@@ -62,7 +62,7 @@ Iloggable& Iloggable::operator=(Iloggable& other) {
 	(*this) = other; 
 	return (*this);
 }
-ostream& operator<<(ostream& out, Iloggable& const command) {
+ostream& operator<<(ostream& out, Iloggable& command) {
 	out << "An Iloggable created." << endl;
 	return out;
 }
@@ -70,7 +70,10 @@ ostream& operator<<(ostream& out, Iloggable& const command) {
 /*
 Implementation for LogObserver
 */
-LogObserver::LogObserver(){}
+LogObserver::LogObserver(){
+	this->_subject = NULL;
+}
+
 LogObserver::LogObserver(Subject* s) {
 	this->_subject = s;
 	_subject->attach(this);
@@ -85,7 +88,7 @@ LogObserver& LogObserver::operator=(LogObserver& other) {
 	this->_subject = other._subject;
 	return (*this);
 }
-ostream& operator<<(ostream& out, LogObserver& const o) {
+ostream& operator<<(ostream& out, LogObserver& o) {
 	out << "LogObserver related to Subject: " << (*o._subject) << endl;
 	return out;
 }

@@ -104,8 +104,8 @@ std::string GameEngine::getCurrentState() const {
 
 // Initialize the command processor inside constructor
 void GameEngine::initializeCommandProcessor() {
-    cout << "Please enter a command line argument that enables the user to choose between accepting the "
-        << "commands from the console(-console) or from a file(-file <filename>)." << endl;
+    cout << "\nPlease enter a command line argument that enables the user to choose between accepting the "
+        << "commands from the console(-console) or from a file(-file <filename>): ";
     while (true) {
         string cla;
         getline(cin, cla);
@@ -145,7 +145,7 @@ string GameEngine::stringToLog() {
 // Returns true if startup completed without any issues
 // Returns false if an error occurs
 bool GameEngine::startupPhase() {
-    int playersID = 1;
+    int playersID = 0;
     while (*currentState != State::ASSIGN_REINFORCEMENT) {
         // Ask for input command
         Command* command = this->cmdPcs->getCommand();
@@ -195,8 +195,8 @@ bool GameEngine::startupPhase() {
                 else {
 
                     // Allocates one territory to each player. Each territory allocated are equidistant from each other
-                    int numTerritories = this->map->territories.size();
-                    int gap = numTerritories / players.size();
+                    int numTerritories = (int)this->map->territories.size();
+                    int gap = numTerritories / (int)players.size();
                     int playersIndex = 0;
 
                     for(int i = 0; i < numTerritories; i ++){ // Iterates through all the territories
@@ -215,10 +215,10 @@ bool GameEngine::startupPhase() {
                     // Assigns orderedPlayers vector to GameEngine object's players member
                     this->players = orderedPlayers;
 
-                    cout << "Determined the order of play" << endl;
+                    cout << "Determined the order of play is shown below: " << endl << endl;
                     for (int i = 0; i < orderedPlayers.size(); i++) {
 
-                        cout << i << ": " << orderedPlayers[i]->pName << endl;
+                        cout << "Player #" << i + 1 << " with ID:" << orderedPlayers[i]->playerID << " and name: " << orderedPlayers[i]->pName << endl;
 
                     }
 
@@ -228,7 +228,7 @@ bool GameEngine::startupPhase() {
                         orderedPlayers[i]->addArmies(50);
                     }
 
-                    cout << "Added 50 armies to each player's reinforcement pool" << endl;
+                    cout << "\nAdded 50 armies to each player's reinforcement pool..." << endl << endl;
 
                     // Draws two cards from the deck for each player
                     Deck deck{};
@@ -237,11 +237,17 @@ bool GameEngine::startupPhase() {
                         deck.draw(orderedPlayers[i]->getHand());
                     }
 
-                    cout << "Drew two cards from the deck for each player" << endl;
+                    cout << "\nDrew two cards from the deck for each player..." << endl << endl;
+
+                    for (int i = 0; i < orderedPlayers.size(); i++) {
+                        cout << "Player #" << i + 1 << " with ID:" << orderedPlayers[i]->playerID << " and name: " << orderedPlayers[i]->pName << " has this hand:" << endl;
+                        orderedPlayers[i]->getHand()->showHand();
+                        cout << "\n\n";
+                    }
                 }
             }
             else if (behavior == "addplayer") {
-                int num = this->players.size();
+                int num = (int)this->players.size();
                 if (num == 6) {
                     cout << "A maximum of 6 players are allowed in this game" << endl;
                     cout << "Please input command \"gamestart\" to start the game now." << endl;
@@ -251,8 +257,8 @@ bool GameEngine::startupPhase() {
 
                     Player* player = new Player(result[1],playersID);
                     players.push_back(player);
-                    playersID ++;
-                    cout << "Added player: Player " << playersID << endl;
+                    cout << "Added player: " << result[1] << " with id: " << playersID << endl;
+                    playersID++;
                 }
             }
             else {
@@ -321,12 +327,24 @@ void GameEngine::issueOrdersPhase() {
     // inform current game play phrase
     cout << "Issue Orders Phase " << endl;
     Player* player;
+    Player* player2;
     int territoryID = 0;
+    std::vector<Player*>::iterator it;
+    std::vector<Player*>::iterator it2;
 
-    cout << "\nISSUING ORDERS\n\n Players will now modify their attack and defend lists...\n\n";
+    cout << "\nISSUING ORDERS\n\nPlayers will now modify their attack and defend lists...\n\n";
+    for (it = players.begin(); it != players.end(); it++) {
+        player = *it;
+        cout << "Player " << player->pName << " have the folloring territories: \n";
+        for (Territory* terr : player->territories) {
+            cout << "- " << terr->name << " with ID: " << terr->id << " and has " << terr->numArmies << " armies in the territory.\n";
+        }
+        cout << "\n\n";
+    }
+
 
     // loop around through all the players and issue their orders to the order list
-    std::vector<Player*>::iterator it;
+
     for (it = players.begin(); it != players.end(); it++) {
         player = *it;
         territoryID = 0;
@@ -404,7 +422,23 @@ void GameEngine::issueOrdersPhase() {
     for (it = players.begin(); it != players.end(); it++) {
         player = *it;
         targetPlayer = player;
+        cout << "\n\n*********************************************************************************\n";
+        cout << "\nPlayer " << player->pName << ", your ID is: " << player->playerID << " and you have the following cards in hand: \n";
         player->getHand()->showHand();
+        cout << "\n\nThe following is the list of current players: \n";
+        for (int i = 0; i < players.size(); i++) {
+            cout << "Player #" << i + 1 << " with ID:" << players[i]->playerID << " and name: " << players[i]->pName << endl;
+        }
+        cout << "\n\nYou own the following territories: \n";
+        for (it2 = players.begin(); it2 != players.end(); it2++) {
+            player2 = *it2;
+            cout << "Player " << player2->pName << " have the folloring territories: \n";
+            for (Territory* terr : player2->territories) {
+                cout << "- " << terr->name << " with ID: " << terr->id << " and has " << terr->numArmies << " armies in the territory.\n";
+            }
+            cout << "\n\n";
+        }
+        cout << "*********************************************************************************\n\n\n";
         while (selection != 6) {
             cout << "\nPlayer " << player->pName << " please select an order: \n";
             cout << "1 - Advance\n";

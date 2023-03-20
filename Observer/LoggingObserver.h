@@ -9,7 +9,7 @@ public:
 	virtual ~Iloggable();
 	Iloggable(Iloggable* log);
 	Iloggable& operator=(Iloggable& other);
-	friend ostream& operator<<(ostream& out, Iloggable& const command);
+	friend ostream& operator<<(ostream& out, Iloggable& command);
 
 	virtual string stringToLog() = 0;
 };
@@ -19,7 +19,7 @@ public:
 	virtual ~Observer();
 	virtual void update(Iloggable* log) = 0;
 	Observer& operator=(Observer& other);
-	friend ostream& operator<<(ostream& out, Observer& const command);
+	friend ostream& operator<<(ostream& out, Observer& command);
 protected:
 	Observer();
 	Observer(Observer* o);
@@ -30,7 +30,7 @@ public:
 	Subject();
 	Subject(Subject* s);
 	Subject& operator=(Subject& other);
-	friend ostream& operator<<(ostream& out, Subject& const command);
+	friend ostream& operator<<(ostream& out, Subject& command);
 	virtual ~Subject();
 
 	virtual void notify(Iloggable* o);
@@ -47,7 +47,7 @@ public:
 	LogObserver(Subject* s);
 	LogObserver(LogObserver* l);
 	LogObserver& operator=(LogObserver& other);
-	friend ostream& operator<<(ostream& out, LogObserver& const command);
+	friend ostream& operator<<(ostream& out, LogObserver& command);
 
 	void update(Iloggable* log);
 private:

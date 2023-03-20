@@ -239,7 +239,7 @@ string FileLineReader::readLineFromFile() {
 	
 	string command = this->commandsBuffer[this->currentCommandIndex];
 
-	cout << "current command index" << currentCommandIndex << "; current command " << command << endl;
+	cout << "Current command index: " << currentCommandIndex << ". Current command is: " << command << endl << endl;
 
 	this->currentCommandIndex++;
 	return command;
