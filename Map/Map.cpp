@@ -154,7 +154,7 @@ bool Map::validate() {
 // Goes through the map and marks the territories iterated through as visited and checks if two territories
 // have the same name
 void Map::DFS(Territory * territory, unordered_map<string, int> &duplicate){
-    cout << "Visiting: " << territory->name << endl;
+    //cout << "Visiting: " << territory->name << endl;
     territory->visited = true;
 
     if( duplicate.find(territory->name) == duplicate.end()){
@@ -313,7 +313,7 @@ Map * Maploader::load() {
 
             Territory * territory = new Territory(id, name, continent, num1, num2);
 
-            cout << "Added territory: " << name << endl;
+            //cout << "Added territory: " << name << endl;
 
             territoriesVector.push_back(territory);
             continentsVector.at(continent).push_back(territory);
