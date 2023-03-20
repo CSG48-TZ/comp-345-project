@@ -560,7 +560,9 @@ bool Advance::execute() {
 				target->removeOwnedTerritory(targetLocation->id);
 				targetLocation->numArmies = (fromLocation->numArmies) - defendingKillsCounter;
 				fromLocation->numArmies = 0;
-				player->setConqueredFlag(true); //this is to set a success flag so that the player recieves a card at the end of the turn. (only once for at leat one successful conquer)
+				Deck d{};
+				d.draw(player->getHand());
+				//player->setConqueredFlag(true); //this is to set a success flag so that the player recieves a card at the end of the turn. (only once for at leat one successful conquer)
 			}
 			else {
 				//capture failed.
@@ -663,7 +665,7 @@ bool Bomb::validate() {
 bool Bomb::execute() {
 	if (validate()) {
 		targetLocation->addArmies(-(int)targetLocation->numArmies / 2);
-
+		player->getHand()->removeCardOfType(2); //2 FOR BOMB
 		notify(this);
 		return true;
 	}
@@ -736,7 +738,7 @@ bool Blockade::execute() {
 		targetLocation->addArmies(targetLocation->numArmies);
 		player->removeOwnedTerritory(targetLocation->id);
 		targetLocation->changeOwner(target);
-
+		player->getHand()->removeCardOfType(1);//1 for BLOCKADE
 		notify(this);
 		return true;
 	}
@@ -818,6 +820,7 @@ bool Airlift::execute() {
 	if (validate()) {
 		fromLocation->addArmies(-armyCount);
 		targetLocation->addArmies(armyCount);
+		player->getHand()->removeCardOfType(0);
 		notify(this);
 		return true;
 	}
@@ -890,6 +893,7 @@ bool Negociate::validate() {
 bool Negociate::execute() {
 	if (validate()) {
 		player->addPlayerToNegociatedList(target);
+		player->getHand()->removeCardOfType(3); //3 for NEGOCIATE
 		return true;
 	}
 	return false;

@@ -477,7 +477,7 @@ void GameEngine::issueOrdersPhase() {
                     }
                     else {
                         player->issueOrder("Airlift", targetPlayer, armycountselected, targetTerr, sourceTerr);
-                        player->getHand()->removeCardOfType(0);
+                        //player->getHand()->removeCardOfType(0);
                     }
                     break;
                 case 3:
@@ -486,7 +486,7 @@ void GameEngine::issueOrdersPhase() {
                     }
                     else {
                         player->issueOrder("Blockade", targetPlayer, armycountselected, targetTerr, sourceTerr);
-                        player->getHand()->removeCardOfType(1);
+                        //player->getHand()->removeCardOfType(1);
                     }
                     break;
                 case 4:
@@ -495,7 +495,7 @@ void GameEngine::issueOrdersPhase() {
                     }
                     else {
                         player->issueOrder("Bomb", targetPlayer, armycountselected, targetTerr, sourceTerr);
-                        player->getHand()->removeCardOfType(2);
+                        //player->getHand()->removeCardOfType(2);
                     }
                     break;
                 case 5:
@@ -504,7 +504,7 @@ void GameEngine::issueOrdersPhase() {
                     }
                     else {
                         player->issueOrder("Negociate", targetPlayer, armycountselected, targetTerr, sourceTerr);
-                        player->getHand()->removeCardOfType(3);
+                        //player->getHand()->removeCardOfType(3);
                     }
                     break;
                 default:
@@ -531,19 +531,26 @@ void GameEngine::executeOrdersPhase() {
     // inform current game play phrase
     cout << "Order Execution Phase " << endl;
     //execute deploy order first
+    int id = 0;
     for (int i = 0; i < players.size(); i++) {
         for (Orders* o : players[i]->orderList->getCurrentOrdersList()) {
             if (o->getCurrentOrder() == "Deploy") {
-                o->execute();
+                if (o->execute()) {
+                    players[i]->orderList->removeOrder(o);
+                }
             }
         }
     }
 
     for (int i = 0; i < players.size(); i++) {
         for (Orders* o : players[i]->orderList->getCurrentOrdersList()) {
-            o->execute();
+            if (o->execute()) {
+                players[i]->orderList->removeOrder(o);
+            }
         }
     }
+
+    //TODO Check if player controls all territory -> winstate.
 
     string nextstate = "assignreinforcement";
     this->transition(nextstate);
