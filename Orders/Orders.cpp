@@ -5,6 +5,8 @@
 * Constructor
 */
 Orders::Orders() {
+	this->player = NULL;
+	this->target = NULL;
 	this->armyCount = 0;
 	this->targetLocation = 0;
 	this->fromLocation = 0;
