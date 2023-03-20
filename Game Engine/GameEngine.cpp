@@ -575,7 +575,7 @@ void GameEngine::mainGameLoop() {
         for (auto& player : players) {
             // if a player owns all the territories, announce the player and end the game
             if (player->territories.size() == numOfAllTerritories) {
-                cout << "The player is " << player->getName() << "! Congratulations!" << endl;
+                cout << "The winner is " << player->getName() << "! Congratulations!" << endl;
                 //exit the loop
                 gameIsFinished = true;
             }
