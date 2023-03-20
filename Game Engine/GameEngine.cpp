@@ -75,6 +75,7 @@ void GameEngine::transition(string& state) {
     else if (state == "exit program") {
         *currentState = State::END;
     }
+    cout << "State transitioned to: " << state << endl;
     notify(this);
 }
 
@@ -145,6 +146,7 @@ string GameEngine::stringToLog() {
 // Returns true if startup completed without any issues
 // Returns false if an error occurs
 bool GameEngine::startupPhase() {
+    int playersID = 1;
     while (*currentState != State::ASSIGN_REINFORCEMENT) {
         // Ask for input command
         Command* command = this->cmdPcs->getCommand();
@@ -172,6 +174,7 @@ bool GameEngine::startupPhase() {
                 string filename = result[1];
                 Maploader maploader(filename);
                 this->map = maploader.load();
+                cout << "Map" << filename << " has been loaded" << endl;
             }
             else if (behavior == "validatemap") {
                 if (this->map->validate()) {
@@ -242,8 +245,10 @@ bool GameEngine::startupPhase() {
                     continue;
                 }
                 else {
-                    Player* player = new Player();
+                    Player* player = new Player("Player",playersID);
                     players.push_back(player);
+                    playersID ++;
+                    cout << "Added player: Player " << playersID << endl;
                 }
             }
             else {
