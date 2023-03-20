@@ -159,20 +159,28 @@ vector<Territory *> Player::toAttack(){
 //Adds a territory to the attack list
 void Player::addToAttack(Territory * t) {
     if (t->owner->playerID == this->playerID) {
-        cout << "Cannot add territory to attack list: Territory is owned by the player.";
+        cout << "\nCannot add territory to attack list: Territory is owned by the player.\n";
+    }
+    else if (std::find(attackList.begin(), attackList.end(), t) != attackList.end()){
+        cout << "\nCannot add territory to attack list: Territory already in list.\n";
     }
     else {
         attackList.push_back(t);
+        cout << "\nAdded territory - " << t->id << " - to " << this->pName << "\'s attack list.\n";
     }
 }
 
 //Adds a territory to the defend list
 void Player::addToDefend(Territory* t) {
     if (t->owner->playerID != this->playerID) {
-        cout << "Cannot add territory to attack list: Territory is not owned by the player.";
+        cout << "\nCannot add territory to attack list: Territory is not owned by the player.\n";
+    }
+    else if (std::find(defendList.begin(), defendList.end(), t) != defendList.end()) {
+        cout << "\nCannot add territory to attack list: Territory already in list.\n";
     }
     else {
         defendList.push_back(t);
+        cout << "\nAdded territory - " << t->id << " - to " << this->pName << "\'s defend list.\n";
     }
 }
 
