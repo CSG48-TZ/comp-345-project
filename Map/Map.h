@@ -17,7 +17,7 @@ using namespace std;
 
 class Player;
 
-class Territory{// TODO- Add a copy constructor
+class Territory{
 public:
     string name;
     int id;

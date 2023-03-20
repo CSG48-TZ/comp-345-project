@@ -68,7 +68,7 @@ ostream& operator<<(ostream& out, Territory& territory){
     out << "Territory name: " << territory.name << endl;
     out << "Continent number: " << territory.continent << endl;
     out << "Number of armies in territory: " << territory.numArmies << endl;
-    out << "Owner: " << territory.owner << endl; // TODO - add player name "owner.name"
+    out << "Owner: " << territory.owner << endl; 
     out << "X: " << territory.continent << endl;
     out << "Y: " << territory.name << endl;
     out << "Territories connected to: " << endl;

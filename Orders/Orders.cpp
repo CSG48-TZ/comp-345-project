@@ -104,7 +104,7 @@ ostream& operator << (ostream& out, const Orders& o)
 }
 
 /*
-* Stream Input Operator TODO
+* Stream Input Operator
 */
 istream& operator >> (istream& in, Orders& o)
 {

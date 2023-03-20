@@ -332,7 +332,7 @@ void GameEngine::issueOrdersPhase() {
         territoryID = 0;
         while (territoryID != -1) {
             cout << "\nPlayer " + player->pName << ", specify a territory ID to attack, -1 when you are done: ";
-            cin >> territoryID; //TODO edge cases like hello input or !@#$!@$QW you know
+            cin >> territoryID; 
             if (territoryID != -1) {
                 for (Territory* terr : map->territories) {
                     if (territoryID == terr->id) {
@@ -353,7 +353,7 @@ void GameEngine::issueOrdersPhase() {
         territoryID = 0;
         while (territoryID != -1) {
             cout << "\nPlayer " + player->pName << ", specify a territory ID to defend, -1 when you are done: ";
-            cin >> territoryID; //TODO edge cases like hello input or !@#$!@$QW you know
+            cin >> territoryID; 
             if (territoryID != -1) {
                 for (Territory* terr : map->territories) {
                     if (territoryID == terr->id) {
@@ -534,7 +534,7 @@ void GameEngine::mainGameLoop() {
 
             // if a player owns 0 territory, remove from the game
             if (player->territories.empty()) {
-                // TODO remove the player and reduce player list size
+                
                 cout << player->getName() << " is removed from the game for having 0 territory" << endl;
             }
         }
