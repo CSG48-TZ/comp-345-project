@@ -29,6 +29,8 @@ public:
     Player* negociatedPlayers[20];
     int reinforcementPool;
     int numPlayers;
+    vector<Territory*> attackList;
+    vector<Territory *> defendList;
 
     Player(); // default constructor
     Player(string pName, int id);
@@ -36,6 +38,9 @@ public:
     ~Player();   // deconstruct
     Player& operator=(const Player &player);
 
+
+    void addToAttack(Territory *);
+    void addToDefend(Territory*);
     void setName(string name);
     string getName();
     void setPlayerID(int id);

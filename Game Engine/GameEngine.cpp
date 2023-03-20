@@ -1,7 +1,6 @@
-#include "GameEngine.h"
+#include "../Game Engine/GameEngine.h"
 #include <iostream>
 #include <string>
-using namespace std;
 
 // Implementation of Constructors
 GameEngine::GameEngine() {
@@ -153,6 +152,7 @@ bool GameEngine::startupPhase() {
         if (command == NULL) {
             cout << "No command was input." << endl;
             exit(0);
+            return false;
         }
         // Check if the command is valid and save effect
         string currentState = this->getCurrentState();
@@ -196,8 +196,9 @@ bool GameEngine::startupPhase() {
 
                     // Allocates one territory to each player. Each territory allocated are equidistant from each other
                     int numTerritories = this->map->territories.size();
-                    int gap = numTerritories/players.size();
+                    int gap = numTerritories / players.size();
                     int playersIndex = 0;
+
                     for(int i = 0; i < numTerritories; i += gap){ // Iterates through all the territories
                         this->map->territories.at(i)->changeOwner(players[playersIndex%players.size()]);
                         playersIndex ++;
@@ -216,7 +217,9 @@ bool GameEngine::startupPhase() {
 
                     cout << "Determined the order of play" << endl;
                     for (int i = 0; i < orderedPlayers.size(); i++) {
-                        cout << i + 1 << ": " << orderedPlayers[i]->playerID << endl;
+
+                        cout << i << ": " << orderedPlayers[i]->pName << endl;
+
                     }
 
 
@@ -245,7 +248,8 @@ bool GameEngine::startupPhase() {
                     continue;
                 }
                 else {
-                    Player* player = new Player("Player",playersID);
+
+                    Player* player = new Player(result[1],playersID);
                     players.push_back(player);
                     playersID ++;
                     cout << "Added player: Player " << playersID << endl;
@@ -276,11 +280,11 @@ void GameEngine::reinforcementPhase() {
     // loop for each player
     cout << "Reinforcement Phase " << endl;
     for (int i = 0; i < numPlayers; i++) {
-        reinforcementAmount = (int)map->territories.size() / 3;
+        reinforcementAmount = (int)players.at(i)->territories.size() / 3;
 
         for (int j = 0; j < map->continents.size(); j++) {
             for (int k = 0; k < map->continents[j].size(); k++) {
-                // TODO: check if every territory in the continent is in the player territory list
+                // TO check : check if every territory in the continent is in the player territory list
 
                 // boolean value to see if the current territory in the continent is in the list of territories of the current player
                 bool present = std::find(begin(players[i]->territories), end(players[i]->territories), map->continents[j][k]) != end(players[i]->territories);
@@ -297,6 +301,7 @@ void GameEngine::reinforcementPhase() {
                     reinforcementAmount += continentBonus;
                 }
             }
+
         }
 
         // Make sure the player gets a minimum of 3 reinforcement troops
@@ -306,7 +311,8 @@ void GameEngine::reinforcementPhase() {
         cout << "Player: " << players[i]->getName() << " has " << reinforcementAmount << " troops to reinforce \"";
         players[i]->addArmies(reinforcementAmount);
     }
-    // set state to issue orders
+    string nextstate = "issueorders";
+    this->transition(nextstate);
 }
 
 /**
@@ -315,11 +321,81 @@ void GameEngine::reinforcementPhase() {
 void GameEngine::issueOrdersPhase() {
     // inform current game play phrase
     cout << "Issue Orders Phase " << endl;
+    Player* player;
+    int territoryID = 0;
+
+    cout << "\nISSUING ORDERS\n\n Players will now modify their attack and defend lists...\n\n";
+
     // loop around through all the players and issue their orders to the order list
     std::vector<Player*>::iterator it;
     for (it = players.begin(); it != players.end(); it++) {
-        Player* player = *it;
+        player = *it;
+        while (territoryID != -1) {
+            cout << "\nPlayer " + player->pName << ", specify a territory ID to attack, -1 when you are done: ";
+            cin >> territoryID; //TODO edge cases like hello input or !@#$!@$QW you know
+            if (territoryID != -1) {
+                for (Territory* terr : map->territories) {
+                    if (territoryID == terr->id) {
+                        if(terr->owner == player) {
+                            cout << "\nCannot add territory to list: Player owns the territory - " << terr->id << ".\n";   
+                        }
+                        else if(terr->owner != NULL) {
+                            player->addToAttack(terr);
+                        }
+                        else {
+                            cout << "\nCannot add territory to list: Nobody owns the territory - " << terr->id << ".\n";
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        territoryID = 0;
+        while (territoryID != -1) {
+            cout << "\nPlayer " + player->pName << ", specify a territory ID to defend, -1 when you are done: ";
+            cin >> territoryID; //TODO edge cases like hello input or !@#$!@$QW you know
+            if (territoryID != -1) {
+                for (Territory* terr : map->territories) {
+                    if (territoryID == terr->id) {
+                        if (terr->owner != player) {
+                            cout << "\nCannot add territory to list: Player does not own the territory - " << terr->id << ".\n";
+                        }
+                        else if (terr->owner != NULL) {
+                            player->addToDefend(terr);
+                        }
+                        else {
+                            cout << "\nCannot add territory to list: Nobody owns the territory - " << terr->id << ".\n";
+                        }
+                        break;
+                    }
+                }
+            }
+        }
     }
+    
+    int armycountselected = 0;
+
+    for (it = players.begin(); it != players.end(); it++) {
+        player = *it;
+        
+        if (player->reinforcementPool > 0) {
+            for (Territory* t : player->toDefend()) {
+                cout << "\nPlayer " + player->pName << " still has " << player->reinforcementPool << " armies to deploy, select how many you wish to deploy to territory id: " << t->id;
+                cin >> armycountselected;
+                if (armycountselected <= player->reinforcementPool) {
+                    player->issueOrder("Deploy", player, armycountselected, t, t);
+                    player->addArmies(-armycountselected);
+                }
+                else {
+                    cout << "\nPlayer " + player->pName << " doesn't have enough armies in their reinforcement pool. Army available to deploy remaining:  " << player->reinforcementPool;
+                }
+            }
+        }
+
+
+    }
+
+
 }
 
 /**

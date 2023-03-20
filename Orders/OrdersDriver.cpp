@@ -12,7 +12,7 @@
 #include "Orders.h"
 #include <windows.h>
 
-int main()
+int main_()
 {
 	cout << "\nCreating setup...";
 	//Creating 3 players
@@ -22,21 +22,21 @@ int main()
 
 	//Loading the map
 	Maploader maploader = { "C:\\Dev\\test.txt" };
-	Map map = maploader.load();
+	Map* map = maploader.load();
 
 	cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 
 	//Creating some territories for DEMO.
-	Territory* playerTerr = map.territories.at(14);
-	Territory* targetTerr = map.territories.at(8);
-	Territory* neutralTerr = map.territories.at(23);
+	Territory* playerTerr = map->territories.at(14);
+	Territory* targetTerr = map->territories.at(8);
+	Territory* neutralTerr = map->territories.at(23);
 
-	Territory* t1 = map.territories.at(1);
-	Territory* t2 = map.territories.at(2);
-	Territory* t3 = map.territories.at(3);
-	Territory* t4 = map.territories.at(4);
-	Territory* t5 = map.territories.at(5);
-	Territory* t6 = map.territories.at(6);
+	Territory* t1 = map->territories.at(1);
+	Territory* t2 = map->territories.at(2);
+	Territory* t3 = map->territories.at(3);
+	Territory* t4 = map->territories.at(4);
+	Territory* t5 = map->territories.at(5);
+	Territory* t6 = map->territories.at(6);
 
 	//Adding territories to players.
 	t->addOwnedTerritory(targetTerr);

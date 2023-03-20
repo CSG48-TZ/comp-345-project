@@ -140,19 +140,6 @@ void Player::printOwnedTerritoryList() {
 
 // return a list of territories that are to be defended
 vector<Territory *> Player::toDefend(){
-    vector<Territory *> defendList;
-    vector<int> random;
-    for (int i = 0; i < 10; i++) {
-        random.push_back(i);
-    }
-
-    std::random_shuffle(random.begin(), random.end());
-
-    for (int i = 0; i < 5; i++) {
-
-        defendList.push_back(territories.at(random.at(i)));
-
-    }
     return defendList;
 }
 
@@ -166,15 +153,35 @@ void Player::printDefendList(vector<Territory *> defendList){
 
 // return a list of territories that are to be attacked
 vector<Territory *> Player::toAttack(){
-    string name;
-    vector<Territory *> attackList;
-    for (int i = 10; i < 16; i++) {
-
-        name = "Territory " + to_string(i);
-        attackList.push_back(new Territory(i, name, rand() % 5 + 1, rand() % 120, rand() % 120));
-
-    }
     return attackList;
+}
+
+//Adds a territory to the attack list
+void Player::addToAttack(Territory * t) {
+    if (t->owner->playerID == this->playerID) {
+        cout << "\nCannot add territory to attack list: Territory is owned by the player.\n";
+    }
+    else if (std::find(attackList.begin(), attackList.end(), t) != attackList.end()){
+        cout << "\nCannot add territory to attack list: Territory already in list.\n";
+    }
+    else {
+        attackList.push_back(t);
+        cout << "\nAdded territory - " << t->id << " - to " << this->pName << "\'s attack list.\n";
+    }
+}
+
+//Adds a territory to the defend list
+void Player::addToDefend(Territory* t) {
+    if (t->owner->playerID != this->playerID) {
+        cout << "\nCannot add territory to attack list: Territory is not owned by the player.\n";
+    }
+    else if (std::find(defendList.begin(), defendList.end(), t) != defendList.end()) {
+        cout << "\nCannot add territory to attack list: Territory already in list.\n";
+    }
+    else {
+        defendList.push_back(t);
+        cout << "\nAdded territory - " << t->id << " - to " << this->pName << "\'s defend list.\n";
+    }
 }
 
 // print attack list

@@ -10,6 +10,7 @@ int main() {
     string command;
     cout << "Initial State is " << game->getCurrentState() << endl;
     game->startupPhase();
+    game->mainGameLoop();
     cout << "***********Game Over! Thank you!***********" << endl;
     delete game;
     game = NULL;
