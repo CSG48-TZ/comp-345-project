@@ -95,9 +95,10 @@ Territory Territory::operator=(const Territory& territory){
 }
 
 // Map class implementation
-Map::Map(vector <vector<Territory *>>& continents, vector<Territory *>& territories) {
+Map::Map(vector <vector<Territory *>>& continents, vector<Territory *>& territories, vector<int>& bonus) {
     this->continents = continents;
     this->territories = territories;
+    this->bonuses = bonus;
 }
 
 // Copy constructor for Map class
@@ -259,6 +260,7 @@ Map * Maploader::load() {
 
     vector<Territory *> territoriesVector;
     vector<vector<Territory*>> continentsVector;
+    vector<int> bonuses;
 
     string line;
     bool continents = false;
@@ -318,6 +320,12 @@ Map * Maploader::load() {
             territoriesVector.push_back(territory);
             continentsVector.at(continent).push_back(territory);
         } else if(continents){
+            string name;
+            int bonus;
+            string color;
+
+            s >> name >> bonus >> color;
+            bonuses.push_back(bonus);
             vector<Territory *> countries;
             continentsVector.push_back(countries);
         }
@@ -327,5 +335,5 @@ Map * Maploader::load() {
 
     infile.close();
 
-    return new Map(continentsVector, territoriesVector);
+    return new Map(continentsVector, territoriesVector, bonuses);
 }

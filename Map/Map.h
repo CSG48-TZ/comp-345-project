@@ -50,9 +50,11 @@ public:
 
     vector<Territory *> territories; // Cumulative list of all the territories
 
+    vector<int> bonuses;
+
     bool validate();
     void addTerritory(Territory * territory);
-    Map(vector<vector<Territory *>>& continents, vector<Territory *>& territories);
+    Map(vector<vector<Territory *>>& continents, vector<Territory *>& territories, vector<int>& bonus);
     Map(const Map& map);
     ~Map();
     Map operator=(const Map& map);
