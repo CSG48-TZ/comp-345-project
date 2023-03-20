@@ -199,7 +199,7 @@ bool GameEngine::startupPhase() {
                     int gap = numTerritories / players.size();
                     int playersIndex = 0;
 
-                    for(int i = 0; i < numTerritories; i += gap){ // Iterates through all the territories
+                    for(int i = 0; i < numTerritories; i ++){ // Iterates through all the territories
                         this->map->territories.at(i)->changeOwner(players[playersIndex%players.size()]);
                         playersIndex ++;
                     }
@@ -296,9 +296,8 @@ void GameEngine::reinforcementPhase() {
 
                 // check if we are at last index to add continent bonus 
                 if (present && k == map->continents[j].size() - 1) {
-                    // TODO: Add continent bonus
                     // adds continent bonus to current reinforcement amount
-                    reinforcementAmount += continentBonus;
+                    reinforcementAmount += map->bonuses[j];
                 }
             }
 
@@ -337,7 +336,7 @@ void GameEngine::issueOrdersPhase() {
                 for (Territory* terr : map->territories) {
                     if (territoryID == terr->id) {
                         if(terr->owner == player) {
-                            cout << "\nCannot add territory to list: Player owns the territory - " << terr->id << ".\n";   
+                            cout << "\nCannot add territory to list: Player " << terr->owner->pName << " owns the territory - " << terr->id << ".\n";
                         }
                         else if(terr->owner != NULL) {
                             player->addToAttack(terr);
@@ -358,7 +357,7 @@ void GameEngine::issueOrdersPhase() {
                 for (Territory* terr : map->territories) {
                     if (territoryID == terr->id) {
                         if (terr->owner != player) {
-                            cout << "\nCannot add territory to list: Player does not own the territory - " << terr->id << ".\n";
+                            cout << "\nCannot add territory to list: Player " << terr->owner->pName << " does not own the territory - " << terr->id << ".\n";
                         }
                         else if (terr->owner != NULL) {
                             player->addToDefend(terr);
@@ -378,7 +377,7 @@ void GameEngine::issueOrdersPhase() {
     for (it = players.begin(); it != players.end(); it++) {
         player = *it;
         
-        if (player->reinforcementPool > 0) {
+        while(player->reinforcementPool > 0) {
             for (Territory* t : player->toDefend()) {
                 cout << "\nPlayer " + player->pName << " still has " << player->reinforcementPool << " armies to deploy, select how many you wish to deploy to territory id: " << t->id;
                 cin >> armycountselected;
@@ -394,7 +393,93 @@ void GameEngine::issueOrdersPhase() {
 
 
     }
+    string orderToIssue;
+    int selection = 0;
+    int targetID, terrID, targetTerrID;
+    Territory* sourceTerr;
+    Territory* targetTerr;
+    Player* targetPlayer;
 
+    for (it = players.begin(); it != players.end(); it++) {
+        player = *it;
+        targetPlayer = player;
+        while (selection != 6) {
+            cout << "\nPlayer " << player->pName << " please select an order: \n";
+            cout << "1 - Advance\n";
+            cout << "2 - Airlift\n";
+            cout << "3 - Blockade\n";
+            cout << "4 - Bomb\n";
+            cout << "5 - Negociate\n";
+            cout << "6 - No more orders\n";
+            cin >> selection;
+            if (selection != 6) {
+                cout << "Army amount: ";
+                cin >> armycountselected;
+                cout << "Target Player ID: ";
+                cin >> targetID;
+                cout << "Source Territory ID: ";
+                cin >> terrID;
+                cout << "Target Territory ID: ";
+                cin >> targetTerrID;
+
+                sourceTerr = map->getTerritoryFromID(terrID);
+                targetTerr = map->getTerritoryFromID(targetTerrID);
+
+                for (int i = 0; i < this->players.size(); i++) {
+                    if (this->players.at(i)->playerID == targetID) {
+                        targetPlayer = this->players.at(i);
+                    }
+                }
+
+                switch (selection) {
+                case 1:
+                    player->issueOrder("Advance", targetPlayer, armycountselected, targetTerr, sourceTerr);
+                    break;
+                case 2:
+                    if (player->getHand()->contains(0) <= 0) {
+                        cout << "\nPlayer does not have an Airlift card. Cannot issue order.\n";
+                    }
+                    else {
+                        player->issueOrder("Airlift", targetPlayer, armycountselected, targetTerr, sourceTerr);
+                        player->getHand()->removeCardOfType(0);
+                    }
+                    break;
+                case 3:
+                    if (player->getHand()->contains(1) <= 0) {
+                        cout << "\nPlayer does not have an Blockade card. Cannot issue order.\n";
+                    }
+                    else {
+                        player->issueOrder("Blockade", targetPlayer, armycountselected, targetTerr, sourceTerr);
+                        player->getHand()->removeCardOfType(1);
+                    }
+                    break;
+                case 4:
+                    if (player->getHand()->contains(2) <= 0) {
+                        cout << "\nPlayer does not have an Bomb card. Cannot issue order.\n";
+                    }
+                    else {
+                        player->issueOrder("Bomb", targetPlayer, armycountselected, targetTerr, sourceTerr);
+                        player->getHand()->removeCardOfType(2);
+                    }
+                    break;
+                case 5:
+                    if (player->getHand()->contains(3) <= 0) {
+                        cout << "\nPlayer does not have an Negociate card. Cannot issue order.\n";
+                    }
+                    else {
+                        player->issueOrder("Negociate", targetPlayer, armycountselected, targetTerr, sourceTerr);
+                        player->getHand()->removeCardOfType(3);
+                    }
+                    break;
+                default:
+                    cout << "\nWrong selection please try again.\n";
+                }
+            }
+        }
+
+    }
+    string nextstate = "executeorders";
+    this->transition(nextstate);
 
 }
 
@@ -409,18 +494,12 @@ void GameEngine::executeOrdersPhase() {
     // inform current game play phrase
     cout << "Order Execution Phase " << endl;
     //execute deploy order first
-    for (auto currPlayer : players) {
-        OrdersList* currOrderList = currPlayer->getOrderList();
-        // loop through the list to find deploy order
-        for (Orders* order : currOrderList->getCurrentOrdersList()) {
-            if (order->getCurrentOrder() == "Deploy") {
-                order->validate();
-                order->execute();
-                currPlayer->getOrderList()->removeOrder(order);
+    for (int i = 0; i < players.size(); i++) {
+        for (Orders* o : players[i]->orderList->getCurrentOrdersList()) {
+            if (o->getCurrentOrder() == "deploy") {
+                o->execute();
             }
         }
-
-        // TODO execute other orders
     }
 }
 

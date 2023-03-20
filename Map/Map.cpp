@@ -119,6 +119,17 @@ void Map::addTerritory(Territory *territory) {
     this->continents.at(numContinent).push_back(territory); // Adds the territory to the continents list
 }
 
+// returns a territory from its ID. Returns NULL if not found.
+Territory* Map::getTerritoryFromID(int id) {
+    for (int i = 0; i < this->territories.size(); i++) {
+        if (this->territories.at(i)->id == id) {
+            return this->territories.at(i);
+        }
+    }
+
+    return NULL;
+}
+
 bool Map::validate() {
     unordered_map<string,int> duplicates ; // Maps the territory name to its continent value
 

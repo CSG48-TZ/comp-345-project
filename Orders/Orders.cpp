@@ -816,8 +816,6 @@ bool Airlift::execute() {
 	if (validate()) {
 		fromLocation->addArmies(-armyCount);
 		targetLocation->addArmies(armyCount);
-		player->getHand()->removeCardOfType(0);
-
 		notify(this);
 		return true;
 	}

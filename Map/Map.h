@@ -54,6 +54,7 @@ public:
 
     bool validate();
     void addTerritory(Territory * territory);
+    Territory* getTerritoryFromID(int id);
     Map(vector<vector<Territory *>>& continents, vector<Territory *>& territories, vector<int>& bonus);
     Map(const Map& map);
     ~Map();
