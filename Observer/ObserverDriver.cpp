@@ -3,6 +3,7 @@
 #include "../Game Engine/GameEngine.h"
 #include "../Orders/Orders.h"
 #include "../Map/Map.h"
+#include "../Player/Player.h"
 
 
 int main() {
@@ -74,10 +75,12 @@ int main() {
 
     cout << "\nAdvance Order 0 will be issued with a territory that is not owned by the player.\nPress any key to continue..";
     cin.get();
+
+    //Creating observers for orderlist
+    LogObserver* orderListObserver = new LogObserver(p->getOrderList());
     p->issueOrder("Advance", t, 500, targetTerr, playerTerr);
 
     //Creating observers for orders
-    LogObserver* orderListObserver= new LogObserver(p->getOrderList());
     LogObserver* ordersObserver = new LogObserver(p->getOrderList()->getLastOrder());
     cout << "*********************************************************************************";
     p->getOrderList()->getLastOrder()->execute();

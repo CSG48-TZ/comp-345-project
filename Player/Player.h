@@ -1,7 +1,6 @@
 #ifndef COMP345_PLAYER_H
 #define COMP345_PLAYER_H
 
-#pragma once
 
 #include <iostream>
 #include <string>
