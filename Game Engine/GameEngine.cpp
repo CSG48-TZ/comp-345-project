@@ -538,6 +538,13 @@ void GameEngine::executeOrdersPhase() {
             }
         }
     }
+
+    for (int i = 0; i < players.size(); i++) {
+        for (Orders* o : players[i]->orderList->getCurrentOrdersList()) {
+            o->execute();
+        }
+    }
+
     string nextstate = "assignreinforcement";
     this->transition(nextstate);
 }

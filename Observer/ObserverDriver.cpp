@@ -2,6 +2,7 @@
 #include "../CommandProcess/CommandProcessing.h"
 #include "../Game Engine/GameEngine.h"
 #include "../Orders/Orders.h"
+#include "../Map/Map.h"
 
 
 int main() {
@@ -44,7 +45,7 @@ int main() {
     Player* r = new Player("Neutral", 3);
 
     //Loading the map
-    Maploader maploader = { "test.txt" };
+    Maploader maploader = { "m" };
     Map* map = maploader.load();
 
     cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
@@ -73,7 +74,7 @@ int main() {
 
     cout << "\nAdvance Order 0 will be issued with a territory that is not owned by the player.\nPress any key to continue..";
     cin.get();
-    p->issueOrder("Advance", t, 500, targetTerr, t1);
+    p->issueOrder("Advance", t, 500, targetTerr, playerTerr);
 
     //Creating observers for orders
     LogObserver* orderListObserver= new LogObserver(p->getOrderList());
@@ -85,7 +86,7 @@ int main() {
     // Memory Arrangement
     delete gameEngineObserver, processorObserver, orderListObserver, ordersObserver;
     gameEngineObserver, processorObserver, orderListObserver, ordersObserver = NULL;
-    delete engine;
+    //delete engine;
     engine = NULL;
     delete p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2, t3, t4, t5, t6, map;
     p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2, t3, t4, t5, t6, map = nullptr;
