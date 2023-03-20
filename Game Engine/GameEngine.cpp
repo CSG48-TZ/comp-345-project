@@ -196,11 +196,7 @@ bool GameEngine::startupPhase() {
                     int gap = numTerritories/players.size();
                     int playersIndex = 0;
                     for(int i = 0; i < numTerritories; i += gap){ // Iterates through all the territories
-                        if(playersIndex >= players.size()) // Breaks when you reach the end of players vector
-                        {
-                            break;
-                        }
-                        this->map->territories.at(i)->changeOwner(players[playersIndex]);
+                        this->map->territories.at(i)->changeOwner(players[playersIndex%players.size()]);
                         playersIndex ++;
                     }
 
