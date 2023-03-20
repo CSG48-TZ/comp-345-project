@@ -74,6 +74,7 @@ void GameEngine::transition(string& state) {
     else if (state == "exit program") {
         *currentState = State::END;
     }
+    cout << "State transitioned to: " << state << endl;
     notify(this);
 }
 
@@ -144,7 +145,7 @@ string GameEngine::stringToLog() {
 // Returns true if startup completed without any issues
 // Returns false if an error occurs
 bool GameEngine::startupPhase() {
-    int id = 0;
+    int playersID = 1;
     while (*currentState != State::ASSIGN_REINFORCEMENT) {
         // Ask for input command
         Command* command = this->cmdPcs->getCommand();
@@ -173,6 +174,7 @@ bool GameEngine::startupPhase() {
                 string filename = result[1];
                 Maploader maploader(filename);
                 this->map = maploader.load();
+                cout << "Map" << filename << " has been loaded" << endl;
             }
             else if (behavior == "validatemap") {
                 if (this->map->validate()) {
@@ -196,13 +198,10 @@ bool GameEngine::startupPhase() {
                     int numTerritories = this->map->territories.size();
                     int gap = numTerritories / players.size();
                     int playersIndex = 0;
-                    for (int i = 0; i < numTerritories; i += gap) { // Iterates through all the territories
-                        if (playersIndex >= players.size()) // Breaks when you reach the end of players vector
-                        {
-                            break;
-                        }
-                        players[playersIndex]->addOwnedTerritory(this->map->territories.at(i));
-                        playersIndex++;
+
+                    for(int i = 0; i < numTerritories; i += gap){ // Iterates through all the territories
+                        this->map->territories.at(i)->changeOwner(players[playersIndex%players.size()]);
+                        playersIndex ++;
                     }
 
                     // Randomizes the order of players
@@ -213,19 +212,25 @@ bool GameEngine::startupPhase() {
                         players.erase(players.begin() + index);
                     }
 
+                    // Assigns orderedPlayers vector to GameEngine object's players member
                     this->players = orderedPlayers;
 
                     cout << "Determined the order of play" << endl;
                     for (int i = 0; i < orderedPlayers.size(); i++) {
+
                         cout << i << ": " << orderedPlayers[i]->pName << endl;
+
                     }
 
+
+                    // Adds 50 armies to each player's reinforcement pool
                     for (int i = 0; i < orderedPlayers.size(); i++) {
                         orderedPlayers[i]->addArmies(50);
                     }
 
                     cout << "Added 50 armies to each player's reinforcement pool" << endl;
 
+                    // Draws two cards from the deck for each player
                     Deck deck{};
                     for (int i = 0; i < orderedPlayers.size(); i++) {
                         deck.draw(orderedPlayers[i]->getHand());
@@ -243,9 +248,11 @@ bool GameEngine::startupPhase() {
                     continue;
                 }
                 else {
-                    Player* player = new Player(result[1], id);
-                    id++;
+
+                    Player* player = new Player(result[1],playersID);
                     players.push_back(player);
+                    playersID ++;
+                    cout << "Added player: Player " << playersID << endl;
                 }
             }
             else {
