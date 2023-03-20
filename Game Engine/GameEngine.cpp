@@ -548,12 +548,20 @@ void GameEngine::executeOrdersPhase() {
                 players[i]->orderList->removeOrder(o);
             }
         }
+        // During the order execution, if a player owns all the territories, announce the player and end the game
+        if (players[i]->territories.size() == (int)map->territories.size()) {
+            cout << "The player is " << players[i]->getName() << "! Congratulations!" << endl;
+            //exit the loop
+            string nextState = "win";
+            this->transition(nextState);
+            break;
+        }
     }
 
-    //TODO Check if player controls all territory -> winstate.
-
-    string nextstate = "assignreinforcement";
-    this->transition(nextstate);
+    if (this->getCurrentState() == "executeorders") {
+        string nextstate = "assignreinforcement";
+        this->transition(nextstate);
+    }
 }
 
 /**
@@ -570,16 +578,9 @@ void GameEngine::mainGameLoop() {
     if (map != nullptr) {
         numOfAllTerritories = (int)map->territories.size();
     }
-    while (!gameIsFinished) {
-
+    // end the game if current state is WIN
+    while (this->getCurrentState() != "win") {
         for (auto& player : players) {
-            // if a player owns all the territories, announce the player and end the game
-            if (player->territories.size() == numOfAllTerritories) {
-                cout << "The player is " << player->getName() << "! Congratulations!" << endl;
-                //exit the loop
-                gameIsFinished = true;
-            }
-
             // if a player owns 0 territory, remove from the game
             if (player->territories.empty()) {
                 // TODO remove the player and reduce player list size
@@ -596,6 +597,26 @@ void GameEngine::mainGameLoop() {
         // order execution phase
         executeOrdersPhase();
         gameRound++;
+    }
+
+    // Replay the command to see what the next state is
+    while (true) {
+        cout << "Please input \"replay\" or \"quit\" to restart or end the game. " << endl;
+        Command* command = this->cmdPcs->getCommand();
+        if (command == NULL) {
+            cout << "No command was input.System Exit. " << endl;
+            break;
+        }
+        // Check if the command is valid and save effect
+        string currentState = this->getCurrentState();
+        string nextState = cmdPcs->validate(command, currentState);
+        cout << "Details of the input command: \n" << *command << endl;
+
+        // Finish the infinite loop if we can move to an acceptable state
+        if (nextState == "start" || nextState == "exit program") {
+            this->transition(nextState);
+            break;
+        }
     }
 }
 
