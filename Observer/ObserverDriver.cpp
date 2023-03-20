@@ -45,21 +45,21 @@ int main() {
 
     //Loading the map
     Maploader maploader = { "test.txt" };
-    Map map = maploader.load();
+    Map* map = maploader.load();
 
     cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 
     //Creating some territories for DEMO.
-    Territory* playerTerr = map.territories.at(14);
-    Territory* targetTerr = map.territories.at(8);
-    Territory* neutralTerr = map.territories.at(23);
+    Territory* playerTerr = map->territories.at(14);
+    Territory* targetTerr = map->territories.at(8);
+    Territory* neutralTerr = map->territories.at(23);
 
-    Territory* t1 = map.territories.at(1);
-    Territory* t2 = map.territories.at(2);
-    Territory* t3 = map.territories.at(3);
-    Territory* t4 = map.territories.at(4);
-    Territory* t5 = map.territories.at(5);
-    Territory* t6 = map.territories.at(6);
+    Territory* t1 = map->territories.at(1);
+    Territory* t2 = map->territories.at(2);
+    Territory* t3 = map->territories.at(3);
+    Territory* t4 = map->territories.at(4);
+    Territory* t5 = map->territories.at(5);
+    Territory* t6 = map->territories.at(6);
 
     //Adding territories to players.
     t->addOwnedTerritory(targetTerr);
@@ -87,7 +87,7 @@ int main() {
     gameEngineObserver, processorObserver, orderListObserver, ordersObserver = NULL;
     delete engine;
     engine = NULL;
-    delete p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2, t3, t4, t5, t6;
-    p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2, t3, t4, t5, t6 = nullptr;
+    delete p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2, t3, t4, t5, t6, map;
+    p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2, t3, t4, t5, t6, map = nullptr;
 	return 0;
 }
