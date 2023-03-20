@@ -200,7 +200,7 @@ bool GameEngine::startupPhase() {
                     int playersIndex = 0;
 
                     for(int i = 0; i < numTerritories; i ++){ // Iterates through all the territories
-                        this->map->territories.at(i)->changeOwner(players[playersIndex%players.size()]);
+                        players[playersIndex % players.size()]->addOwnedTerritory(this->map->territories.at(i));
                         playersIndex ++;
                     }
 
@@ -329,6 +329,7 @@ void GameEngine::issueOrdersPhase() {
     std::vector<Player*>::iterator it;
     for (it = players.begin(); it != players.end(); it++) {
         player = *it;
+        territoryID = 0;
         while (territoryID != -1) {
             cout << "\nPlayer " + player->pName << ", specify a territory ID to attack, -1 when you are done: ";
             cin >> territoryID; //TODO edge cases like hello input or !@#$!@$QW you know
@@ -379,7 +380,7 @@ void GameEngine::issueOrdersPhase() {
         
         while(player->reinforcementPool > 0) {
             for (Territory* t : player->toDefend()) {
-                cout << "\nPlayer " + player->pName << " still has " << player->reinforcementPool << " armies to deploy, select how many you wish to deploy to territory id: " << t->id;
+                cout << "\nPlayer " + player->pName << " still has " << player->reinforcementPool << " armies to deploy, select how many you wish to deploy to territory id #" << t->id << ": ";
                 cin >> armycountselected;
                 if (armycountselected <= player->reinforcementPool) {
                     player->issueOrder("Deploy", player, armycountselected, t, t);
@@ -403,6 +404,7 @@ void GameEngine::issueOrdersPhase() {
     for (it = players.begin(); it != players.end(); it++) {
         player = *it;
         targetPlayer = player;
+        player->getHand()->showHand();
         while (selection != 6) {
             cout << "\nPlayer " << player->pName << " please select an order: \n";
             cout << "1 - Advance\n";
@@ -475,8 +477,9 @@ void GameEngine::issueOrdersPhase() {
                     cout << "\nWrong selection please try again.\n";
                 }
             }
+            
         }
-
+        selection = 0;
     }
     string nextstate = "executeorders";
     this->transition(nextstate);
@@ -496,11 +499,13 @@ void GameEngine::executeOrdersPhase() {
     //execute deploy order first
     for (int i = 0; i < players.size(); i++) {
         for (Orders* o : players[i]->orderList->getCurrentOrdersList()) {
-            if (o->getCurrentOrder() == "deploy") {
+            if (o->getCurrentOrder() == "Deploy") {
                 o->execute();
             }
         }
     }
+    string nextstate = "assignreinforcement";
+    this->transition(nextstate);
 }
 
 /**
