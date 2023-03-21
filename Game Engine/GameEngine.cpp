@@ -447,6 +447,7 @@ void GameEngine::issueOrdersPhase() {
             cout << "4 - Bomb\n";
             cout << "5 - Negociate\n";
             cout << "6 - No more orders\n";
+            cout << "7 - Remove all territories\n"; // For demonstration purposes
             cin >> selection;
             if (selection != 6) {
                 cout << "Army amount: ";
@@ -507,6 +508,9 @@ void GameEngine::issueOrdersPhase() {
                         //player->getHand()->removeCardOfType(3);
                     }
                     break;
+                case 7:
+                    player->territories.clear();
+                    break;
                 default:
                     cout << "\nWrong selection please try again.\n";
                 }
@@ -549,7 +553,7 @@ void GameEngine::executeOrdersPhase() {
             }
         }
         // During the order execution, if a player owns all the territories, announce the player and end the game
-        if (players[i]->territories.size() == (int)map->territories.size()) {
+        if (players[i]->territories.size() == (int)map->territories.size() || players.size() == 1) {
             cout << "The player is " << players[i]->getName() << "! Congratulations!" << endl;
             //exit the loop
             string nextState = "win";
@@ -583,8 +587,16 @@ void GameEngine::mainGameLoop() {
         for (auto& player : players) {
             // if a player owns 0 territory, remove from the game
             if (player->territories.empty()) {
-                // TODO remove the player and reduce player list size
                 cout << player->getName() << " is removed from the game for having 0 territory" << endl;
+                vector<Player*>::iterator it = players.begin();
+                while (it != players.end()) {
+                    if (player == *it) {
+                        it = players.erase(it);
+                    }
+                    else {
+                        ++it;
+                    }
+                }
             }
         }
 
