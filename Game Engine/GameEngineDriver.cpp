@@ -15,8 +15,6 @@ int foo() {
     delete game;
     game = NULL;
 
-    
-
     return 0;
 }
 
@@ -29,10 +27,14 @@ int main() {
     cout << "- Load a map \n";
     cout << "- Validate a map \n";
     cout << "- Create two players : Maggie and Bob \n\n";
+    cout << "- Replay or Quiz the game when the game ends \n";
 
     GameEngine* game = new GameEngine;
-    game->startupPhase();
-    game->mainGameLoop();
+    cout << "***********Game Start***********\nWelcome to the game!" << endl;
+    while (game->getCurrentState() == "start") {
+        game->startupPhase();
+        game->mainGameLoop();
+    }
+    cout << "***********Game Over! Thank you!***********" << endl;
     return 0;
-
 }

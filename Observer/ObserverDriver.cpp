@@ -90,8 +90,7 @@ int main() {
     delete gameEngineObserver, processorObserver, orderListObserver, ordersObserver;
     gameEngineObserver, processorObserver, orderListObserver, ordersObserver = NULL;
     //delete engine;
-    engine = NULL;
-    delete p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2, t3, t4, t5, t6, map;
-    p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2, t3, t4, t5, t6, map = nullptr;
+    delete p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2, t3, t4, t5, t6, map, engine;
+    p, t, r, playerTerr, targetTerr, neutralTerr, t1, t2, t3, t4, t5, t6, map, engine = nullptr;
 	return 0;
 }
