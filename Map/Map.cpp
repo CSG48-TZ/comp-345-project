@@ -326,7 +326,7 @@ Map * Maploader::load() {
 
             Territory * territory = new Territory(id, name, continent, num1, num2);
 
-            //cout << "Added territory: " << name << endl;
+            cout << "Added territory: " << name << endl;
 
             territoriesVector.push_back(territory);
             continentsVector.at(continent).push_back(territory);

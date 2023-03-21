@@ -592,6 +592,7 @@ void GameEngine::mainGameLoop() {
                 while (it != players.end()) {
                     if (player == *it) {
                         it = players.erase(it);
+                        break;
                     }
                     else {
                         ++it;
