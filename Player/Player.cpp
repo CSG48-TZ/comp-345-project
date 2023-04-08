@@ -1,4 +1,3 @@
-#pragma once
 #include "Player.h"
 #include <algorithm>
 #include <cctype>
@@ -42,6 +41,8 @@ Player::~Player(){
     hand = nullptr;
     delete orderList;
     orderList = nullptr;
+    delete strategy;
+    strategy = nullptr;
 }
 
 // assignment operator
@@ -140,7 +141,7 @@ void Player::printOwnedTerritoryList() {
 
 // return a list of territories that are to be defended
 vector<Territory *> Player::toDefend(){
-    return defendList;
+    return this->strategy->toDefend();
 }
 
 // print defend list
@@ -153,7 +154,7 @@ void Player::printDefendList(vector<Territory *> defendList){
 
 // return a list of territories that are to be attacked
 vector<Territory *> Player::toAttack(){
-    return attackList;
+    return this->strategy->toAttack();
 }
 
 //Adds a territory to the attack list
@@ -193,7 +194,7 @@ void Player::printAttackList(vector<Territory *> attackList){
 
 //  creates an order object and adds it to the list of orders.
 void Player::issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation) {
-    Orders* order{};
+    /*Orders* order{};
     
     std::transform(type.begin(), type.end(), type.begin(),
         [](unsigned char c) { return std::tolower(c); });
@@ -226,7 +227,8 @@ void Player::issueOrder(string type, Player* target, int armyCount, Territory* t
 
     orderNumber++;
     orderList->add(order);  // adding order to the list
-    cout << "Order has been added to the list" << endl;
+    cout << "Order has been added to the list" << endl;*/
+    return this->strategy->issueOrder();
 }
 
 //Helper funtion for the driver to show current hand.
@@ -272,3 +274,8 @@ void Player::clearNegociatedList() {
 void Player::addArmies(int num) {
     this->reinforcementPool += num;
 }
+
+void Player::issueOrder() {
+    return this->strategy->issueOrder();
+}
+

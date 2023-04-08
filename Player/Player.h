@@ -8,6 +8,7 @@
 #include "../Map/Map.h"
 #include "../Orders/Orders.h"
 #include "../Cards/Cards.h"
+#include "../Strategy/PlayerStrategies.h"
 
 using namespace std;
 
@@ -61,6 +62,9 @@ public:
     void printOwnedTerritoryList();
     void issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation);
     void printCurrentHand();
+
+private:
+    PlayerStrategy* strategy;
 };
 
 #endif //COMP345_PLAYER_H
