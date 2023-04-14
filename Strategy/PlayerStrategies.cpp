@@ -72,7 +72,7 @@ vector<Territory*> DefaultPlayerStrategy::to_attack(Player* player) {
 	return setToVector;
 }
 
-bool DefaultPlayerStrategy::issueOrder(Player* player, Deck* deck, Map* territoriesMap, const list<Player*> gamePlayers) {
+bool DefaultPlayerStrategy::issueOrder(Player* player) {
 	int actionNumber = -1;
 
 	std::random_device randomDevice;
@@ -140,7 +140,7 @@ bool DefaultPlayerStrategy::issueOrder(Player* player, Deck* deck, Map* territor
 		std::uniform_int_distribution<int> distributionTroops(1, player->reinforcementPool);
 		int troopNumber = distributionTroops(mt);
 
-		player->issueOrder("Deploy", player, troopNumber, territoryToNumberMap[territoryChoice], territoryToNumberMap[territoryChoice]);
+		player->issue_Order("Deploy", player, troopNumber, territoryToNumberMap[territoryChoice], territoryToNumberMap[territoryChoice]);
 
 		cout << "Deploy order issued." << endl;
 
@@ -204,7 +204,7 @@ bool DefaultPlayerStrategy::issueOrder(Player* player, Deck* deck, Map* territor
 
 		int destinationTerritoryChoice = distributionDestination(mt);
 
-		player->issueOrder("Advance", player, troopNumber, destinationTerritoryToNumberMap.at(destinationTerritoryChoice), sourceTerritoryToNumberMap.at(sourceTerritoryChoice));
+		player->issue_Order("Advance", player, troopNumber, destinationTerritoryToNumberMap.at(destinationTerritoryChoice), sourceTerritoryToNumberMap.at(sourceTerritoryChoice));
 
 		cout << "Advance order issued." << endl;
 		break;
@@ -294,7 +294,7 @@ vector<Territory*> HumanPlayerStrategy::to_attack(Player* player) {
 	return setToVector;
 }
 
-bool HumanPlayerStrategy::issueOrder(Player* player, Deck* deck, Map* territoriesMap, const list<Player*> gamePlayers) {
+bool HumanPlayerStrategy::issueOrder(Player* player) {
 	int nbOfPossibleActions = 4;
 	int actionNumber = -1;
 
@@ -380,7 +380,7 @@ bool HumanPlayerStrategy::issueOrder(Player* player, Deck* deck, Map* territorie
 			cin >> troopNumber;
 
 
-		player->issueOrder("Deploy", player, troopNumber, territoryToNumberMap[territoryChoice], territoryToNumberMap[territoryChoice]);
+		player->issue_Order("Deploy", player, troopNumber, territoryToNumberMap[territoryChoice], territoryToNumberMap[territoryChoice]);
 
 		cout << "Deploy order issued." << endl;
 
@@ -453,7 +453,7 @@ bool HumanPlayerStrategy::issueOrder(Player* player, Deck* deck, Map* territorie
 			cin >> destinationTerritoryChoice;
 
 
-		player->issueOrder("Advance", player, troopNumber, destinationTerritoryToNumberMap.at(destinationTerritoryChoice), sourceTerritoryToNumberMap.at(sourceTerritoryChoice));
+		player->issue_Order("Advance", player, troopNumber, destinationTerritoryToNumberMap.at(destinationTerritoryChoice), sourceTerritoryToNumberMap.at(sourceTerritoryChoice));
 
 		cout << "Advance order issued." << endl;
 		break;
@@ -542,7 +542,7 @@ void AggressivePlayerStrategy::setStrongestTerritory(Player* player) {
 }
 
 vector<Territory*> AggressivePlayerStrategy::to_defend(Player* player) {
-	return player->getTerritory();
+	return player->toDefend();
 }
 
 vector<Territory*> AggressivePlayerStrategy::to_attack(Player* player) {
@@ -569,7 +569,7 @@ vector<Territory*> AggressivePlayerStrategy::to_attack(Player* player) {
 	return setToVector;
 }
 
-bool AggressivePlayerStrategy::issueOrder(Player* player, Deck* deck, Map* territoriesMap, const list<Player*> gamePlayers) {
+bool AggressivePlayerStrategy::issueOrder(Player* player) {
 	int actionNumber = -1;
 
 	std::random_device randomDevice;
@@ -616,7 +616,7 @@ bool AggressivePlayerStrategy::issueOrder(Player* player, Deck* deck, Map* terri
 		std::uniform_int_distribution<int> distributionTroops(1, player->reinforcementPool);
 		int troopNumber = distributionTroops(mt);
 
-		player->issueOrder("Deploy", player, troopNumber, strongestTerritory, strongestTerritory);
+		player->issue_Order("Deploy", player, troopNumber, strongestTerritory, strongestTerritory);
 
 		cout << "Deploy order issued." << endl;
 
@@ -657,12 +657,12 @@ bool AggressivePlayerStrategy::issueOrder(Player* player, Deck* deck, Map* terri
 							1);
 						int destinationTerritoryChoice = distributionDestination(mt);
 
-						player->issueOrder("Advance", player, troopNumber, strongestTerritory->edges[destinationTerritoryChoice], to_defend(player).at(sourceTerritoryChoice));
+						player->issue_Order("Advance", player, troopNumber, strongestTerritory->edges[destinationTerritoryChoice], to_defend(player).at(sourceTerritoryChoice));
 
 					}
 					else {
 
-						player->issueOrder("Advance", player, troopNumber, strongestTerritory, to_defend(player).at(sourceTerritoryChoice));
+						player->issue_Order("Advance", player, troopNumber, strongestTerritory, to_defend(player).at(sourceTerritoryChoice));
 
 					}
 				}
@@ -671,7 +671,7 @@ bool AggressivePlayerStrategy::issueOrder(Player* player, Deck* deck, Map* terri
 						destinationTerritoryToNumberMap.size() -
 						1);
 					int destinationTerritoryChoice = distributionDestination(mt);
-					player->issueOrder("Advance", player, troopNumber, destinationTerritoryToNumberMap[destinationTerritoryChoice], to_defend(player).at(sourceTerritoryChoice));
+					player->issue_Order("Advance", player, troopNumber, destinationTerritoryToNumberMap[destinationTerritoryChoice], to_defend(player).at(sourceTerritoryChoice));
 				}
 			}
 		}
@@ -798,7 +798,7 @@ vector<Territory*> BenevolentPlayerStrategy::to_attack(Player* player) {
 	return setToVector;
 }
 
-bool BenevolentPlayerStrategy::issueOrder(Player* player, Deck* deck, Map* territoriesMap, const list<Player*> gamePlayers) {
+bool BenevolentPlayerStrategy::issueOrder(Player* player) {
 	int actionNumber = -1;
 
 	std::random_device randomDevice;
@@ -869,7 +869,7 @@ bool BenevolentPlayerStrategy::issueOrder(Player* player, Deck* deck, Map* terri
 		std::uniform_int_distribution<int> distributionTroops(1, player->reinforcementPool);
 		int troopNumber = distributionTroops(mt);
 
-		player->issueOrder("Deploy", player, troopNumber, territoryToNumberMap[territoryChoice], territoryToNumberMap[territoryChoice]);
+		player->issue_Order("Deploy", player, troopNumber, territoryToNumberMap[territoryChoice], territoryToNumberMap[territoryChoice]);
 
 		cout << "Deploy order issued." << endl;
 
@@ -925,7 +925,7 @@ bool BenevolentPlayerStrategy::issueOrder(Player* player, Deck* deck, Map* terri
 
 			int destinationTerritoryChoice = distributionDestination(mt);
 
-			player->issueOrder("Advance", player, troopNumber, destinationTerritoryToNumberMap.at(destinationTerritoryChoice), sourceTerritoryToNumberMap.at(sourceTerritoryChoice));
+			player->issue_Order("Advance", player, troopNumber, destinationTerritoryToNumberMap.at(destinationTerritoryChoice), sourceTerritoryToNumberMap.at(sourceTerritoryChoice));
 
 			cout << "Advance order issued." << endl;
 		}
@@ -1035,7 +1035,7 @@ vector<Territory*> NeutralPlayerStrategy::to_attack(Player* player) {
 	return setToVector;
 }
 
-bool NeutralPlayerStrategy::issueOrder(Player* player, Deck* deck, Map* territoriesMap, const list<Player*> gamePlayers) {
+bool NeutralPlayerStrategy::issueOrder(Player* player) {
 	cout << "Ending turn.\n" << endl;
 	return false;
 }
@@ -1049,6 +1049,66 @@ std::ostream& operator<<(ostream& out, const NeutralPlayerStrategy& strategy) {
 }
 
 NeutralPlayerStrategy& NeutralPlayerStrategy::operator=(const NeutralPlayerStrategy& strategy) {
+	if (this != &strategy)
+	{
+		setStrategyName(strategy.getStrategyName());
+	}
+
+	return *this;
+}
+
+
+//TODO
+
+
+/* CheaterPlayerStrategy class */
+CheaterPlayerStrategy::CheaterPlayerStrategy() {
+	setStrategyName("Cheater");
+}
+CheaterPlayerStrategy::~CheaterPlayerStrategy() {}
+
+vector<Territory*> CheaterPlayerStrategy::to_defend(Player* player) {
+	return player->toDefend();
+}
+
+vector<Territory*> CheaterPlayerStrategy::to_attack(Player* player) {
+	std::set<Territory*> territoriesToAttack = set<Territory*>();
+
+	// Loop through all our territories...
+	for (Territory* t : player->getTerritory())
+	{
+		for (Territory* adj : t->edges) {
+
+			if (adj->owner != player)
+				territoriesToAttack.emplace(adj);
+		}
+	}
+
+	// Transforming the set to a vector.
+	vector<Territory*> setToVector = vector<Territory*>();
+
+	setToVector.reserve(territoriesToAttack.size());
+	for (Territory* t : territoriesToAttack)
+	{
+		setToVector.push_back(t);
+	}
+	return setToVector;
+}
+
+bool CheaterPlayerStrategy::issueOrder(Player* player) {
+	cout << "Ending turn.\n" << endl;
+	return false;
+}
+
+CheaterPlayerStrategy::CheaterPlayerStrategy(const CheaterPlayerStrategy& strategy) : PlayerStrategy(strategy) {
+
+}
+
+std::ostream& operator<<(ostream& out, const CheaterPlayerStrategy& strategy) {
+	return out << strategy.getStrategyName();
+}
+
+CheaterPlayerStrategy& CheaterPlayerStrategy::operator=(const CheaterPlayerStrategy& strategy) {
 	if (this != &strategy)
 	{
 		setStrategyName(strategy.getStrategyName());

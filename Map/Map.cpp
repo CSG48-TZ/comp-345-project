@@ -61,6 +61,8 @@ bool Territory::isAnEdge(Territory* target) {
             break;
         }
     }
+
+    return found; 
 }
 
 // Accessor method for duplicate attribute
