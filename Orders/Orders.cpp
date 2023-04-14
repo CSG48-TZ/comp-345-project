@@ -491,17 +491,9 @@ bool Advance::validate() {
 		return false;
 	}
 
-	vector<Territory*> currentedges;
-
-	currentedges = fromLocation->edges;
-
 	bool found = false;
-	for (auto i : currentedges) {
-		if (i == targetLocation) {
-			found = true;
-			break;
-		}
-	}
+	found = fromLocation->isAnEdge(targetLocation);
+
 
 	if (!found) {
 		cout << "\nFAILED: The source territory doesn't have a connected edge with the target territory to advance.";

@@ -31,6 +31,7 @@ public:
     void changeOwner(Player* newOwner);
     void addEdge(Territory * adjacent);
     void addArmies(int num);
+    bool isAnEdge(Territory* target);
     ~Territory();
     Territory operator=(const Territory& territory);
     Territory(const Territory& territory);
