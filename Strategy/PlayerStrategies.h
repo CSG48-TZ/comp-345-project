@@ -20,7 +20,7 @@ public:
 
     virtual vector<Territory*> to_defend(Player *player) = 0;
     virtual vector<Territory*> to_attack(Player *player) = 0;
-    virtual bool issueOrder(Player *player, Deck* deck, Map* territoriesMap, const list<Player*> gamePlayers) = 0;
+    virtual bool issueOrder(Player *player) = 0;
 
     // Stream insertion operator
     friend std::ostream& operator<<(std::ostream& out, const PlayerStrategy& strategy);
@@ -45,7 +45,7 @@ public:
 
     vector<Territory*> to_defend(Player *player);
     vector<Territory*> to_attack(Player *player);
-    bool issueOrder(Player *player, Deck* deck, Map* territoriesMap,const list<Player*> gamePlayers);
+    bool issueOrder(Player *player);
 
     // Stream insertion operator
     friend std::ostream& operator<<(std::ostream& out, const DefaultPlayerStrategy& strategy);
@@ -67,7 +67,7 @@ public:
 
     vector<Territory*> to_defend(Player *player);
     vector<Territory*> to_attack(Player *player);
-    bool issueOrder(Player *player, Deck* deck, Map* territoriesMap,const list<Player*> gamePlayers);
+    bool issueOrder(Player *player);
 
     // Stream insertion operator
     friend std::ostream& operator<<(std::ostream& out, const HumanPlayerStrategy& strategy);
@@ -96,7 +96,7 @@ public:
     void setStrongestTerritory(Player* player);
     vector<Territory*> to_defend(Player *player);
     vector<Territory*> to_attack(Player *player);
-    bool issueOrder(Player *player, Deck* deck, Map* territoriesMap,const list<Player*> gamePlayers);
+    bool issueOrder(Player *player);
 
     // Stream insertion operator
     friend std::ostream& operator<<(std::ostream& out, const AggressivePlayerStrategy& strategy);
@@ -125,7 +125,7 @@ public:
     Territory* getWeakestTerritory();
     vector<Territory*> to_defend(Player *player);
     vector<Territory*> to_attack(Player *player);
-    bool issueOrder(Player *player, Deck* deck, Map* territoriesMap,const list<Player*> gamePlayers);
+    bool issueOrder(Player *player);
 
     // Stream insertion operator
     friend std::ostream& operator<<(std::ostream& out, const BenevolentPlayerStrategy& strategy);
@@ -147,11 +147,31 @@ public:
 
     vector<Territory*> to_defend(Player *player);
     vector<Territory*> to_attack(Player *player);
-    bool issueOrder(Player *player, Deck* deck, Map* territoriesMap,const list<Player*> gamePlayers);
+    bool issueOrder(Player *player);
 
     // Stream insertion operator
     friend std::ostream& operator<<(std::ostream& out, const NeutralPlayerStrategy& strategy);
 
     // Assignment Operator
     NeutralPlayerStrategy& operator =(const NeutralPlayerStrategy& strategy);
+};
+
+
+//TODO
+class CheaterPlayerStrategy : public PlayerStrategy {
+public:
+    CheaterPlayerStrategy();
+    // Copy constructor
+    CheaterPlayerStrategy(const CheaterPlayerStrategy& strategy);
+    ~CheaterPlayerStrategy();
+
+    vector<Territory*> to_defend(Player* player);
+    vector<Territory*> to_attack(Player* player);
+    bool issueOrder(Player* player);
+
+    // Stream insertion operator
+    friend std::ostream& operator<<(std::ostream& out, const CheaterPlayerStrategy& strategy);
+
+    // Assignment Operator
+    CheaterPlayerStrategy& operator =(const CheaterPlayerStrategy& strategy);
 };
