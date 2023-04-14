@@ -11,18 +11,19 @@ Player::Player(){
     this->playerID = 0;
     this->orderList = new OrdersList(this->playerID);
     this->orderNumber = 0;
-
+    this->playerStrategy = new DefaultPlayerStrategy();
     
 }
 
 // parametrized constructor
-Player::Player(string pName, int id){
+Player::Player(string pName, int id, PlayerStrategy* ps){
     this->pName = pName;
     this->territories = vector<Territory*>();
     this->hand = new Hand();
     this->playerID = id;
     this->orderList = new OrdersList(id);
     this->orderNumber = 0;
+    this->playerStrategy = ps;
 }
 
 // copy constructor
@@ -140,7 +141,7 @@ void Player::printOwnedTerritoryList() {
 
 // return a list of territories that are to be defended
 vector<Territory *> Player::toDefend(){
-    return defendList;
+    return playerStrategy->to_defend(this);;
 }
 
 // print defend list
@@ -153,7 +154,7 @@ void Player::printDefendList(vector<Territory *> defendList){
 
 // return a list of territories that are to be attacked
 vector<Territory *> Player::toAttack(){
-    return attackList;
+    return playerStrategy->to_attack(this);
 }
 
 //Adds a territory to the attack list
@@ -191,13 +192,17 @@ void Player::printAttackList(vector<Territory *> attackList){
     }
 }
 
+void Player::issueOrder() {
+    playerStrategy->issueOrder(this);
+}
+
 //  creates an order object and adds it to the list of orders.
-void Player::issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation) {
+void Player::issue_Order(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation) {
     Orders* order{};
     
     std::transform(type.begin(), type.end(), type.begin(),
         [](unsigned char c) { return std::tolower(c); });
-    
+    PlayerStrategy* neutral = new NeutralPlayerStrategy();
     if (type == "deploy") {
         order = new Deploy(this, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
@@ -207,7 +212,7 @@ void Player::issueOrder(string type, Player* target, int armyCount, Territory* t
     else if (type == "blockade") {
         if (target->getName() != "NEUTRAL") {
             cout << "Target name for BLOCKADE order is not \"NEUTRAL\" a new player will be created.";
-            Player* n = new Player("NEUTRAL", 0);\
+            Player* n = new Player("NEUTRAL", 0, neutral);\
             order = new Blockade(n, this, armyCount, targetLocation, fromLocation, orderNumber);
         }
         else {
@@ -271,4 +276,9 @@ void Player::clearNegociatedList() {
 // Adds specified number to the player's reinforcement pool
 void Player::addArmies(int num) {
     this->reinforcementPool += num;
+}
+
+//returns the PlayerStrategy
+PlayerStrategy* Player::getPlayerStrategy() {
+    return this->playerStrategy;
 }

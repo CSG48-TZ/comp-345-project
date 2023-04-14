@@ -491,17 +491,9 @@ bool Advance::validate() {
 		return false;
 	}
 
-	vector<Territory*> currentedges;
-
-	currentedges = fromLocation->edges;
-
 	bool found = false;
-	for (auto i : currentedges) {
-		if (i == targetLocation) {
-			found = true;
-			break;
-		}
-	}
+	found = fromLocation->isAnEdge(targetLocation);
+
 
 	if (!found) {
 		cout << "\nFAILED: The source territory doesn't have a connected edge with the target territory to advance.";
@@ -562,7 +554,7 @@ bool Advance::execute() {
 				fromLocation->numArmies = 0;
 				Deck d{};
 				d.draw(player->getHand());
-				//player->setConqueredFlag(true); //this is to set a success flag so that the player recieves a card at the end of the turn. (only once for at leat one successful conquer)
+				player->setConqueredFlag(true); //this is to set a success flag so that the player recieves a card at the end of the turn. (only once for at leat one successful conquer)
 			}
 			else {
 				//capture failed.

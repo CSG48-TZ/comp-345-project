@@ -197,6 +197,11 @@ void Hand::showHand(){
     " | "<< cardTypes[cardHand[6]->getType()]; 
 }
 
+// returns the amount of cards in the hand
+int Hand::getNumberOfCardsInHand() {
+    return cardAmount;
+}
+
 // Deck definitions
 
 // Default constructor (deck contains 10 fo each card totalling to 50)

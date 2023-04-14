@@ -29,11 +29,12 @@ public:
 };
 
 class Hand {
-    Card* cardHand[7];
+
     int cardAmount;
     static const int MAX_AMOUNT_OF_CARDS = 7;
 
 public:
+        Card* cardHand[7];
        // Default Constructor
         Hand();
         // Destructor
@@ -51,6 +52,7 @@ public:
         void removeCardOfType(int type);
         void showHand();
         int contains(int type);
+        int getNumberOfCardsInHand();
 };
 
 class Deck {

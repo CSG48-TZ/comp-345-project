@@ -48,6 +48,23 @@ void Territory::addEdge(Territory *adjacent) {
     this->edges.push_back(adjacent);
 }
 
+//returns true if the selected territory is an edge.
+bool Territory::isAnEdge(Territory* target) {
+    vector<Territory*> currentedges;
+
+    currentedges = this->edges;
+
+    bool found = false;
+    for (auto i : currentedges) {
+        if (i == target) {
+            found = true;
+            break;
+        }
+    }
+
+    return found; 
+}
+
 // Accessor method for duplicate attribute
 bool Territory::isDuplicate() {
     return this->duplicate;
