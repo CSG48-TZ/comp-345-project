@@ -34,7 +34,7 @@ public:
 
 
 /**
- * Default Strategy (the original AI from A2)
+ * Default Strategy
  */
 class DefaultPlayerStrategy : public PlayerStrategy {
 public:
