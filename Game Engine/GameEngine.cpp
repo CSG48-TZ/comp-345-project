@@ -246,7 +246,33 @@ bool GameEngine::startupPhase() {
                     }
                 }
             }
-            else if (behavior == "addplayer") {
+            else if (behavior == "addplayer" && result.size() == 2) {
+                string ps = result[1];
+                PlayerStrategy* playstrat;
+                if (ps == "h" || ps == "H") {
+                    playstrat = new HumanPlayerStrategy();
+                }
+                else if (ps == "a" || ps == "A") {
+                    playstrat = new AggressivePlayerStrategy();
+                }
+                else if (ps == "b" || ps == "B") {
+                    playstrat = new BenevolentPlayerStrategy();
+                }
+                else if (ps == "n" || ps == "N") {
+                    playstrat = new NeutralPlayerStrategy();
+                }
+                else if (ps == "c" || ps == "C") {
+                    playstrat = new CheaterPlayerStrategy();
+                }
+                else {
+                    cout << "Please enter a correct argument for the player strategy: " << endl;
+                    cout << "h or H : Human " << endl;
+                    cout << "a or A : Aggressive " << endl;
+                    cout << "b or B : Benevolent " << endl;
+                    cout << "n or N : Neutral " << endl;
+                    cout << "c or C : Cheater " << endl;
+                    continue;
+                }
                 int num = (int)this->players.size();
                 if (num == 6) {
                     cout << "A maximum of 6 players are allowed in this game" << endl;
@@ -255,7 +281,7 @@ bool GameEngine::startupPhase() {
                 }
                 else {
 
-                    Player* player = new Player(result[1],playersID);
+                    Player* player = new Player(result[1],playersID, playstrat);
                     players.push_back(player);
                     cout << "Added player: " << result[1] << " with id: " << playersID << endl;
                     playersID++;
@@ -392,7 +418,7 @@ void GameEngine::issueOrdersPhase() {
     }
     
     int armycountselected = 0;
-
+    //TODO THIS HAS TO BE REWRITTEN
     for (it = players.begin(); it != players.end(); it++) {
         player = *it;
         
@@ -401,7 +427,7 @@ void GameEngine::issueOrdersPhase() {
                 cout << "\nPlayer " + player->pName << " still has " << player->reinforcementPool << " armies to deploy, select how many you wish to deploy to territory id #" << t->id << ": ";
                 cin >> armycountselected;
                 if (armycountselected <= player->reinforcementPool) {
-                    player->issueOrder("Deploy", player, armycountselected, t, t);
+                    player->issue_Order("Deploy", player, armycountselected, t, t);
                     player->addArmies(-armycountselected);
                 }
                 else {
@@ -470,14 +496,14 @@ void GameEngine::issueOrdersPhase() {
 
                 switch (selection) {
                 case 1:
-                    player->issueOrder("Advance", targetPlayer, armycountselected, targetTerr, sourceTerr);
+                    player->issue_Order("Advance", targetPlayer, armycountselected, targetTerr, sourceTerr);
                     break;
                 case 2:
                     if (player->getHand()->contains(0) <= 0) {
                         cout << "\nPlayer does not have an Airlift card. Cannot issue order.\n";
                     }
                     else {
-                        player->issueOrder("Airlift", targetPlayer, armycountselected, targetTerr, sourceTerr);
+                        player->issue_Order("Airlift", targetPlayer, armycountselected, targetTerr, sourceTerr);
                         //player->getHand()->removeCardOfType(0);
                     }
                     break;
@@ -486,7 +512,7 @@ void GameEngine::issueOrdersPhase() {
                         cout << "\nPlayer does not have an Blockade card. Cannot issue order.\n";
                     }
                     else {
-                        player->issueOrder("Blockade", targetPlayer, armycountselected, targetTerr, sourceTerr);
+                        player->issue_Order("Blockade", targetPlayer, armycountselected, targetTerr, sourceTerr);
                         //player->getHand()->removeCardOfType(1);
                     }
                     break;
@@ -495,7 +521,7 @@ void GameEngine::issueOrdersPhase() {
                         cout << "\nPlayer does not have an Bomb card. Cannot issue order.\n";
                     }
                     else {
-                        player->issueOrder("Bomb", targetPlayer, armycountselected, targetTerr, sourceTerr);
+                        player->issue_Order("Bomb", targetPlayer, armycountselected, targetTerr, sourceTerr);
                         //player->getHand()->removeCardOfType(2);
                     }
                     break;
@@ -504,7 +530,7 @@ void GameEngine::issueOrdersPhase() {
                         cout << "\nPlayer does not have an Negociate card. Cannot issue order.\n";
                     }
                     else {
-                        player->issueOrder("Negociate", targetPlayer, armycountselected, targetTerr, sourceTerr);
+                        player->issue_Order("Negociate", targetPlayer, armycountselected, targetTerr, sourceTerr);
                         //player->getHand()->removeCardOfType(3);
                     }
                     break;

@@ -8,6 +8,7 @@
 #include "../Map/Map.h"
 #include "../Orders/Orders.h"
 #include "../Cards/Cards.h"
+#include "../Strategy/PlayerStrategies.h"
 
 using namespace std;
 
@@ -30,9 +31,11 @@ public:
     int numPlayers;
     vector<Territory*> attackList;
     vector<Territory *> defendList;
+    PlayerStrategy* playerStrategy;
+
 
     Player(); // default constructor
-    Player(string pName, int id);
+    Player(string pName, int id, PlayerStrategy* ps);
     Player(const Player &player);
     ~Player();   // deconstruct
     Player& operator=(const Player &player);
@@ -52,6 +55,7 @@ public:
     void clearNegociatedList();
     OrdersList *getOrderList();
     void addArmies(int num);
+    PlayerStrategy* getPlayerStrategy();
 
     void setConqueredFlag(bool value);
     vector<Territory *> toDefend();
@@ -59,7 +63,8 @@ public:
     vector<Territory *> toAttack();
     void printAttackList(vector<Territory *> attackList);
     void printOwnedTerritoryList();
-    void issueOrder(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation);
+    void issueOrder();
+    void issue_Order(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation);
     void printCurrentHand();
 };
 

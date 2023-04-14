@@ -554,7 +554,7 @@ bool Advance::execute() {
 				fromLocation->numArmies = 0;
 				Deck d{};
 				d.draw(player->getHand());
-				//player->setConqueredFlag(true); //this is to set a success flag so that the player recieves a card at the end of the turn. (only once for at leat one successful conquer)
+				player->setConqueredFlag(true); //this is to set a success flag so that the player recieves a card at the end of the turn. (only once for at leat one successful conquer)
 			}
 			else {
 				//capture failed.
