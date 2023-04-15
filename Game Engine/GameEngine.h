@@ -39,6 +39,7 @@ class GameEngine : public Iloggable, public Subject{
 
 
         CommandProcessor* cmdPcs;
+        TournamentMode* mode;
 
         // default constructor
         GameEngine();
@@ -79,7 +80,6 @@ class GameEngine : public Iloggable, public Subject{
         State* currentState;
         Map* map;
         vector<Player*> players;
-        TournamentMode* mode;
 
         void initializeCommandProcessor();
         void initializeTourMode(Command* command);
