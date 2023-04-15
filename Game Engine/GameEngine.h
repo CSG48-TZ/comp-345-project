@@ -7,6 +7,21 @@
 #include "../Cards/Cards.h"
 #include "../Observer/LoggingObserver.h"
 
+
+class TournamentMode : public Iloggable, public Subject {
+public:
+    TournamentMode();
+    ~TournamentMode();
+    int tourGameNum;
+    int tourMaxTurn;
+    vector<string> tourMaps;
+    vector<string> tourStrategies;
+    vector<string> winnerStrategies;
+
+    string stringToLog();
+    void generateLogFile();
+};
+
 class GameEngine : public Iloggable, public Subject{
     public:
         // Define a enum data member to present the all the states of the game engine
@@ -56,10 +71,16 @@ class GameEngine : public Iloggable, public Subject{
         void mainGameLoop();
         string stringToLog();
 
+        void tournamentModeStartUp(int mapID);
+        void runGame();
+
     private:
         // A private attribute to track current state
         State* currentState;
         Map* map;
         vector<Player*> players;
+        TournamentMode* mode;
+
         void initializeCommandProcessor();
+        void initializeTourMode(Command* command);
 };

@@ -31,10 +31,7 @@ int main() {
 
     GameEngine* game = new GameEngine;
     cout << "***********Game Start***********\nWelcome to the game!" << endl;
-    while (game->getCurrentState() == "start") {
-        game->startupPhase();
-        game->mainGameLoop();
-    }
+    game->runGame();
     cout << "***********Game Over! Thank you!***********" << endl;
     return 0;
 }

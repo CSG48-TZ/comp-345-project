@@ -33,6 +33,7 @@ protected:
     void saveCommand(string input, string effect="Null");
     virtual string readCommand() const;
     string valCommand(string command, string currentState) const;
+    
 public:
     CommandProcessor();
     CommandProcessor(CommandProcessor* cmdPcs);
@@ -41,6 +42,7 @@ public:
     virtual ~CommandProcessor();
 
     string validate(Command* command, string currentState);
+    bool valTournament(string command, string currentState);
     Command* getCommand();
     string stringToLog();
 };

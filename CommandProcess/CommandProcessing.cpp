@@ -136,27 +136,98 @@ string CommandProcessor::valCommand(string command, string currentState) const {
 
 	return nextState;
 }
+
+bool CommandProcessor::valTournament(string command, string currentState) {
+	if (currentState == "start") {
+		// Split the command into parameters using space as a delimiter
+		vector<string> params;
+		stringstream ss(command);
+		string param;
+		while (getline(ss, param, ' ')) {
+			params.push_back(param);
+		}
+
+		// Validate the number of parameters
+		if (params.size() != 8) {
+			return false;
+		}
+
+		// Validate the format and range of each parameter
+		if (params[0].find("-M") != 0 || params[1].empty() ||
+			params[2].find("-P") != 0 || params[3].empty() ||
+			params[4].find("-G") != 0 || stoi(params[5]) < 1 || stoi(params[5]) > 5 ||
+			params[6].find("-D") != 0 || stoi(params[7]) < 10 || stoi(params[7]) > 50) {
+			return false;
+		}
+
+		// Split the map command into parameters using "," as a delimiter
+		vector<string> maps;
+		stringstream ssm(params[1]);
+		string map;
+		while (getline(ssm, map, ',')) {
+			maps.push_back(map);
+		}
+
+		if (maps.size() < 1 || maps.size() > 5) {
+			return false;
+		}
+
+		// Split the player strategy command into parameters using "," as a delimiter
+		vector<string> strategies;
+		stringstream sss(params[3]);
+		string strategy;
+		while (getline(sss, strategy, ',')) {
+			strategies.push_back(strategy);
+		}
+
+		if (strategies.size() < 2 || strategies.size() > 4) {
+			return false;
+		}
+
+		// If all validations pass, return true
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 // Check if the command is valid in the current game state. If the command is not valid, a corresponding error message should be saved in the effect of the command.
 string CommandProcessor::validate(Command* command, string currentState) {
 	// Extract and split the command details from the input line
 	string commandName = command->getCommandName();
-	istringstream iss(commandName);
-	vector<string> result;
-	string word;
-	while (getline(iss, word, ' ')) {
-		result.push_back(word);
-	}
-	string behavior = result[0];
+	string nextState = "";
 
-	// Check the validaty of the command, get the next state, and save the effect
-	string nextState = this->valCommand(behavior, currentState);
-	if (nextState == "") {
-		command->saveEffect("Error Message: Invalid command. ");
+	string space = " ";
+	string behavior = "";
+	string restOfCommand = "";
+
+	if (commandName.find(space) != std::string::npos) {
+		behavior = commandName.substr(0, commandName.find(space));
+		restOfCommand = commandName.substr(commandName.find(space) + 1, commandName.size());
+	}
+
+	if (behavior == "tournament" ) {
+		if (this->valTournament(restOfCommand, currentState)) {
+			command->saveEffect("Valid tournament command. ");
+			nextState = "tournament";
+		}
+		else {
+			command->saveEffect("Invalid tournament command. ");
+		}
 	}
 	else {
-		string effect = "The state of Game Engine change from " + currentState + " to " + nextState;
-		command->saveEffect(effect);
+		// Check the validaty of the command, get the next state, and save the effect
+		nextState = this->valCommand(behavior, currentState);
+		if (nextState == "") {
+			command->saveEffect("Error Message: Invalid command. ");
+		}
+		else {
+			string effect = "The state of Game Engine change from " + currentState + " to " + nextState;
+			command->saveEffect(effect);
+		}
 	}
+
 	return nextState;
 }
 
