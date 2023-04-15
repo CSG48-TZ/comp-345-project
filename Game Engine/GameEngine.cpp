@@ -1,12 +1,68 @@
 #include "../Game Engine/GameEngine.h"
 #include <iostream>
 #include <string>
+#include <iomanip>
+
+TournamentMode::TournamentMode(){
+    this->tourMaxTurn = 500;
+    this->tourGameNum = 0;
+}
+TournamentMode::~TournamentMode(){
+    if (tourStrategies.size() != 0) {
+        tourStrategies.clear();
+    }
+    if (tourMaps.size() != 0) {
+        tourMaps.clear();
+    }
+}
+string TournamentMode::stringToLog() {
+    string message = "Tournament mode:\nM: ";
+    for (int i = 0; i < this->tourMaps.size(); i++) {
+        message = message + this->tourMaps[i] + ", ";
+    }
+
+    message += "\nP: ";
+    for (int i = 0; i < this->tourStrategies.size(); i++) {
+        message = message + this->tourStrategies[i] + ", ";
+    }
+
+    message += "\nG: ";
+    message += this->tourGameNum;
+    message += "\nP: ";
+    message += this->tourMaxTurn;
+
+    message += "\n\nResults\n\t  \t\t";
+
+    // Print header of the table
+    for (int i = 0; i < this->tourMaps.size(); i++) {
+        message += this->tourMaps[i];
+        message += "\t";
+    }
+    message += "\n";
+
+    for (int i = 0; i < tourGameNum; i++) {
+        message = message + "\tGame " + to_string(i+1) + "\t";
+
+        for (int j = 0; j < this->tourMaps.size(); j++) {
+            int index = i * this->tourMaps.size() + j;
+            message = message + this->winnerStrategies[index] + "\t";
+        }
+    }
+    message += "\n";
+
+    return message;
+}
+void TournamentMode::generateLogFile() {
+    notify(this);
+}
+
 
 // Implementation of Constructors
 GameEngine::GameEngine() {
     currentState = new State(START);
     this->initializeCommandProcessor();
     this->map = NULL;
+    this->mode = new TournamentMode();
 }
 
 // copy constructor
@@ -14,12 +70,14 @@ GameEngine::GameEngine(const GameEngine& engine) {
     this->currentState = engine.currentState;
     this->cmdPcs = engine.cmdPcs;
     this->map = engine.map;
+    this->mode = new TournamentMode();
 }
 
 // assignment operator
 GameEngine& GameEngine::operator=(const GameEngine& engine) {
     this->currentState = engine.currentState;
     this->cmdPcs = engine.cmdPcs;
+    this->mode = engine.mode;
     return *this;
 }
 
@@ -43,6 +101,7 @@ GameEngine::~GameEngine() {
         players[i] = NULL;
     }
     players.clear();
+    delete mode;
 }
 
 // Implementation of Accessors
@@ -73,6 +132,10 @@ void GameEngine::transition(string& state) {
     }
     else if (state == "exit program") {
         *currentState = State::END;
+    }
+    else if (state == "tournament") {
+        state = "start";
+        *currentState = State::START;
     }
     cout << "State transitioned to: " << state << endl;
     notify(this);
@@ -158,6 +221,12 @@ bool GameEngine::startupPhase() {
         string currentState = this->getCurrentState();
         string nextState = cmdPcs->validate(command, currentState);
         cout << "Details of the input command: \n" << *command << endl;
+
+        if (nextState == "tournament") {
+            cout << "Tournament mode starts." << endl;
+            this->initializeTourMode(command);
+            return true;
+        }
 
         // Do corresponding operation if the command is valid
         if (nextState != "") {
@@ -581,6 +650,10 @@ void GameEngine::executeOrdersPhase() {
         // During the order execution, if a player owns all the territories, announce the player and end the game
         if (players[i]->territories.size() == (int)map->territories.size() || players.size() == 1) {
             cout << "The player is " << players[i]->getName() << "! Congratulations!" << endl;
+            // Add winner strategy
+            string winnerStrategy = players[i]->getPlayerStrategy()->getStrategyName();
+            this->mode->winnerStrategies.push_back(winnerStrategy);
+
             //exit the loop
             string nextState = "win";
             this->transition(nextState);
@@ -609,7 +682,7 @@ void GameEngine::mainGameLoop() {
         numOfAllTerritories = (int)map->territories.size();
     }
     // end the game if current state is WIN
-    while (this->getCurrentState() != "win") {
+    while (this->getCurrentState() != "win" && gameRound <= this->mode->tourMaxTurn) {
         for (auto& player : players) {
             // if a player owns 0 territory, remove from the game
             if (player->territories.empty()) {
@@ -638,25 +711,214 @@ void GameEngine::mainGameLoop() {
         gameRound++;
     }
 
-    // Replay the command to see what the next state is
-    while (true) {
-        cout << "Please input \"replay\" or \"quit\" to restart or end the game. " << endl;
-        Command* command = this->cmdPcs->getCommand();
-        if (command == NULL) {
-            cout << "No command was input.System Exit. " << endl;
-            break;
-        }
-        // Check if the command is valid and save effect
-        string currentState = this->getCurrentState();
-        string nextState = cmdPcs->validate(command, currentState);
-        cout << "Details of the input command: \n" << *command << endl;
+    if (this->getCurrentState() != "win") {
+        string nextState = "win";
+        this->transition(nextState);
+        string winnerStrategy = "Draw";
+        this->mode->winnerStrategies.push_back(winnerStrategy);
+    }
+    if (this->mode->tourGameNum == 0) {
+        // Decide the next state by command if it's the general mode
+        while (true) {
+            cout << "Please input \"replay\" or \"quit\" to restart or end the game. " << endl;
+            Command* command = this->cmdPcs->getCommand();
+            if (command == NULL) {
+                cout << "No command was input.System Exit. " << endl;
+                break;
+            }
+            // Check if the command is valid and save effect
+            string currentState = this->getCurrentState();
+            string nextState = cmdPcs->validate(command, currentState);
+            cout << "Details of the input command: \n" << *command << endl;
 
-        // Finish the infinite loop if we can move to an acceptable state
-        if (nextState == "start" || nextState == "exit program") {
-            this->transition(nextState);
-            break;
+            // Finish the infinite loop if we can move to an acceptable state
+            if (nextState == "start" || nextState == "exit program") {
+                this->transition(nextState);
+                break;
+            }
+        }
+    }
+    
+}
+
+void GameEngine::runGame() {
+    while (this->getCurrentState() == "start") {
+        this->startupPhase();
+
+        // If the tournament mode is not initialized, then use the general mode
+        if (this->mode->tourGameNum == 0) {
+            this->mainGameLoop();
+        }
+        else {
+            // If the game engine is on the tournament mode, play the game
+            for (int j = 0; j < this->mode->tourMaps.size(); j++) {
+                this->tournamentModeStartUp(j);
+                for (int i = 0; i < this->mode->tourGameNum; i++) {
+                    this->mainGameLoop();
+                }
+            }
+
+
+
+            while (true) {
+                cout << "Please input \"replay\" or \"quit\" to restart or end the game. " << endl;
+                Command* command = this->cmdPcs->getCommand();
+                if (command == NULL) {
+                    cout << "No command was input.System Exit. " << endl;
+                    break;
+                }
+                // Check if the command is valid and save effect
+                string currentState = this->getCurrentState();
+                string nextState = cmdPcs->validate(command, currentState);
+                cout << "Details of the input command: \n" << *command << endl;
+
+                // Finish the infinite loop if we can move to an acceptable state
+                if (nextState == "start" || nextState == "exit program") {
+                    this->transition(nextState);
+                    break;
+                }
+            }
         }
     }
 }
 
+void GameEngine::tournamentModeStartUp(int mapID) {
+    string filename = this->mode->tourMaps[mapID];
+    Maploader maploader(filename);
+    this->map = maploader.load();
+    cout << "Map" << filename << " has been loaded" << endl;
 
+    if (this->map->validate()) {
+        cout << "Map validated successfully" << endl;
+    }
+    else {
+        cout << "Map invalid. Game stop." << endl;
+        exit(0);
+    }
+
+    PlayerStrategy* playstrat;
+    for (int i = 0; i < this->mode->tourStrategies.size(); i++) {
+        string ps = this->mode->tourStrategies[i];
+        if (ps == "h" || ps == "H") {
+            playstrat = new HumanPlayerStrategy();
+        }
+        else if (ps == "a" || ps == "A") {
+            playstrat = new AggressivePlayerStrategy();
+        }
+        else if (ps == "b" || ps == "B") {
+            playstrat = new BenevolentPlayerStrategy();
+        }
+        else if (ps == "n" || ps == "N") {
+            playstrat = new NeutralPlayerStrategy();
+        }
+        else if (ps == "c" || ps == "C") {
+            playstrat = new CheaterPlayerStrategy();
+        }
+        else {
+            cout << "Incorrect strategy. Ignored. " << endl;
+            continue;
+        }
+        int num = (int)this->players.size();
+        if (num == 6) {
+            cout << "A maximum of 6 players are allowed in this game" << endl;
+            cout << "Please input command \"gamestart\" to start the game now." << endl;
+            continue;
+        }
+        else {
+            Player* player = new Player(ps, i, playstrat);
+            players.push_back(player);
+            cout << "Added player: " << ps << " with id: " << i << endl;
+        }
+    }
+
+
+    if (this->players.size() < 2) {
+        cout << "At least two players are necessary to start the game. Game cannot be started. " << endl;
+        exit(0);
+    }
+    else {
+        // Allocates one territory to each player. Each territory allocated are equidistant from each other
+        int numTerritories = (int)this->map->territories.size();
+        int gap = numTerritories / (int)players.size();
+        int playersIndex = 0;
+
+        for (int i = 0; i < numTerritories; i++) { // Iterates through all the territories
+            players[playersIndex % players.size()]->addOwnedTerritory(this->map->territories.at(i));
+            playersIndex++;
+        }
+
+        // Randomizes the order of players
+        vector<Player*> orderedPlayers;
+        while (players.size() != 0) {
+            int index = rand() % players.size();
+            orderedPlayers.push_back(players[index]);
+            players.erase(players.begin() + index);
+        }
+
+        // Assigns orderedPlayers vector to GameEngine object's players member
+        this->players = orderedPlayers;
+
+        cout << "Determined the order of play is shown below: " << endl << endl;
+        for (int i = 0; i < orderedPlayers.size(); i++) {
+            cout << "Player #" << i + 1 << " with ID:" << orderedPlayers[i]->playerID << " and name: " << orderedPlayers[i]->pName << endl;
+
+        }
+
+        // Adds 50 armies to each player's reinforcement pool
+        for (int i = 0; i < orderedPlayers.size(); i++) {
+            orderedPlayers[i]->addArmies(50);
+        }
+
+        cout << "\nAdded 50 armies to each player's reinforcement pool..." << endl << endl;
+
+        // Draws two cards from the deck for each player
+        Deck deck{};
+        for (int i = 0; i < orderedPlayers.size(); i++) {
+            deck.draw(orderedPlayers[i]->getHand());
+            deck.draw(orderedPlayers[i]->getHand());
+        }
+
+        cout << "\nDrew two cards from the deck for each player..." << endl << endl;
+
+        for (int i = 0; i < orderedPlayers.size(); i++) {
+            cout << "Player #" << i + 1 << " with ID:" << orderedPlayers[i]->playerID << " and name: " << orderedPlayers[i]->pName << " has this hand:" << endl;
+            orderedPlayers[i]->getHand()->showHand();
+            cout << "\n\n";
+        }
+    }
+    string nextState = "assignreinforcement";
+    this->transition(nextState);
+    
+
+}
+
+void GameEngine::initializeTourMode(Command* commandObj) {
+    string command = commandObj->getCommandName();
+
+    string space = " ";
+    string restOfCommand = command.substr(command.find(space) + 1, command.size());
+
+    vector<string> params;
+    stringstream ss(restOfCommand);
+    string param;
+    while (getline(ss, param, ' ')) {
+        params.push_back(param);
+    }
+
+    // Split the map command into parameters using "," as a delimiter
+    stringstream ssm(params[1]);
+    string map;
+    while (getline(ssm, map, ',')) {
+        this->mode->tourMaps.push_back(map);
+    }
+
+    // Split the player strategy command into parameters using "," as a delimiter
+    stringstream sss(params[3]);
+    string strategy;
+    while (getline(sss, strategy, ',')) {
+        this->mode->tourStrategies.push_back(strategy);
+    }
+
+    this->mode->tourGameNum = stoi(params[5]);
+    this->mode->tourMaxTurn = stoi(params[7]);
+}
