@@ -192,8 +192,8 @@ void Player::printAttackList(vector<Territory *> attackList){
     }
 }
 
-void Player::issueOrder() {
-    playerStrategy->issueOrder(this);
+bool Player::issueOrder() {
+    return playerStrategy->issueOrder(this);
 }
 
 //  creates an order object and adds it to the list of orders.

@@ -65,7 +65,7 @@ public:
     vector<Territory *> toAttack();
     void printAttackList(vector<Territory *> attackList);
     void printOwnedTerritoryList();
-    void issueOrder();
+    bool issueOrder();
     void issue_Order(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation);
     void printCurrentHand();
 };
