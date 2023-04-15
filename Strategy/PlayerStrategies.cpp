@@ -1058,9 +1058,6 @@ NeutralPlayerStrategy& NeutralPlayerStrategy::operator=(const NeutralPlayerStrat
 }
 
 
-//TODO
-
-
 /* CheaterPlayerStrategy class */
 CheaterPlayerStrategy::CheaterPlayerStrategy() {
 	setStrategyName("Cheater");
@@ -1068,7 +1065,7 @@ CheaterPlayerStrategy::CheaterPlayerStrategy() {
 CheaterPlayerStrategy::~CheaterPlayerStrategy() {}
 
 vector<Territory*> CheaterPlayerStrategy::to_defend(Player* player) {
-	return player->toDefend();
+	return player->getTerritory();
 }
 
 vector<Territory*> CheaterPlayerStrategy::to_attack(Player* player) {
@@ -1096,6 +1093,7 @@ vector<Territory*> CheaterPlayerStrategy::to_attack(Player* player) {
 }
 
 bool CheaterPlayerStrategy::issueOrder(Player* player) {
+    player->issue_Order("steal", player, 0, nullptr, nullptr);
 	cout << "Ending turn.\n" << endl;
 	return false;
 }

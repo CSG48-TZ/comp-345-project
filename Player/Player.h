@@ -57,6 +57,8 @@ public:
     void addArmies(int num);
     PlayerStrategy* getPlayerStrategy();
 
+    bool isCheater();
+
     void setConqueredFlag(bool value);
     vector<Territory *> toDefend();
     void printDefendList(vector<Territory *> defendList);

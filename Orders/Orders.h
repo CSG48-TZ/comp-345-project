@@ -135,4 +135,13 @@ public:
 	Negociate copy(Negociate order);
 };
 
+class Steal : public Orders {
+public:
+    Steal(Player * cheaterPlayer);
+    ~Steal();
+    bool validate(void) override;
+    bool execute() override;
+    Steal copy(Steal order);
+};
+
 #endif
