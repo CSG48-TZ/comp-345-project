@@ -228,6 +228,9 @@ void Player::issue_Order(string type, Player* target, int armyCount, Territory* 
     else if (type == "negociate") {
         order = new Negociate(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
+    else if (type == "steal") {
+        order = new Steal(this);
+    }
 
     orderNumber++;
     orderList->add(order);  // adding order to the list
@@ -281,4 +284,8 @@ void Player::addArmies(int num) {
 //returns the PlayerStrategy
 PlayerStrategy* Player::getPlayerStrategy() {
     return this->playerStrategy;
+}
+
+bool Player::isCheater() {
+    return this->playerStrategy->getStrategyName() == "Cheater";
 }

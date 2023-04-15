@@ -910,3 +910,34 @@ string Orders::stringToLog() {
 	string message = "Order Executed: " + this->getCurrentOrder() + "; ";
 	return message;
 }
+
+
+/****************STEAL ORDER LIST SUB CLASS****************/
+
+Steal::Steal(Player *cheaterPlayer) {
+    this->player = cheaterPlayer;
+}
+
+Steal::~Steal() noexcept {
+    delete player;
+}
+
+bool Steal::validate() {
+    return this->player->isCheater();
+}
+
+bool Steal::execute() {
+    if(validate()){
+        cout << "Cheater player stealing territories" << endl;
+        for(Territory* territory: player->toAttack())
+        {
+            cout << "Stole: " << territory->name << endl;
+            player->addOwnedTerritory(territory);
+        }
+    }
+    return true;
+}
+
+Steal Steal::copy(Steal order) {
+    Steal copy = Steal(this->player);
+}
