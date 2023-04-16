@@ -448,6 +448,34 @@ void GameEngine::issueOrdersPhase() {
 
 }
 
+
+//Helper function for the neutral player
+void GameEngine::gatherAndCombinePlayers() {
+    for (Territory* t : this->map->territories) { //Go through ALL territories belongs to the current player
+        if ((t->owner->pName) == "neutralplaceholder") { ///if the owner name of that territory is the placeholdername 
+            bool flag = false;
+            for (Player* p : players) { //go through all the players playeing
+                if (p->isNeutral() && p != t->owner) { //look for our neutral player
+                    delete t->owner;
+                    t->owner == nullptr;
+                    t->changeOwner(p); //give him our territory
+                    flag = true; // set the flag as true if we find a neutral player in the current playerlist
+                }
+            } 
+            
+            if (!flag) {
+                // If no neutral player in the player list now, add what we created to the player list
+                t->owner->setName("n");
+                int playerID = this->players.size();
+                t->owner->setPlayerID(playerID);
+                players.push_back(t->owner);
+                flag = true;
+            }
+        }
+    }
+}
+
+
 /**
  * Execute all deploy order before other orders, then use
  * round-robin fashion to execute the rest of the orders
@@ -477,6 +505,11 @@ void GameEngine::executeOrdersPhase() {
     for (int i = 0; i < players.size(); i++) {
         for (Orders* o : players[i]->orderList->getCurrentOrdersList()) {
             if (o->execute()) {
+                // For blockade
+                if (o->getCurrentOrder() == "Blockade") {
+                    this->gatherAndCombinePlayers();
+                }
+
                 if(o->getOrderTargetPlayer()->isNeutral())
                 {
                     cout << "Neutral player was attacked. Switching to aggressive" << endl;
