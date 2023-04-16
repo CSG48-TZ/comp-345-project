@@ -80,6 +80,9 @@ class GameEngine : public Iloggable, public Subject{
         void tournamentModeStartUp(int mapID);
         void runGame();
 
+        //Helper function for the neutral player
+        void gatherAndCombinePlayers();
+
     private:
         // A private attribute to track current state
         State* currentState;
