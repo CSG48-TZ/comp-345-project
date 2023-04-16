@@ -475,6 +475,7 @@ void GameEngine::executeOrdersPhase() {
             if (o->execute()) {
                 if(o->getOrderTargetPlayer()->isNeutral())
                 {
+                    cout << "Neutral player was attacked. Switching to aggressive" << endl;
                     o->getOrderTargetPlayer()->playerStrategy = new AggressivePlayerStrategy();
                 }
                 players[i]->orderList->removeOrder(o);
