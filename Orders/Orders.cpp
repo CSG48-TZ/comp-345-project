@@ -615,11 +615,6 @@ bool Bomb::validate() {
 		cout << "\nFAILED: The target territory is owned by the same player issuing the bomb order.";
 		return false;
 	}
-	int count = player->getHand()->contains(2); //2 for BOMB
-	if (count == 0) {
-		cout << "\nFAILED: The player does not have a BOMB card.";
-		return false;
-	}
 
 	vector<Territory*> currentedges;
 
@@ -635,12 +630,14 @@ bool Bomb::validate() {
 
 	if (!found) {
 		cout << "\nFAILED: The source territory doesn't have a connected edge with the target territory to BOMB.";
+		player->getHand()->addCard(new Card(2));
 		return false;
 	}
 
 	for (Player* p : player->negociatedPlayers) {
 		if (p == target) {
 			cout << "\nFAILED: The target player currently has a negociated contract and cannot be attacked.";
+			player->getHand()->addCard(new Card(2));
 			return false;
 		}
 	}
@@ -657,7 +654,6 @@ bool Bomb::validate() {
 bool Bomb::execute() {
 	if (validate()) {
 		targetLocation->addArmies(-(int)targetLocation->numArmies / 2);
-		player->getHand()->removeCardOfType(2); //2 FOR BOMB
 		notify(this);
 		return true;
 	}
@@ -709,13 +705,8 @@ bool Blockade::validate() {
 	cout << "\nValidating Blockade order: \"" << this->toString();
 	if (targetLocation->owner != player) {
 		cout << "\nFAILED: The target territory is not owned by the same player issuing the blockade order.";
+		player->getHand()->addCard(new Card(1));
 		return false;
-	}
-
-	int count = player->getHand()->contains(1); //1 for Blockade
-	if (count == 0) {
-		cout << "\nFAILED: The player does not have a BLOCKADE card in hand.";
-		return false; //checks for card in hand.
 	}
 
 	cout << "\nVALIDATED.";
@@ -730,7 +721,6 @@ bool Blockade::execute() {
 		targetLocation->addArmies(targetLocation->numArmies);
 		player->removeOwnedTerritory(targetLocation->id);
 		targetLocation->changeOwner(target);
-		player->getHand()->removeCardOfType(1);//1 for BLOCKADE
 		notify(this);
 		return true;
 	}
@@ -785,22 +775,17 @@ bool Airlift::validate() {
 	//Checks if both the source and target belong to the player.
 	if (targetLocation->owner != player && fromLocation->owner == player) {
 		cout << "\nFAILED: The player doesn't own the target territory.\n";
+		player->getHand()->addCard(new Card(0));
 		return false;
 	}
 
 	//check if the player has enough army.
 	if (fromLocation->numArmies < armyCount) {
 		cout << "\nFAILED: The player doesn't have enough armies asked by the order in the source territory to airlift.";
+		player->getHand()->addCard(new Card(0));
 		return false;
 	}
-	Hand* playerHand = player->getHand();
 
-	int count = playerHand->contains(0); //0 for Airlift
-
-	if (count == 0) {
-		cout << "\nFAILED: The player doesn't have an airlift card in hand.";
-		return false; //doesn't have the card type.
-	}
 	cout << "\nVALIDATED.";
 	return true;
 }
@@ -812,7 +797,6 @@ bool Airlift::execute() {
 	if (validate()) {
 		fromLocation->addArmies(-armyCount);
 		targetLocation->addArmies(armyCount);
-		player->getHand()->removeCardOfType(0);
 		notify(this);
 		return true;
 	}
@@ -862,17 +846,10 @@ Negociate::~Negociate() {
 */
 bool Negociate::validate() {
 	cout << "\nValidating Negociate order: \"" << this->toString();
-	Hand* playerHand = player->getHand();
-
-	int count = playerHand->contains(3); //3 for Diplomacy
-
-	if (count == 0) {
-		cout << "\nFAILED: The player doesn't have an Diplomacy card in hand.";
-		return false; //doesn't have the card type.
-	}
 
 	if (targetLocation->owner == player) {
 		cout << "\nFAILED: The target territory is owned by the same player issuing the negociate order.";
+		player->getHand()->addCard(new Card(3));
 		return false;
 	}
 	cout << "\nVALIDATED.";
@@ -885,7 +862,6 @@ bool Negociate::validate() {
 bool Negociate::execute() {
 	if (validate()) {
 		player->addPlayerToNegociatedList(target);
-		player->getHand()->removeCardOfType(3); //3 for NEGOCIATE
 		return true;
 	}
 	return false;
@@ -914,12 +890,26 @@ string Orders::stringToLog() {
 
 /****************STEAL ORDER LIST SUB CLASS****************/
 
-Steal::Steal(Player *cheaterPlayer) {
-    this->player = cheaterPlayer;
+Steal::Steal(Player* target, Player* player, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber) {
+	this->target = target;
+	this->player = player;
+	this->armyCount = armyCount;
+	this->targetLocation = targetLocation;
+	this->fromLocation = fromLocation;
+	this->orderNumber = orderNumber;
+
+	currentOrder = "Steal";
 }
 
-Steal::~Steal() noexcept {
-    delete player;
+Steal::~Steal() {
+	delete target;
+	target = nullptr;
+	delete player;
+	player = nullptr;
+	delete targetLocation;
+	targetLocation = nullptr;
+	delete fromLocation;
+	fromLocation = nullptr;;
 }
 
 bool Steal::validate() {
@@ -929,16 +919,16 @@ bool Steal::validate() {
 bool Steal::execute() {
     if(validate()){
         cout << "Cheater player stealing territories" << endl;
-        for(Territory* territory: player->toAttack())
-        {
+        for(Territory* territory: player->toAttack()) {
             cout << "Stole: " << territory->name << endl;
             player->addOwnedTerritory(territory);
         }
+		return true;
     }
-    return true;
+	return false;
 }
 
 Steal Steal::copy(Steal order) {
-    Steal copy = Steal(this->player);
+    Steal copy = Steal(this->target, this->player, this->armyCount, this->targetLocation, this->fromLocation, this->orderNumber);
 	return copy;
 }

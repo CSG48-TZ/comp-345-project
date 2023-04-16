@@ -224,7 +224,7 @@ void Player::issue_Order(string type, Player* target, int armyCount, Territory* 
         order = new Negociate(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
     else if (type == "steal") {
-        order = new Steal(this);
+        order = new Steal(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
 
     orderNumber++;

@@ -137,7 +137,7 @@ public:
 
 class Steal : public Orders {
 public:
-    Steal(Player * cheaterPlayer);
+    Steal(Player* target, Player* player, int armyCount, Territory* targetLocation, Territory* fromLocation, int orderNumber);
     ~Steal();
     bool validate(void) override;
     bool execute() override;

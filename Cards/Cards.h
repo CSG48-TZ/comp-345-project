@@ -26,6 +26,7 @@ public:
         void play(Hand*, int, Deck*, OrdersList*);
         int getType();
         void setType(int);
+        string getName();
 };
 
 class Hand {
@@ -53,6 +54,7 @@ public:
         void showHand();
         int contains(int type);
         int getNumberOfCardsInHand();
+
 };
 
 class Deck {
