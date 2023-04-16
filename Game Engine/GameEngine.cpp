@@ -632,8 +632,6 @@ void GameEngine::runGame() {
                 }
             }
 
-
-
             while (true) {
                 cout << "Please input \"replay\" or \"quit\" to restart or end the game. " << endl;
                 Command* command = this->cmdPcs->getCommand();
@@ -653,6 +651,8 @@ void GameEngine::runGame() {
                 }
             }
         }
+
+        this->mode->generateLogFile();
     }
 }
 
