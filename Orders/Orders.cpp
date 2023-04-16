@@ -940,4 +940,5 @@ bool Steal::execute() {
 
 Steal Steal::copy(Steal order) {
     Steal copy = Steal(this->player);
+	return copy;
 }

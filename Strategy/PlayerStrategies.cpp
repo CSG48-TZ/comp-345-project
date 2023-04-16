@@ -45,7 +45,7 @@ DefaultPlayerStrategy::DefaultPlayerStrategy() {
 DefaultPlayerStrategy::~DefaultPlayerStrategy() {}
 
 vector<Territory*> DefaultPlayerStrategy::to_defend(Player* player) {
-	return player->toDefend();
+	return player->getTerritory();
 }
 
 vector<Territory*> DefaultPlayerStrategy::to_attack(Player* player) {
@@ -267,7 +267,7 @@ HumanPlayerStrategy::HumanPlayerStrategy() {
 }
 HumanPlayerStrategy::~HumanPlayerStrategy() {}
 vector<Territory*> HumanPlayerStrategy::to_defend(Player* player) {
-	return player->toDefend();
+	return player->getTerritory();
 }
 
 vector<Territory*> HumanPlayerStrategy::to_attack(Player* player) {
@@ -542,7 +542,7 @@ void AggressivePlayerStrategy::setStrongestTerritory(Player* player) {
 }
 
 vector<Territory*> AggressivePlayerStrategy::to_defend(Player* player) {
-	return player->toDefend();
+	return player->getTerritory();
 }
 
 vector<Territory*> AggressivePlayerStrategy::to_attack(Player* player) {
@@ -771,7 +771,7 @@ vector<Territory*> BenevolentPlayerStrategy::getWeakestTerritories(Player* playe
 }
 
 vector<Territory*> BenevolentPlayerStrategy::to_defend(Player* player) {
-	return player->toDefend();
+	return player->getTerritory();
 }
 
 vector<Territory*> BenevolentPlayerStrategy::to_attack(Player* player) {
@@ -1008,7 +1008,7 @@ NeutralPlayerStrategy::NeutralPlayerStrategy() {
 NeutralPlayerStrategy::~NeutralPlayerStrategy() {}
 
 vector<Territory*> NeutralPlayerStrategy::to_defend(Player* player) {
-	return player->toDefend();
+	return player->getTerritory();
 }
 
 vector<Territory*> NeutralPlayerStrategy::to_attack(Player* player) {

@@ -15,6 +15,25 @@ TournamentMode::~TournamentMode(){
         tourMaps.clear();
     }
 }
+
+TournamentMode::TournamentMode(TournamentMode* other) {
+    this->tourGameNum = other->tourGameNum;
+    this->tourMaps = other->tourMaps;
+    this->tourMaxTurn = other->tourMaxTurn;
+    this->tourStrategies = other->tourStrategies;
+}
+TournamentMode& TournamentMode::operator=(const TournamentMode& other) {
+    this->tourGameNum = other.tourGameNum;
+    this->tourMaps = other.tourMaps;
+    this->tourMaxTurn = other.tourMaxTurn;
+    this->tourStrategies = other.tourStrategies;
+    return *this;
+}
+ostream& operator<<(ostream& out, const TournamentMode& mode) {
+    out << "Tournament Mode state is " << to_string(mode.tourGameNum) << endl;
+    return out;
+}
+
 string TournamentMode::stringToLog() {
     string message = "Tournament mode:\nM: ";
     for (int i = 0; i < this->tourMaps.size(); i++) {

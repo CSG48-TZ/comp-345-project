@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <iostream>
 #include <string>
+#include "../Observer/LoggingObserver.h"
 using namespace std;
 
 
@@ -30,8 +31,13 @@ int main() {
     cout << "- Replay or Quiz the game when the game ends \n";
 
     GameEngine* game = new GameEngine;
+    // Create an observer for every object
+    LogObserver* gameEngineObserver = new LogObserver(game->mode);
     cout << "***********Game Start***********\nWelcome to the game!" << endl;
     game->runGame();
     cout << "***********Game Over! Thank you!***********" << endl;
+
+    delete game, gameEngineObserver;
+    game, gameEngineObserver = NULL;
     return 0;
 }

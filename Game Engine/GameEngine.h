@@ -12,6 +12,11 @@ class TournamentMode : public Iloggable, public Subject {
 public:
     TournamentMode();
     ~TournamentMode();
+    TournamentMode(TournamentMode* other);
+    TournamentMode& operator=(const TournamentMode& mode);
+    // stream insertion operator
+    friend std::ostream& operator<<(std::ostream& out, const TournamentMode& mode);
+
     int tourGameNum;
     int tourMaxTurn;
     vector<string> tourMaps;
@@ -39,6 +44,7 @@ class GameEngine : public Iloggable, public Subject{
 
 
         CommandProcessor* cmdPcs;
+        TournamentMode* mode;
 
         // default constructor
         GameEngine();
@@ -79,7 +85,6 @@ class GameEngine : public Iloggable, public Subject{
         State* currentState;
         Map* map;
         vector<Player*> players;
-        TournamentMode* mode;
 
         void initializeCommandProcessor();
         void initializeTourMode(Command* command);
