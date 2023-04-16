@@ -1036,7 +1036,7 @@ vector<Territory*> NeutralPlayerStrategy::to_attack(Player* player) {
 }
 
 bool NeutralPlayerStrategy::issueOrder(Player* player) {
-	cout << "Ending turn.\n" << endl;
+	cout << "Neutral Player does not issue any orders.\n" << endl;
 	return false;
 }
 
