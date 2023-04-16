@@ -223,14 +223,41 @@ bool DefaultPlayerStrategy::issueOrder(Player* player) {
 		}
 
 		// Generate a random input
-		std::uniform_int_distribution<int> distribution(0, player->hand->getNumberOfCardsInHand() - 1);
-		int cardChoice = distribution(mt);
+		if (counter > 0) {
+			int troopNumber, sourceTerritoryChoice, targetTerritoryChoice, ownedTargetTerritoryChoice;
+			targetTerritoryChoice = mt() % to_attack(player).size();
+			ownedTargetTerritoryChoice = mt() % to_defend(player).size();
 
-		// Playing the card.
-		Card* card = cardsToNumbers[cardChoice];
+			while (troopNumber <= 0 && ownedTargetTerritoryChoice != sourceTerritoryChoice) {
+				sourceTerritoryChoice = mt() % to_defend(player).size();
+				troopNumber = to_defend(player)[sourceTerritoryChoice]->numArmies;
+				ownedTargetTerritoryChoice = mt() % to_defend(player).size();
+			}
 
-		cout << "Playing a card: " + card->getType() << endl;
-		//TODO PLAY THE CARD
+			std::uniform_int_distribution<int> distribution(0, player->hand->getNumberOfCardsInHand() - 1);
+			int cardChoice = distribution(mt);
+
+			// Playing the card.
+			Card* card = cardsToNumbers[cardChoice];
+
+			cout << "Playing a card: " << card << endl;
+			switch (card->getType()) {
+			case 0:
+				player->issue_Order("airlift", player, troopNumber, to_defend(player)[ownedTargetTerritoryChoice], to_defend(player)[sourceTerritoryChoice]);
+				break;
+			case 1:
+				player->issue_Order("blockade", player, troopNumber, to_defend(player)[sourceTerritoryChoice], to_defend(player)[sourceTerritoryChoice]);
+				break;
+			case 3:
+				player->issue_Order("bomb", to_attack(player)[targetTerritoryChoice]->owner, troopNumber, to_attack(player)[targetTerritoryChoice], to_defend(player)[sourceTerritoryChoice]);
+				break;
+			case 4:
+				player->issue_Order("negociate", to_attack(player)[targetTerritoryChoice]->owner, troopNumber, to_attack(player)[targetTerritoryChoice], to_defend(player)[sourceTerritoryChoice]);
+				break;
+			default:
+				cout << "ERROR: Wrong card type for Default player: " << card << " with ID: " << cardChoice << " Card->getType() returned: " << card->getType() << " Ending turn.\n" << endl;
+			}
+		}
 		break;
 	}
 	case 3:
@@ -462,7 +489,9 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 	{
 		// Play a card
 
-		cout << "Which card would you like to play?" << endl;
+		cout << "Which card would you like to play? (0 for the first card, 1 for the second and so on..) : " << endl;
+		player->getHand()->showHand();
+		cout << endl;
 
 		int counter = 0;
 		std::map<int, Card*> cardsToNumbers = std::map<int, Card*>();
@@ -484,11 +513,113 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 
 		// Playing the card.
 		Card* card = cardsToNumbers[cardChoice];
+		Territory* sourceTerr;
+		Territory* targetTerr;
+		Player* targetPlayer;
+
+		cout << "\n\n*********************************************************************************\n";
+		cout << "\nPlayer " << player->pName << ", your ID is: " << player->playerID << " and you have the following cards in hand: \n";
+		player->getHand()->showHand();
+
+		cout << "\n\nYou own the following territories: \n";
+
+		cout << "Player " << player->pName << " have the following territories: \n";
+		for (Territory* terr : to_defend(player)) {
+			cout << "- " << terr->name << " with ID: " << terr->id << " and has " << terr->numArmies << " armies in the territory.\n";
+		}
+		cout << "\n\n";
+		cout << "\n\nThe following territories are in your attack list: \n";
+
+		cout << "Player " << player->pName << " have the following territories in their attack list: \n";
+		for (Territory* terr : to_attack(player)) {
+			cout << "- " << terr->name << " with ID: " << terr->id << " and has " << terr->numArmies << " armies in the territory.\n";
+		}
+		cout << "\n\n";
+
 
 		cout << "Playing a card: " << card << endl;
+		int armycountselected = 0, terrID = 0, targetTerrID = 0;
+		cout << "Please enter the information requested for the order: \n";
+		cout << "Army amount: ";
+		cin >> armycountselected;
+		cout << "Source Territory ID: ";
+		cin >> terrID;
+		cout << "Target Territory ID: ";
+		cin >> targetTerrID;
 
-		//TODO Play Card
 
+		bool found1 = false;
+		while (!found1) {
+			for (Territory* terr : to_defend(player)) {
+				if (terr->id == terrID) {
+					sourceTerr = terr;
+					found1 = true;
+					break;
+				}
+			}
+			cout << "Source territory not found in to_Defend() list. Pleasy try again: \n";
+			cout << "Source Territory ID: ";
+			cin >> terrID;
+		}
+
+		bool found2 = false;
+		while (!found2) {
+			for (Territory* terr : to_attack(player)) {
+				if (terr->id == targetTerrID) {
+					targetTerr = terr;
+					found2 = true;
+					break;
+				}
+			}
+			cout << "Target territory not found in to_attack() list. Pleasy try again: \n";
+			cout << "Target Territory ID: ";
+			cin >> targetTerrID;
+		}
+
+		targetPlayer = targetTerr->owner;
+
+		switch (card->getType()) {
+		case 1:
+			player->issue_Order("Advance", targetPlayer, armycountselected, targetTerr, sourceTerr);
+			break;
+		case 2:
+			if (player->getHand()->contains(0) <= 0) {
+				cout << "\nPlayer does not have an Airlift card. Cannot issue order.\n";
+			}
+			else {
+				player->issue_Order("Airlift", targetPlayer, armycountselected, targetTerr, sourceTerr);
+			}
+			break;
+		case 3:
+			if (player->getHand()->contains(1) <= 0) {
+				cout << "\nPlayer does not have an Blockade card. Cannot issue order.\n";
+			}
+			else {
+				player->issue_Order("Blockade", targetPlayer, armycountselected, targetTerr, sourceTerr);
+			}
+			break;
+		case 4:
+			if (player->getHand()->contains(2) <= 0) {
+				cout << "\nPlayer does not have an Bomb card. Cannot issue order.\n";
+			}
+			else {
+				player->issue_Order("Bomb", targetPlayer, armycountselected, targetTerr, sourceTerr);
+			}
+			break;
+		case 5:
+			if (player->getHand()->contains(3) <= 0) {
+				cout << "\nPlayer does not have an Negociate card. Cannot issue order.\n";
+			}
+			else {
+				player->issue_Order("Negociate", targetPlayer, armycountselected, targetTerr, sourceTerr);
+			}
+			break;
+		case 7:
+			player->territories.clear();
+			break;
+		default:
+			cout << "ERROR: Wrong card type for Human player: " << card << " with ID: " << cardChoice << " Card->getType() returned: " << card->getType() << " Ending turn.\n" << endl;
+		}
 		break;
 	}
 	case 3:
@@ -692,6 +823,14 @@ bool AggressivePlayerStrategy::issueOrder(Player* player) {
 
 		// Generate a random input
 		if (counter > 0) {
+			int troopNumber, sourceTerritoryChoice, targetTerritoryChoice;
+			targetTerritoryChoice = mt() % to_attack(player).size();
+
+			while (troopNumber <= 0) {
+				sourceTerritoryChoice = mt() % to_defend(player).size();
+				troopNumber = to_defend(player)[sourceTerritoryChoice]->numArmies;
+			}
+
 			std::uniform_int_distribution<int> distribution(0, player->hand->getNumberOfCardsInHand() - 1);
 			int cardChoice = distribution(mt);
 
@@ -699,7 +838,22 @@ bool AggressivePlayerStrategy::issueOrder(Player* player) {
 			Card* card = cardsToNumbers[cardChoice];
 
 			cout << "Playing a card: " << card << endl;
-			//TODO Play the card
+			switch (card->getType()) {
+			case 0:
+				player->issue_Order("airlift", player, troopNumber, strongestTerritory, to_defend(player)[sourceTerritoryChoice]);
+				break;
+			case 1:
+				player->issue_Order("blockade", player, troopNumber, to_defend(player)[sourceTerritoryChoice], to_defend(player)[sourceTerritoryChoice]);
+				break;
+			case 3:
+				player->issue_Order("bomb", to_attack(player)[targetTerritoryChoice]->owner, troopNumber, to_attack(player)[targetTerritoryChoice], strongestTerritory);
+				break;
+			case 4:
+				player->issue_Order("negociate", to_attack(player)[targetTerritoryChoice]->owner, troopNumber, to_attack(player)[targetTerritoryChoice], strongestTerritory);
+				break;
+			default:
+				cout << "ERROR: Wrong card type for aggresive player: " << card << " with ID: " << cardChoice << " Card->getType() returned: " << card->getType() << " Ending turn.\n" << endl;
+			}
 		}
 		break;
 	}
@@ -941,23 +1095,48 @@ bool BenevolentPlayerStrategy::issueOrder(Player* player) {
 		int counter = 0;
 		std::map<int, Card*> cardsToNumbers = std::map<int, Card*>();
 
-
 		// Iterating through the hand
 		for (Card* c : player->getHand()->cardHand) {
-			if (c->getType() != 2) {
-				cardsToNumbers[counter] = &*c;
-				counter++;
-			}
+			cardsToNumbers[counter] = &*c;
+			counter++;
 		}
 
 		// Generate a random input
-		std::uniform_int_distribution<int> distribution(0, player->hand->getNumberOfCardsInHand() - 1);
-		int cardChoice = distribution(mt);
+		if (counter > 0) {
+			int troopNumber, sourceTerritoryChoice, targetTerritoryChoice, ownedTargetTerritoryChoice;
+			targetTerritoryChoice = mt() % to_attack(player).size();
+			ownedTargetTerritoryChoice = mt() % to_defend(player).size();
 
-		// Playing the card.
-		Card* card = cardsToNumbers[cardChoice];
-		
-		//TODO Play card
+			while (troopNumber <= 0 && ownedTargetTerritoryChoice != sourceTerritoryChoice) {
+				sourceTerritoryChoice = mt() % to_defend(player).size();
+				troopNumber = to_defend(player)[sourceTerritoryChoice]->numArmies;
+				ownedTargetTerritoryChoice = mt() % to_defend(player).size();
+			}
+
+			std::uniform_int_distribution<int> distribution(0, player->hand->getNumberOfCardsInHand() - 1);
+			int cardChoice = distribution(mt);
+
+			// Playing the card.
+			Card* card = cardsToNumbers[cardChoice];
+
+			cout << "Playing a card: " << card << endl;
+			switch (card->getType()) {
+			case 0:
+				player->issue_Order("airlift", player, troopNumber, to_defend(player)[ownedTargetTerritoryChoice], to_defend(player)[sourceTerritoryChoice]);
+				break;
+			case 1:
+				player->issue_Order("blockade", player, troopNumber, to_defend(player)[sourceTerritoryChoice], to_defend(player)[sourceTerritoryChoice]);
+				break;
+			case 3:
+				player->issue_Order("bomb", to_attack(player)[targetTerritoryChoice]->owner, troopNumber, to_attack(player)[targetTerritoryChoice], to_defend(player)[sourceTerritoryChoice]);
+				break;
+			case 4:
+				player->issue_Order("negociate", to_attack(player)[targetTerritoryChoice]->owner, troopNumber, to_attack(player)[targetTerritoryChoice], to_defend(player)[sourceTerritoryChoice]);
+				break;
+			default:
+				cout << "ERROR: Wrong card type for Benevolent player: " << card << " with ID: " << cardChoice << " Card->getType() returned: " << card->getType() << " Ending turn.\n" << endl;
+			}
+		}
 
 		break;
 	}
@@ -1036,7 +1215,7 @@ vector<Territory*> NeutralPlayerStrategy::to_attack(Player* player) {
 }
 
 bool NeutralPlayerStrategy::issueOrder(Player* player) {
-	cout << "Ending turn.\n" << endl;
+	cout << "Neutral Player does not issue any orders.\n" << endl;
 	return false;
 }
 
@@ -1093,7 +1272,7 @@ vector<Territory*> CheaterPlayerStrategy::to_attack(Player* player) {
 }
 
 bool CheaterPlayerStrategy::issueOrder(Player* player) {
-    player->issue_Order("steal", player, 0, nullptr, nullptr);
+	player->issue_Order("steal", player, 0, nullptr, nullptr);
 	cout << "Ending turn.\n" << endl;
 	return false;
 }
