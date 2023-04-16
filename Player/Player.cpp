@@ -209,6 +209,7 @@ void Player::issue_Order(string type, Player* target, int armyCount, Territory* 
     else if (type == "airlift") {
         order = new Airlift(target, this, armyCount, targetLocation, fromLocation, orderNumber);
     }
+    //TODO Fix the target player to be neutral not by creating a new player but asign it it to the current neutral player.
     else if (type == "blockade") {
         if (target->getName() != "NEUTRAL") {
             cout << "Target name for BLOCKADE order is not \"NEUTRAL\" a new player will be created.";

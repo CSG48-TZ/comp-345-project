@@ -466,6 +466,10 @@ void GameEngine::executeOrdersPhase() {
                 if (o->execute()) {
                     players[i]->orderList->removeOrder(o);
                 }
+                else {
+                    cout << "Order " << o->toString() << " is invalid! Romved from the list.";
+                    players[i]->orderList->removeOrder(o);
+                }
             }
         }
     }
@@ -478,6 +482,9 @@ void GameEngine::executeOrdersPhase() {
                     cout << "Neutral player was attacked. Switching to aggressive" << endl;
                     o->getOrderTargetPlayer()->playerStrategy = new AggressivePlayerStrategy();
                 }
+                players[i]->orderList->removeOrder(o);
+            } else {
+                cout << "Order " << o->toString() << " is invalid! Romved from the list.";
                 players[i]->orderList->removeOrder(o);
             }
         }
