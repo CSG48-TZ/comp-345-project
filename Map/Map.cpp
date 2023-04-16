@@ -148,37 +148,45 @@ Territory* Map::getTerritoryFromID(int id) {
 }
 
 bool Map::validate() {
-    unordered_map<string,int> duplicates ; // Maps the territory name to its continent value
+    unordered_map<string, int> duplicates; // Maps the territory name to its continent value
 
-    DFS(this->territories.at(0), duplicates);
+    if (territories.size() > 0) {
+        DFS(this->territories.at(0), duplicates);
 
-    for(int index = 0; index < territories.size(); index ++){
-        Territory * temp = territories.at(index);
-        if(temp->isDuplicate()){
-            cerr<< "Territory: " << temp->name << " is in more than one continent" << endl;
-            return false;
-        } else if(!temp->visited){
-            cerr<< "Territory: " << temp->name << " is not connected to the rest of the map" << endl;
-            return false;
-        } else {
-            temp->visited = false; // Resets visited to false for continentDFS
+        for (int index = 0; index < territories.size(); index++) {
+            Territory* temp = territories.at(index);
+            if (temp->isDuplicate()) {
+                cerr << "Territory: " << temp->name << " is in more than one continent" << endl;
+                return false;
+            }
+            else if (!temp->visited) {
+                cerr << "Territory: " << temp->name << " is not connected to the rest of the map" << endl;
+                return false;
+            }
+            else {
+                temp->visited = false; // Resets visited to false for continentDFS
+            }
+        }
+
+        for (int index = 0; index < continents.size(); index++) {
+            int territoriesFound = continentDFS(continents.at(index).at(0));
+
+            if (territoriesFound != continents.at(index).size()) {
+                cout << "Index: " << index << endl;
+                cout << "Num territories found: " << territoriesFound << endl;
+                cout << "Num supposed to be: " << continents.at(index).size() << endl;
+                cerr << "Territory numbers do not match with continent size" << endl;
+                return false;
+            }
         }
     }
-
-    for(int index = 0; index < continents.size(); index ++){
-        int territoriesFound = continentDFS(continents.at(index).at(0));
-
-        if(territoriesFound != continents.at(index).size()){
-            cout << "Index: " << index << endl;
-            cout << "Num territories found: " << territoriesFound << endl;
-            cout << "Num supposed to be: " << continents.at(index).size() << endl;
-            cerr << "Territory numbers do not match with continent size" << endl;
-            return false;
-        }
+    else {
+        cout << "Error in map validate!";
+        return false;
     }
-
     return true;
 }
+
 
 // Goes through the map and marks the territories iterated through as visited and checks if two territories
 // have the same name

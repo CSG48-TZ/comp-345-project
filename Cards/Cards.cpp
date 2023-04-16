@@ -52,6 +52,11 @@ int Card::getType(){
     }
 }
 
+//return the name of the card by its type.
+string Card::getName() {
+    return cardTypes[cardType];
+}
+
 // sets the card type
 void Card::setType(int newType){
     cardType = newType;
@@ -126,7 +131,6 @@ ostream& operator<<(ostream& out, const Hand& hand) {
 // Destructor
 Hand::~Hand() {
     for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
-        delete cardHand[i];
         cardHand[i] = NULL;
     }
 }
@@ -170,14 +174,18 @@ void Hand::removeCardOfType(int type) {
     for (int i = 0; i < MAX_AMOUNT_OF_CARDS; i++) {
         if (cardHand[i]->getType() == type) {
             removeCardAtIndex(i);
+            cardAmount -= 1;
         }
     }
 }
 
 // remove card from the hand
 void Hand::removeCardAtIndex(int cardNum) {
+    delete cardHand[cardNum];
+    cardHand[cardNum] = nullptr;
     cardHand[cardNum] = cardHand[cardAmount - 1];
-    cardHand[cardAmount - 1] = NULL;
+    delete cardHand[cardAmount - 1];
+    cardHand[cardAmount - 1] = nullptr;
     cardAmount -= 1;
 }
 
