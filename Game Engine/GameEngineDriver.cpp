@@ -37,6 +37,10 @@ int main() {
     game->runGame();
     cout << "***********Game Over! Thank you!***********" << endl;
 
+    //PAUSE
+    cout << "\nPress any key to continue..";
+    cin.get();
+
     delete game, gameEngineObserver;
     game, gameEngineObserver = NULL;
     return 0;
