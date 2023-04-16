@@ -339,7 +339,7 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 	{
 		// Deploy
 		cout << "0: Deploy " << endl;
-		cout << "(You have " << player->reinforcementPool << " reinforcements left in your pool. You must deploy them before issuing any other order." << endl;
+		cout << "(You have " << player->reinforcementPool << " reinforcements left in your pool. You must deploy them before issuing any other order. Order number 0)" << endl;
 
 		// Validate input.
 		while (actionNumber != 0)
@@ -509,7 +509,7 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 		for (Card* c : player->getHand()->cardHand) {
 			if (&*c != NULL) {
 				cardsToNumbers[counter] = &*c;
-				cout << counter << ": " << c << endl;
+				cout << counter << ": " << c->getName() << endl;
 				counter++;
 			}
 		}
@@ -544,6 +544,8 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 		}
 		cout << "\n\n";
 
+		bool found1 = false;
+		bool found2 = false;
 
 		cout << "Playing a card: " << card->getName() << endl;
 		int armycountselected = 0, terrID = 0, targetTerrID = 0;
@@ -555,8 +557,22 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 		cout << "Target Territory ID: ";
 		cin >> targetTerrID;
 
+		for (Territory* terr : to_defend(player)) {
+			if (terr->id == terrID) {
+				sourceTerr = terr;
+				found1 = true;
+				break;
+			}
+		}
 
-		bool found1 = false;
+		for (Territory* terr : to_attack(player)) {
+			if (terr->id == targetTerrID) {
+				targetTerr = terr;
+				found2 = true;
+				break;
+			}
+		}
+
 		while (!found1) {
 			for (Territory* terr : to_defend(player)) {
 				if (terr->id == terrID) {
@@ -570,8 +586,9 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 			cin >> terrID;
 		}
 
-		bool found2 = false;
+
 		while (!found2) {
+
 			for (Territory* terr : to_attack(player)) {
 				if (terr->id == targetTerrID) {
 					targetTerr = terr;
@@ -579,6 +596,7 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 					break;
 				}
 			}
+
 			cout << "Target territory not found in to_attack() list. Pleasy try again: \n";
 			cout << "Target Territory ID: ";
 			cin >> targetTerrID;
@@ -587,10 +605,7 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 		targetPlayer = targetTerr->owner;
 
 		switch (card->getType()) {
-		case 1:
-			player->issue_Order("Advance", targetPlayer, armycountselected, targetTerr, sourceTerr);
-			break;
-		case 2:
+		case 0:
 			if (player->getHand()->contains(0) <= 0) {
 				cout << "\nPlayer does not have an Airlift card. Cannot issue order.\n";
 			}
@@ -599,7 +614,7 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 				player->getHand()->removeCardOfType(0);
 			}
 			break;
-		case 3:
+		case 1:
 			if (player->getHand()->contains(1) <= 0) {
 				cout << "\nPlayer does not have an Blockade card. Cannot issue order.\n";
 			}
@@ -608,7 +623,7 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 				player->getHand()->removeCardOfType(1);
 			}
 			break;
-		case 4:
+		case 2:
 			if (player->getHand()->contains(2) <= 0) {
 				cout << "\nPlayer does not have an Bomb card. Cannot issue order.\n";
 			}
@@ -617,7 +632,7 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 				player->getHand()->removeCardOfType(2);
 			}
 			break;
-		case 5:
+		case 3:
 			if (player->getHand()->contains(3) <= 0) {
 				cout << "\nPlayer does not have an Negociate card. Cannot issue order.\n";
 			}
@@ -626,8 +641,7 @@ bool HumanPlayerStrategy::issueOrder(Player* player) {
 				player->getHand()->removeCardOfType(3);
 			}
 			break;
-		case 7:
-			player->territories.clear();
+		case 4: 
 			break;
 		default:
 			cout << "ERROR: Wrong card type for Human player: " << card->getName() << " with ID: " << cardChoice << " Card->getType() returned: " << card->getType() << " Ending turn.\n" << endl;
