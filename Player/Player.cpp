@@ -289,3 +289,7 @@ PlayerStrategy* Player::getPlayerStrategy() {
 bool Player::isCheater() {
     return this->playerStrategy->getStrategyName() == "Cheater";
 }
+
+bool Player::isNeutral() {
+    return this->playerStrategy->getStrategyName() == "Neutral";
+}

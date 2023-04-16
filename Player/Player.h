@@ -68,6 +68,8 @@ public:
     bool issueOrder();
     void issue_Order(string type, Player* target, int armyCount, Territory* targetLocation, Territory* fromLocation);
     void printCurrentHand();
+
+    bool isNeutral();
 };
 
 #endif //COMP345_PLAYER_H
