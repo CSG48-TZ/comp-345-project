@@ -455,7 +455,7 @@ void GameEngine::gatherAndCombinePlayers() {
 			for (Player* p : players) { //go through all the players playeing
 				if (p->isNeutral() && p != t->owner) { //look for our neutral player
 					delete t->owner;
-					t->owner == nullptr;
+					t->owner = nullptr;
 					t->changeOwner(p); //give him our territory
 					flag = true; // set the flag as true if we find a neutral player in the current playerlist
 				}
