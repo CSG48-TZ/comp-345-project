@@ -1,0 +1,1 @@
+tournament -M map1.map,map2.map,map3.map -P a,n,c -G 3 -D 30
