@@ -12,6 +12,11 @@ class TournamentMode : public Iloggable, public Subject {
 public:
     TournamentMode();
     ~TournamentMode();
+    TournamentMode(TournamentMode* other);
+    TournamentMode& operator=(const TournamentMode& mode);
+    // stream insertion operator
+    friend std::ostream& operator<<(std::ostream& out, const TournamentMode& mode);
+
     int tourGameNum;
     int tourMaxTurn;
     vector<string> tourMaps;
