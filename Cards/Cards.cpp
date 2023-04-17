@@ -95,12 +95,17 @@ void Card::play(Hand* hand, int cardNum, Deck* deck, OrdersList* orderList) {
 
 // Default constructor
 Hand::Hand(){
-    
     cardAmount = 0;
 }
 
 // copy constructor
 Hand::Hand(const Hand& hand) {
+    for (int i = 0; i < this->cardHand.size(); i++) {
+        delete cardHand[i];
+        cardHand[i] = NULL;
+    }
+    cardHand.clear();
+
     for (int i =0; i < hand.cardHand.size(); i++){
         this->cardHand.push_back(hand.cardHand[i]);
     }
@@ -117,7 +122,7 @@ Hand& Hand::operator=(const Hand& hand) {
 // stream insertion operator
 ostream& operator<<(ostream& out, const Hand& hand) {
     for (int i = 0; i < hand.cardHand.size(); i++) {
-        out << "Card " << to_string(i) << " in hand is " << hand.cardHand[1] << endl;
+        out << "Card " << to_string(i) << " in hand is " << hand.cardHand[i] << endl;
     }
     return out;
 }
@@ -133,7 +138,7 @@ Hand::~Hand() {
 
 // delete hand
 void Hand::del(){
-    for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
+    for (int i =0; i < this->cardHand.size(); i++){
         delete cardHand[i];
         cardHand[i] = NULL;
     }
