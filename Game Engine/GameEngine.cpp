@@ -636,6 +636,8 @@ void GameEngine::runGame() {
 						p = nullptr;
 					}
 					players.clear();
+					delete map;
+					map = nullptr;
 				}
 			}
 			this->mode->generateLogFile();
