@@ -507,8 +507,7 @@ void GameEngine::executeOrdersPhase() {
 				if (o->getCurrentOrder() == "Blockade") {
 					this->gatherAndCombinePlayers();
 				}
-
-				if (o->getOrderTargetPlayer()->isNeutral())
+				else if (o->getOrderTargetPlayer() != nullptr && o->getOrderTargetPlayer()->isNeutral())
 				{
 					cout << "Neutral player was attacked. Switching to aggressive" << endl;
 					o->getOrderTargetPlayer()->playerStrategy = new AggressivePlayerStrategy();
@@ -636,6 +635,8 @@ void GameEngine::runGame() {
 						p = nullptr;
 					}
 					players.clear();
+					delete map;
+					map = nullptr;
 				}
 			}
 			this->mode->generateLogFile();

@@ -35,7 +35,7 @@ class Hand {
     static const int MAX_AMOUNT_OF_CARDS = 7;
 
 public:
-        Card* cardHand[7];
+        vector <Card*> cardHand;
        // Default Constructor
         Hand();
         // Destructor
