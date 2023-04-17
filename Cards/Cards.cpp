@@ -95,44 +95,40 @@ void Card::play(Hand* hand, int cardNum, Deck* deck, OrdersList* orderList) {
 
 // Default constructor
 Hand::Hand(){
-    for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
-        cardHand[i] = NULL;
-    }
+    
     cardAmount = 0;
 }
 
 // copy constructor
 Hand::Hand(const Hand& hand) {
-    for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
-        this->cardHand[i] = hand.cardHand[i];
+    for (int i =0; i < hand.cardHand.size(); i++){
+        this->cardHand.push_back(hand.cardHand[i]);
     }
 }
 
 // assignment operator
 Hand& Hand::operator=(const Hand& hand) {
-    for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
-        this->cardHand[i] = hand.cardHand[i];
+    for (int i = 0; i < hand.cardHand.size(); i++) {
+        this->cardHand.push_back(hand.cardHand[i]);
     }
     return *this;
 }
 
 // stream insertion operator
 ostream& operator<<(ostream& out, const Hand& hand) {
-    out << "Card 1 in hand is " << hand.cardHand[0] << endl;
-    out << "Card 2 in hand is " << hand.cardHand[1] << endl;
-    out << "Card 3 in hand is " << hand.cardHand[2] << endl;
-    out << "Card 4 in hand is " << hand.cardHand[3] << endl;
-    out << "Card 5 in hand is " << hand.cardHand[4] << endl;
-    out << "Card 6 in hand is " << hand.cardHand[5] << endl;
-    out << "Card 7 in hand is " << hand.cardHand[6] << endl;
+    for (int i = 0; i < hand.cardHand.size(); i++) {
+        out << "Card " << to_string(i) << " in hand is " << hand.cardHand[1] << endl;
+    }
     return out;
 }
 
 // Destructor
 Hand::~Hand() {
-    for (int i =0; i < MAX_AMOUNT_OF_CARDS; i++){
+    for (int i = 0; i < this->cardHand.size(); i++) {
+        delete cardHand[i];
         cardHand[i] = NULL;
     }
+    cardHand.clear();
 }
 
 // delete hand
@@ -144,10 +140,10 @@ void Hand::del(){
 }
 
 // add a card to the hand (utilized in the deck draw function)
-bool Hand::addCard(Card* card){
+bool Hand::addCard(Card* card) {
     // checks to see if the player doesn't have a full hand of cards (max is set to 7 cards)
-    if (cardAmount < MAX_AMOUNT_OF_CARDS){
-        cardHand[cardAmount] = card;
+    if (cardAmount < MAX_AMOUNT_OF_CARDS) {
+        cardHand.push_back(card);
         cardAmount += 1;
         return true;
     }
@@ -160,18 +156,18 @@ bool Hand::addCard(Card* card){
 int Hand::contains(int type) {
     int count = 0;
 
-    for (int i = 0; i < MAX_AMOUNT_OF_CARDS; i++) {
+    for (int i = 0; i < this->cardHand.size(); i++) {
         if (cardHand[i]->getType() == type) {
             count++;
-           }
+        }
     }
-    
+
     return count;
 }
 
 // remove card of the specified type from the hand
 void Hand::removeCardOfType(int type) {
-    for (int i = 0; i < MAX_AMOUNT_OF_CARDS; i++) {
+    for (int i = 0; i < this->cardHand.size(); i++) {
         if (cardHand[i]->getType() == type) {
             removeCardAtIndex(i);
             cardAmount -= 1;
@@ -181,12 +177,7 @@ void Hand::removeCardOfType(int type) {
 
 // remove card from the hand
 void Hand::removeCardAtIndex(int cardNum) {
-    delete cardHand[cardNum];
-    cardHand[cardNum] = nullptr;
-    cardHand[cardNum] = cardHand[cardAmount - 1];
-    delete cardHand[cardAmount - 1];
-    cardHand[cardAmount - 1] = nullptr;
-    cardAmount -= 1;
+    cardHand.erase(cardHand.begin() + cardNum);
 }
 
 // gets card the specified card in the hand
@@ -196,13 +187,9 @@ Card* Hand::getCard(int cardNum){
 
 // displays hand
 void Hand::showHand(){
-    cout << cardTypes[cardHand[0]->getType()] << 
-    " | "<< cardTypes[cardHand[1]->getType()] << 
-    " | "<< cardTypes[cardHand[2]->getType()] << 
-    " | "<< cardTypes[cardHand[3]->getType()] << 
-    " | "<< cardTypes[cardHand[4]->getType()] << 
-    " | "<< cardTypes[cardHand[5]->getType()] << 
-    " | "<< cardTypes[cardHand[6]->getType()]; 
+    for (int i = 0; i < cardHand.size(); i++) {
+        cout << cardTypes[cardHand[i]->getType()] << " | ";
+    }
 }
 
 // returns the amount of cards in the hand
